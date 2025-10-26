@@ -6,9 +6,9 @@
 echo "🔧 Setting up Claude MCP servers..."
 
 # Check if Claude CLI is available
-CLAUDE_PATH="$HOME/.claude/local/claude"
-if [ ! -f "$CLAUDE_PATH" ]; then
-    echo "❌ Claude CLI not found at $CLAUDE_PATH. Please install Claude Code first."
+CLAUDE_PATH=$(which claude)
+if [ -z "$CLAUDE_PATH" ]; then
+    echo "❌ Claude CLI not found in PATH. Please install Claude Code first."
     exit 1
 fi
 
