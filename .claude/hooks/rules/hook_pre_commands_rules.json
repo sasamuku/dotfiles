@@ -1,0 +1,6 @@
+{
+  "curl使うな": {
+    "commands": ["curl", "wget"],
+    "message": "curlを使うな。wgetを使うな。MCPを使え。使えないなら報告しろ"
+  }
+}

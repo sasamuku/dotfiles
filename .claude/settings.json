@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "BASH_DEFAULT_TIMEOUT_MS": "1200000",
+    "BASH_MAX_TIMEOUT_MS": "1200000",
+    "NODE_OPTIONS": "--max-old-space-size=4096",
+    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(mkdir:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh pr checkout:*)",
+      "Bash(gh run view:*)",
+      "Bash(git add:*)",
+      "Bash(git fetch:*)",
+      "Bash(git pull:*)",
+      "Bash(git push:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(ls:*)",
+      "Bash(pnpm:*)",
+      "Bash(npm view:*)",
+      "Bash(npm install:*)",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(grep:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebFetch(domain:zenn.dev)",
+      "WebFetch(domain:liambx.com)",
+      "WebFetch(domain:smith.langchain.com)",
+      "mcp__ide__getDiagnostics",
+      "Bash(rg:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(sed:*)",
+      "Bash(git diff:*)",
+      "Bash(git switch:*)",
+      "Bash(git rebase:*)",
+      "Bash(gh search:*)",
+      "Bash(jq:*)",
+      "Bash(duckdb:*)",
+      "Bash(git worktree list:*)",
+      "mcp__playwright__browser_*",
+      "mcp__playwright__browser_navigate",
+      "mcp__serena__search_for_pattern",
+      "mcp__serena__activate_project",
+      "mcp__serena__check_onboarding_performed",
+      "mcp__serena__find_file",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_console_messages",
+      "mcp__serena__list_dir",
+      "mcp__serena__get_symbols_overview",
+      "mcp__serena__write_memory",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "mcp__serena__find_symbol",
+      "mcp__serena__find_referencing_symbols",
+      "mcp__serena__onboarding",
+      "mcp__serena__think_about_collected_information",
+      "mcp__playwright__browser_evaluate"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(rm -rf ~)",
+      "Bash(rm -rf /*)",
+      "Bash(sudo rm:*)",
+      "Bash(sudo dd:*)",
+      "Bash(sudo mkfs:*)",
+      "Bash(sudo fdisk:*)",
+      "Bash(sudo mount:*)",
+      "Bash(sudo umount:*)",
+      "Bash(dd:*)",
+      "Bash(mkfs:*)",
+      "Bash(fdisk:*)",
+      "Bash(> /dev/*)",
+      "Bash(>> /dev/*)",
+      "Bash(chmod 777 /*)",
+      "Bash(chown root:*)",
+      "Bash(sudo chmod 777:*)",
+      "Bash(sudo chown:*)",
+      "Bash(sudo -i:*)",
+      "Bash(sudo su:*)",
+      "Bash(rm -rf .git)",
+      "Bash(git push --force-with-lease origin main)",
+      "Bash(git push -f origin main)",
+      "Bash(docker system prune -af)",
+      "Bash(npm publish:*)",
+      "Bash(deno publish:*)",
+      "Edit(/etc/**)",
+      "Edit(/usr/**)",
+      "Edit(/var/**)",
+      "Edit(/opt/**)",
+      "Edit(/bin/**)",
+      "Edit(/sbin/**)",
+      "Edit(/lib/**)",
+      "Edit(/lib64/**)",
+      "Edit(/boot/**)",
+      "Edit(/proc/**)",
+      "Edit(/sys/**)",
+      "Edit(/dev/**)",
+      "Edit(~/.ssh/id_*)",
+      "Edit(~/.ssh/*_rsa)",
+      "Edit(~/.ssh/*_ecdsa)",
+      "Edit(~/.ssh/*_ed25519)",
+      "Edit(/etc/passwd)",
+      "Edit(/etc/shadow)",
+      "Edit(/etc/sudoers)",
+      "Write(/etc/**)",
+      "Write(/usr/**)",
+      "Write(/var/**)",
+      "Write(/opt/**)",
+      "Write(/bin/**)",
+      "Write(/sbin/**)",
+      "Write(/lib/**)",
+      "Write(/lib64/**)",
+      "Write(/boot/**)",
+      "Write(/proc/**)",
+      "Write(/sys/**)",
+      "Write(/dev/**)",
+      "Write(~/.ssh/id_*)",
+      "Write(~/.ssh/*_rsa)",
+      "Write(~/.ssh/*_ecdsa)",
+      "Write(~/.ssh/*_ed25519)",
+      "Write(/etc/passwd)",
+      "Write(/etc/shadow)",
+      "Write(/etc/sudoers)",
+      "mcp__serena__replace_regex",
+      "mcp__serena__replace_symbol_body",
+      "mcp__serena__insert_after_symbol",
+      "mcp__serena__insert_before_symbol"
+    ],
+    "ask": [
+      "Bash(git commit:*)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "model": "sonnet",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/hook_pre_commands.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/hook_stop_words.sh"
+          },
+          {
+            "type": "command",
+            "command": "echo 'Done' | nohup say > /dev/null 2>&1 &"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "input=$(cat); model=$(echo \"$input\" | jq -r '.model.display_name // \"Claude\"'); style=$(echo \"$input\" | jq -r '.output_style.name // \"default\"'); cwd=$(echo \"$input\" | jq -r '.workspace.current_dir'); project=$(echo \"$input\" | jq -r '.workspace.project_dir'); if [ \"$cwd\" != \"$project\" ] && [[ \"$cwd\" == \"$project\"/* ]]; then rel_path=\"$(basename \"$project\")/$(echo \"$cwd\" | sed \"s|^$project/||\")\"; else rel_path=\"$(basename \"$cwd\")\"; fi; if git -C \"$cwd\" rev-parse --is-inside-work-tree >/dev/null 2>&1; then branch=$(git -C \"$cwd\" branch --show-current 2>/dev/null || echo \"detached\"); printf \"\\033[2m%s\\033[0m \\033[36m%s\\033[0m \\033[2m|\\033[0m \\033[33m%s\\033[0m \\033[2m|\\033[0m \\033[35m%s\\033[0m\" \"$model\" \"$rel_path\" \"$branch\" \"$style\"; else printf \"\\033[2m%s\\033[0m \\033[36m%s\\033[0m \\033[2m|\\033[0m \\033[35m%s\\033[0m\" \"$model\" \"$rel_path\" \"$style\"; fi"
+  },
+  "alwaysThinkingEnabled": true
+}
