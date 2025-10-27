@@ -13,14 +13,28 @@ if [ -z "$CLAUDE_PATH" ]; then
 fi
 
 # Add MCP servers (user scope)
+MCP_LIST=$("$CLAUDE_PATH" mcp list 2>/dev/null || echo "")
+
 echo "➕ Adding chrome-devtools MCP server..."
-"$CLAUDE_PATH" mcp add chrome-devtools --scope user -- npx chrome-devtools-mcp@latest
+if echo "$MCP_LIST" | grep -q "chrome-devtools"; then
+    echo "   ⏭️  chrome-devtools already exists, skipping..."
+else
+    "$CLAUDE_PATH" mcp add chrome-devtools --scope user -- npx chrome-devtools-mcp@latest
+fi
 
 echo "➕ Adding context7 MCP server..."
-"$CLAUDE_PATH" mcp add --transport http --scope user context7 https://mcp.context7.com/mcp
+if echo "$MCP_LIST" | grep -q "context7"; then
+    echo "   ⏭️  context7 already exists, skipping..."
+else
+    "$CLAUDE_PATH" mcp add --transport http --scope user context7 https://mcp.context7.com/mcp
+fi
 
 echo "➕ Adding serena MCP server..."
-"$CLAUDE_PATH" mcp add serena --scope user -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant
+if echo "$MCP_LIST" | grep -q "serena"; then
+    echo "   ⏭️  serena already exists, skipping..."
+else
+    "$CLAUDE_PATH" mcp add serena --scope user -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant
+fi
 
 echo "🎉 Claude MCP setup completed!"
 echo ""
