@@ -18,6 +18,11 @@ echo "📁 Creating Serena config symlink..."
 mkdir -p ~/.serena
 ln -sf $(realpath $(dirname ${0}))/.serena/serena_config.yml ~/.serena/serena_config.yml
 
+# Neovim config
+echo "📁 Creating Neovim config symlink..."
+mkdir -p ~/.config/nvim
+ln -sf $(realpath $(dirname ${0}))/.config/nvim/init.lua ~/.config/nvim/init.lua
+
 # Claude MCP setup
 echo "🔌 Setting up Claude MCP servers..."
 $(dirname ${0})/setup_claude_mcp.sh
