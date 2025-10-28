@@ -49,25 +49,9 @@ eval "$(direnv hook zsh)"
 # alias
 alias ls="ls -la -G"
 alias showz="cat ~/.zshrc"
-alias editz="micro ~/.zshrc"
+alias editz='$EDITOR ~/.zshrc'
 alias sourcez="source ~/.zshrc"
-alias k="kubectl"
-alias kc="kubectx"
-alias kn="kubens"
 alias be='bundle exec'
-
-# rbenv
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-
-# for M1 Mac to implement tf command
-export GODEBUG=asyncpreemptoff=1
-export VOLTA_HOME="$HOME/.volta"
-export PATH="$VOLTA_HOME/bin:$PATH"
-export PATH="/opt/homebrew/bin:$PATH"
-
-# JDK
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
 
 # Android SDK
 export ANDROID_HOME=$HOME/Library/Android/sdk
@@ -77,7 +61,8 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 # Claude Code
 export PATH="$HOME/.claude/local:$PATH"
 
+# kiro
 [[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
-eval "$(mise activate zsh)"
 
-export EDITOR=micro
+# mise
+eval "$(mise activate zsh)"

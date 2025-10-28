@@ -11,10 +11,10 @@ fi
 #
 
 if [[ -z "$EDITOR" ]]; then
-  export EDITOR='nano'
+  export EDITOR='micro'
 fi
 if [[ -z "$VISUAL" ]]; then
-  export VISUAL='nano'
+  export VISUAL='micro'
 fi
 if [[ -z "$PAGER" ]]; then
   export PAGER='less'
