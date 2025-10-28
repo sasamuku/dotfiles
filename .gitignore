@@ -1,0 +1,9 @@
+# Secrets and sensitive files
+.zsh_secrets
+.zshrc.secrets
+.gitconfig.local
+.env
+.env.local
+
+# macOS
+.DS_Store
