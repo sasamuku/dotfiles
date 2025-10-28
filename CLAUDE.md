@@ -13,30 +13,59 @@ This is a personal dotfiles repository for macOS setup and configuration managem
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/MH4GF/dotfiles/master/setup_macos.sh)"
 ```
 
-### Dotfiles Symlink Setup Only
-```bash
-./setup.sh
-```
+This runs:
+1. `setup_brew.sh` - Installs Homebrew and all packages from Brewfile
+2. `setup.sh` - Creates symlinks for all dotfiles
+   - Runs `setup_zsh.sh` - Installs Prezto and links zsh configs
+   - Links Neovim, Claude configs
+   - Runs `setup_claude_mcp.sh` - Configures MCP servers
+3. Applies macOS system preferences
 
-### Claude MCP Servers Setup
+### Individual Setup Scripts
 ```bash
-./setup_claude_mcp.sh
+./setup_brew.sh        # Homebrew and packages only
+./setup_zsh.sh         # Zsh with Prezto
+./setup.sh             # All dotfiles (includes zsh, neovim, claude)
+./setup_claude_mcp.sh  # Claude MCP servers only
 ```
 
 ## Repository Structure
 
-Key files and directories:
-- `setup.sh` - Main dotfiles symlink setup script
-- `setup_macos.sh` - Complete macOS setup including Homebrew and tools installation
-- `setup_claude_mcp.sh` - Sets up MCP servers for Claude Code
-- `Brewfile` - Homebrew packages and applications list
-- `.zshrc` - Zsh shell configuration with aliases and settings
+### Setup Scripts
+- `setup_macos.sh` - Complete macOS setup (calls all other setup scripts)
+- `setup_brew.sh` - Homebrew and package installation
+- `setup_zsh.sh` - Zsh with Prezto setup
+- `setup.sh` - Dotfiles symlink creation (zsh, neovim, claude)
+- `setup_claude_mcp.sh` - Claude MCP servers configuration
+
+### Configuration Files
+- `Brewfile` - Homebrew packages, casks, and VS Code extensions
+- `.zshrc` - Zsh shell configuration (Prezto-based)
+- `.zpreztorc` - Prezto module configuration
+- `.zprofile` - Zsh profile settings
+- `.zshenv` - Zsh environment variables
 - `.gitconfig` - Git configuration with custom aliases
-- `.config/` - Application configurations (starship, karabiner, gh, git, mise, nvim)
-- `.claude/` - Claude-specific settings and commands
+
+### Application Configs
+- `.config/nvim/` - Neovim configuration (Lua-based)
+- `.claude/` - Claude Code settings and custom commands
 - `.serena/` - Serena MCP server configuration
 
 ## Development Tools
+
+### Shell Environment
+- **Zsh** with **Prezto** framework
+- Modules: completion, syntax-highlighting, autosuggestions, history-substring-search
+- Interactive tools: peco (for history and directory navigation)
+- Custom keybindings:
+  - `Ctrl+R` - Command history search with peco
+  - `Ctrl+G` - Directory history navigation with peco
+
+### Editor
+- **Neovim** with Lua configuration
+- LSP support (TypeScript via ts_ls)
+- Telescope for fuzzy finding
+- Git integration via vim-fugitive
 
 ### Tool Version Management (mise)
 This repository uses mise for managing development tool versions:

@@ -1,11 +1,18 @@
 #!/bin/sh
 
-# Claude Code Dotfiles Setup Script
-# This script creates symlinks for Claude Code settings
+# Dotfiles Setup Script
+# This script creates symlinks for development tools configuration
 
-echo "🔧 Setting up Claude Code configuration..."
+echo "🔧 Setting up dotfiles..."
+
+# Zsh setup
+echo "🐚 Setting up Zsh..."
+$(dirname ${0})/setup_zsh.sh
+
+echo ""
 
 # Claude settings
+echo "🔧 Setting up Claude Code configuration..."
 echo "📁 Creating Claude settings symlinks..."
 mkdir -p ~/.claude
 ln -sf $(realpath $(dirname ${0}))/.claude/commands ~/.claude/commands
