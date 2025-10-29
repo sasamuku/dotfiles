@@ -31,6 +31,11 @@ echo "📁 Creating Neovim config symlink..."
 mkdir -p ~/.config/nvim
 ln -sf $(realpath $(dirname ${0}))/.config/nvim/init.lua ~/.config/nvim/init.lua
 
+# WezTerm config
+echo "📁 Creating WezTerm config symlink..."
+mkdir -p ~/.config/wezterm
+ln -sf $(realpath $(dirname ${0}))/.config/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
+
 # Claude MCP setup
 echo "🔌 Setting up Claude MCP servers..."
 $(dirname ${0})/setup_claude_mcp.sh

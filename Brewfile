@@ -28,6 +28,7 @@ cask "raycast"
 cask "slack"
 cask "zoom"
 cask "cursor"
+cask "wezterm"
 
 vscode "anthropic.claude-code"
 vscode "bierner.markdown-mermaid"

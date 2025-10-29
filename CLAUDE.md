@@ -35,6 +35,7 @@ All scripts can be run independently.
 - `.gitconfig.local.sample` → `~/.gitconfig.local` (personal git settings)
 - `.zsh_secrets.example` → `~/.zsh_secrets` (private env vars)
 - `.config/nvim/` - Neovim (Lua)
+- `.config/wezterm/` - WezTerm terminal emulator
 - `.claude/` - Claude Code settings
 - `.serena/` - Serena MCP config
 
