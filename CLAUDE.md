@@ -31,6 +31,7 @@ All scripts can be run independently.
 - `Brewfile` - Homebrew packages, casks, VS Code extensions
 - `.zshrc`, `.zprofile`, `.zshenv` - Zsh configs
 - `.config/sheldon/plugins.toml` - sheldon plugin manager config
+- `.config/starship.toml` - Starship prompt config
 - `.gitconfig` - Git aliases and settings
 - `.gitconfig.local.sample` → `~/.gitconfig.local` (personal git settings)
 - `.zsh_secrets.example` → `~/.zsh_secrets` (private env vars)
@@ -43,7 +44,8 @@ All scripts can be run independently.
 
 ### Shell Environment
 - **Zsh** + **sheldon** (fast Rust-based plugin manager)
-- Plugins: completion, syntax-highlighting, autosuggestions, history-substring-search, pure prompt
+- Plugins: completion, syntax-highlighting, autosuggestions, history-substring-search
+- **Starship** prompt (fast, customizable, cross-shell)
 - **peco** keybindings: `Ctrl+R` (history), `Ctrl+G` (directory)
 - **mise** for tool versions: Node.js 22.14.0, Go 1.21.2, Ruby 3.2.2
 

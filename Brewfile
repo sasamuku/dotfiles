@@ -13,6 +13,7 @@ brew "neovim"
 brew "node"
 brew "peco"
 brew "sheldon"
+brew "starship"
 brew "watch"
 
 cask "1password"

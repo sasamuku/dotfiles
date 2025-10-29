@@ -1,6 +1,9 @@
 # Initialize sheldon plugin manager
 eval "$(sheldon source)"
 
+# Initialize starship prompt
+eval "$(starship init zsh)"
+
 # history
 HISTFILE=$HOME/.zsh-history
 HISTSIZE=100000

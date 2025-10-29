@@ -36,6 +36,11 @@ echo "📁 Creating WezTerm config symlink..."
 mkdir -p ~/.config/wezterm
 ln -sf $(realpath $(dirname ${0}))/.config/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
 
+# Starship config
+echo "📁 Creating Starship config symlink..."
+mkdir -p ~/.config
+ln -sf $(realpath $(dirname ${0}))/.config/starship.toml ~/.config/starship.toml
+
 # Claude MCP setup
 echo "🔌 Setting up Claude MCP servers..."
 $(dirname ${0})/setup_claude_mcp.sh
