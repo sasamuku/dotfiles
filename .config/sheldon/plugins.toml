@@ -1,0 +1,30 @@
+# Sheldon Plugin Configuration
+# https://sheldon.cli.rs/
+
+shell = "zsh"
+
+# Defer plugin loading for faster startup
+[plugins.zsh-defer]
+github = "romkatv/zsh-defer"
+
+# Completions
+[plugins.zsh-completions]
+github = "zsh-users/zsh-completions"
+
+# Autosuggestions
+[plugins.zsh-autosuggestions]
+github = "zsh-users/zsh-autosuggestions"
+use = ["{{ name }}.zsh"]
+
+# Syntax highlighting (must be loaded after other plugins)
+[plugins.zsh-syntax-highlighting]
+github = "zsh-users/zsh-syntax-highlighting"
+
+# History substring search
+[plugins.zsh-history-substring-search]
+github = "zsh-users/zsh-history-substring-search"
+
+# Pure prompt theme
+[plugins.pure]
+github = "sindresorhus/pure"
+use = ["async.zsh", "pure.zsh"]
