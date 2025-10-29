@@ -1,0 +1,17 @@
+# Local Git Configuration
+# Copy this file to .gitconfig.local and update with your personal information
+# .gitconfig.local is gitignored and will not be committed
+
+[user]
+	name = Your Name
+	email = your.email@example.com
+
+# GitHub-specific configuration (optional)
+# [user]
+# 	signingkey = YOUR_GPG_KEY_ID
+# [commit]
+# 	gpgsign = true
+
+# Additional custom aliases or settings
+# [alias]
+# 	custom-command = !your custom command here
