@@ -116,4 +116,23 @@ config.keys = {
   },
 }
 
+-- Tab title format: show current directory
+wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
+  local pane = tab.active_pane
+  local cwd = pane.current_working_dir
+
+  if cwd then
+    local path = cwd.file_path or cwd
+    -- Remove file:// prefix if present
+    path = path:gsub('file://[^/]*', '')
+    -- Extract only the directory name (last component)
+    local dir_name = path:match("([^/]+)/?$") or path
+    return {
+      { Text = ' ' .. dir_name .. ' ' },
+    }
+  end
+
+  return tab.active_pane.title
+end)
+
 return config
