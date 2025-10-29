@@ -17,7 +17,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/sasamuku/dotfiles/master/s
 ```
 setup.sh (Main wrapper)
 ├── setup_brew.sh (Homebrew + packages)
-├── setup_zsh.sh (Zsh + Prezto)
+├── setup_zsh.sh (Zsh + sheldon)
 ├── setup_dotfiles.sh (Dotfiles: Git, Claude, Serena, Neovim)
 │   └── setup_claude_mcp.sh (MCP servers)
 └── setup_macos.sh (macOS preferences)
@@ -29,7 +29,8 @@ All scripts can be run independently.
 
 ### Configuration Files
 - `Brewfile` - Homebrew packages, casks, VS Code extensions
-- `.zshrc`, `.zpreztorc`, `.zprofile`, `.zshenv` - Zsh/Prezto configs
+- `.zshrc`, `.zprofile`, `.zshenv` - Zsh configs
+- `.config/sheldon/plugins.toml` - sheldon plugin manager config
 - `.gitconfig` - Git aliases and settings
 - `.gitconfig.local.sample` → `~/.gitconfig.local` (personal git settings)
 - `.zsh_secrets.example` → `~/.zsh_secrets` (private env vars)
@@ -40,7 +41,8 @@ All scripts can be run independently.
 ## Development Tools
 
 ### Shell Environment
-- **Zsh** + **Prezto** (completion, syntax-highlighting, autosuggestions, history-substring-search)
+- **Zsh** + **sheldon** (fast Rust-based plugin manager)
+- Plugins: completion, syntax-highlighting, autosuggestions, history-substring-search, pure prompt
 - **peco** keybindings: `Ctrl+R` (history), `Ctrl+G` (directory)
 - **mise** for tool versions: Node.js 22.14.0, Go 1.21.2, Ruby 3.2.2
 

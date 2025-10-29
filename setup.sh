@@ -19,7 +19,7 @@ echo ""
 
 # 2. Zsh configuration
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "🐚 Step 2/4: Zsh and Prezto"
+echo "🐚 Step 2/4: Zsh and Sheldon"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 "${SCRIPT_DIR}/setup_zsh.sh"
 echo ""

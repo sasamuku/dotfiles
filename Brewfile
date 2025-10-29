@@ -12,6 +12,7 @@ brew "mise"
 brew "neovim"
 brew "node"
 brew "peco"
+brew "sheldon"
 brew "watch"
 
 cask "1password"

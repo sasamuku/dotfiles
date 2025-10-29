@@ -1,7 +1,5 @@
-# Source Prezto.
-if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
-fi
+# Initialize sheldon plugin manager
+eval "$(sheldon source)"
 
 # history
 HISTFILE=$HOME/.zsh-history
