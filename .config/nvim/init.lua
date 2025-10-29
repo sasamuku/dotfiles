@@ -172,17 +172,22 @@ require("lazy").setup({
       -- Setup mason first
       require("mason").setup()
       
-      -- Setup mason-lspconfig
+      -- Setup mason-lspconfig with handlers
       require("mason-lspconfig").setup({
         ensure_installed = { "ts_ls" },
-      })
-
-      -- Get lspconfig
-      local lspconfig = require("lspconfig")
-      
-      -- Setup ts_ls
-      lspconfig.ts_ls.setup({
-        filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+        handlers = {
+          -- Default handler for all servers
+          function(server_name)
+            vim.lsp.enable(server_name)
+          end,
+          -- Custom handler for ts_ls
+          ts_ls = function()
+            vim.lsp.config('ts_ls', {
+              filetypes = { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
+            })
+            vim.lsp.enable('ts_ls')
+          end,
+        },
       })
       
       -- LSPAttachイベントを使用してキーマッピングを設定
