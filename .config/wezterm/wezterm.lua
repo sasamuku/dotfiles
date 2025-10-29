@@ -21,9 +21,37 @@ config.window_padding = {
 
 -- Tab bar
 config.enable_tab_bar = true
-config.hide_tab_bar_if_only_one_tab = true
+config.hide_tab_bar_if_only_one_tab = false
 config.show_tab_index_in_tab_bar = false
 config.tab_bar_at_bottom = false
+
+-- Tab bar colors
+config.colors = {
+  tab_bar = {
+    background = '#1a1b26',
+    active_tab = {
+      bg_color = '#7aa2f7',
+      fg_color = '#1a1b26',
+      intensity = 'Bold',
+    },
+    inactive_tab = {
+      bg_color = '#292e42',
+      fg_color = '#565f89',
+    },
+    inactive_tab_hover = {
+      bg_color = '#3b4261',
+      fg_color = '#c0caf5',
+    },
+    new_tab = {
+      bg_color = '#1a1b26',
+      fg_color = '#565f89',
+    },
+    new_tab_hover = {
+      bg_color = '#3b4261',
+      fg_color = '#c0caf5',
+    },
+  },
+}
 
 -- Misc
 config.scrollback_lines = 10000
@@ -32,6 +60,32 @@ config.audible_bell = 'Disabled'
 
 -- Keybindings
 config.keys = {
+  -- Tab management
+  {
+    key = 't',
+    mods = 'CMD',
+    action = wezterm.action.SpawnTab 'CurrentPaneDomain',
+  },
+  {
+    key = 'Tab',
+    mods = 'CTRL',
+    action = wezterm.action.ActivateTabRelative(1),
+  },
+  {
+    key = 'Tab',
+    mods = 'CTRL|SHIFT',
+    action = wezterm.action.ActivateTabRelative(-1),
+  },
+  {
+    key = '[',
+    mods = 'CMD|SHIFT',
+    action = wezterm.action.ActivateTabRelative(-1),
+  },
+  {
+    key = ']',
+    mods = 'CMD|SHIFT',
+    action = wezterm.action.ActivateTabRelative(1),
+  },
   -- Split panes
   {
     key = 'd',
