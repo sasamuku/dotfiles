@@ -1,41 +1,50 @@
-#!/bin/sh
+#!/bin/bash
 
-# Dotfiles Setup Script
-# This script creates symlinks for development tools configuration
+# Main Setup Script
+# This script orchestrates all setup scripts in the correct order
 
-echo "🔧 Setting up dotfiles..."
+set -e
 
-# Zsh setup
-echo "🐚 Setting up Zsh..."
-$(dirname ${0})/setup_zsh.sh
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+echo "🚀 Starting complete macOS setup..."
 echo ""
 
-# Claude settings
-echo "🔧 Setting up Claude Code configuration..."
-echo "📁 Creating Claude settings symlinks..."
-mkdir -p ~/.claude
-ln -sf $(realpath $(dirname ${0}))/.claude/commands ~/.claude/commands
-ln -sf $(realpath $(dirname ${0}))/.claude/CLAUDE.md ~/.claude/CLAUDE.md
-ln -sf $(realpath $(dirname ${0}))/.claude/settings.json ~/.claude/settings.json
-ln -sf $(realpath $(dirname ${0}))/.claude/hooks ~/.claude/hooks
-
-# Serena config
-echo "📁 Creating Serena config symlink..."
-mkdir -p ~/.serena
-ln -sf $(realpath $(dirname ${0}))/.serena/serena_config.yml ~/.serena/serena_config.yml
-
-# Neovim config
-echo "📁 Creating Neovim config symlink..."
-mkdir -p ~/.config/nvim
-ln -sf $(realpath $(dirname ${0}))/.config/nvim/init.lua ~/.config/nvim/init.lua
-
-# Claude MCP setup
-echo "🔌 Setting up Claude MCP servers..."
-$(dirname ${0})/setup_claude_mcp.sh
-
-echo "✅ Claude Code setup completed!"
+# 1. Homebrew and packages
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "📦 Step 1/4: Homebrew and Packages"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+"${SCRIPT_DIR}/setup_brew.sh"
 echo ""
-echo "📝 Next steps:"
-echo "  1. Edit .serena/serena_config.yml to add your project paths"
-echo "  2. Restart Claude Code to apply the new settings"
+
+# 2. Zsh configuration
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🐚 Step 2/4: Zsh and Prezto"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+"${SCRIPT_DIR}/setup_zsh.sh"
+echo ""
+
+# 3. Dotfiles (Claude, Serena, Neovim)
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🔧 Step 3/4: Dotfiles (Claude, Serena, Neovim)"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+"${SCRIPT_DIR}/setup_dotfiles.sh"
+echo ""
+
+# 4. macOS system preferences
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "⚙️  Step 4/4: macOS System Preferences"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+"${SCRIPT_DIR}/setup_macos.sh"
+echo ""
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "✅ Complete setup finished!"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "📝 Manual steps required:"
+echo "  1. Sign in to 1Password and other apps"
+echo "  2. Copy .gitconfig.local.sample to .gitconfig.local for personal git settings"
+echo "  3. Copy .zsh_secrets.example to .zsh_secrets for private environment variables"
+echo "  4. Restart your computer for all changes to take effect"
+echo ""

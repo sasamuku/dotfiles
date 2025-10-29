@@ -4,14 +4,6 @@ set -e
 
 echo "🍎 Starting macOS Setup..."
 
-# Run Homebrew setup
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-"${SCRIPT_DIR}/setup_brew.sh"
-
-# Run dotfiles setup
-echo "📥 Setting up dotfiles..."
-"${SCRIPT_DIR}/setup.sh"
-
 # macOS System Preferences
 echo "⚙️  Configuring macOS preferences..."
 
@@ -72,6 +64,3 @@ killall SystemUIServer || true
 
 echo "✅ macOS setup complete!"
 echo ""
-echo "📌 Manual steps required:"
-echo "1. Sign in to 1Password and other apps"
-echo "2. Restart your computer for all changes to take effect"
