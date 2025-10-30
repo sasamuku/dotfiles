@@ -46,6 +46,12 @@ echo "📁 Creating Zsh functions symlink..."
 mkdir -p ~/.config/zsh/functions
 ln -sf $(realpath $(dirname ${0}))/.config/zsh/functions/wt.zsh ~/.config/zsh/functions/wt.zsh
 
+# Cursor config
+echo "📁 Creating Cursor config symlinks..."
+mkdir -p ~/Library/Application\ Support/Cursor/User
+ln -sf $(realpath $(dirname ${0}))/.config/cursor/settings.json ~/Library/Application\ Support/Cursor/User/settings.json
+ln -sf $(realpath $(dirname ${0}))/.config/cursor/keybindings.json ~/Library/Application\ Support/Cursor/User/keybindings.json
+
 # Claude MCP setup
 echo "🔌 Setting up Claude MCP servers..."
 $(dirname ${0})/setup_claude_mcp.sh

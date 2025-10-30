@@ -1,0 +1,106 @@
+{
+    "diffEditor.ignoreTrimWhitespace": false,
+    "go.toolsManagement.autoUpdate": true,
+    "files.insertFinalNewline": true,
+    "yaml.customTags": [
+        "!And",
+        "!And sequence",
+        "!If",
+        "!If sequence",
+        "!Not",
+        "!Not sequence",
+        "!Equals",
+        "!Equals sequence",
+        "!Or",
+        "!Or sequence",
+        "!FindInMap",
+        "!FindInMap sequence",
+        "!Base64",
+        "!Join",
+        "!Join sequence",
+        "!Cidr",
+        "!Ref",
+        "!Sub",
+        "!Sub sequence",
+        "!GetAtt",
+        "!GetAZs",
+        "!ImportValue",
+        "!ImportValue sequence",
+        "!Select",
+        "!Select sequence",
+        "!Split",
+        "!Split sequence"
+    ],
+    "aws.telemetry": false,
+    "yaml.format.printWidth": 100,
+    "yaml.format.bracketSpacing": false,
+    "yaml.validate": false,
+    "redhat.telemetry.enabled": false,
+    "security.workspace.trust.untrustedFiles": "open",
+    "terminal.integrated.scrollback": 100000,
+    "eslint.workingDirectories": [
+        {
+            "mode": "auto"
+        }
+    ],
+    "ruby.intellisense": "rubyLocate",
+    "ruby.format": false,
+    "yaml.format.enable": false,
+    "editor.detectIndentation": false,
+    "editor.tabSize": 2,
+    "workbench.editor.showTabs": "single",
+    "files.trimTrailingWhitespace": true,
+    "gitlens.rebaseEditor.ordering": "asc",
+    "workbench.editorAssociations": {
+        "git-rebase-todo": "default"
+    },
+    "editor.renderLineHighlight": "gutter",
+    "workbench.colorCustomizations": {
+        "editor.lineHighlightBackground": "#404040"
+    },
+    "editor.inlineSuggest.enabled": true,
+    "editor.mouseWheelZoom": true,
+    "markdown-pdf.displayHeaderFooter": false,
+    "editor.stickyScroll.maxLineCount": 10,
+    "editor.stickyScroll.enabled": true,
+    "files.exclude": {
+        "**/.ruby-lsp": false
+    },
+    "github.copilot.editor.enableAutoCompletions": true,
+    "files.autoSave": "afterDelay",
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "makefile.configureOnOpen": true,
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "github.copilot.chat.localeOverride": "ja",
+    "git.autofetch": true,
+    "githubPullRequests.pullBranch": "never",
+    "workbench.colorTheme": "Default Dark Modern",
+    "cursor.cpp.enablePartialAccepts": true,
+    "cursor.composer.shouldAllowCustomModes": true,
+    "cursor.cpp.disabledLanguages": [],
+    "cursor.composer.shouldChimeAfterChatFinishes": true,
+    "[dockercompose]": {
+      "editor.insertSpaces": true,
+      "editor.tabSize": 2,
+      "editor.autoIndent": "advanced",
+      "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "[github-actions-workflow]": {
+      "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "git-worktree-manager.worktreeCopyPatterns": [
+      ".env",
+      ".vscode/**",
+      "*.local",
+      ".claude/settings.local.json"
+    ],
+    "vscode-neovim.neovimInitVimPaths.darwin": "~/.config/nvim/init.lua"
+}
