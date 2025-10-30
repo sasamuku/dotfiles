@@ -9,7 +9,7 @@ config.font = wezterm.font('JetBrains Mono', { weight = 'Regular' })
 config.font_size = 13.0
 
 -- Window
-config.window_background_opacity = 0.95
+config.window_background_opacity = 0.80
 config.macos_window_background_blur = 20
 config.window_decorations = 'RESIZE'
 config.window_padding = {
@@ -113,6 +113,17 @@ config.keys = {
     key = 'w',
     mods = 'CMD',
     action = wezterm.action.CloseCurrentPane { confirm = true },
+  },
+  -- Line editing
+  {
+    key = 'Delete',
+    mods = 'CMD',
+    action = wezterm.action.SendKey { key = 'k', mods = 'CTRL' },
+  },
+  {
+    key = 'Backspace',
+    mods = 'CMD',
+    action = wezterm.action.SendKey { key = 'u', mods = 'CTRL' },
   },
 }
 
