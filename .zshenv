@@ -1,3 +1,7 @@
+# Default editor
+export EDITOR=nvim
+export VISUAL=nvim
+
 # Load private environment variables (API keys, tokens, etc.)
 # Copy .zsh_secrets.example to .zsh_secrets and add your private variables
 if [[ -f "${HOME}/.zsh_secrets" ]]; then

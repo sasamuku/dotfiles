@@ -5,7 +5,7 @@
 	email = sasazawa3330@gmail.com
 
 [core]
-	editor = micro
+	editor = nvim
 	autocrlf = input
 	excludesfile = ~/.gitignore_global
 

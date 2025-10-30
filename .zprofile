@@ -10,12 +10,6 @@ fi
 # Editors
 #
 
-if [[ -z "$EDITOR" ]]; then
-  export EDITOR='micro'
-fi
-if [[ -z "$VISUAL" ]]; then
-  export VISUAL='micro'
-fi
 if [[ -z "$PAGER" ]]; then
   export PAGER='less'
 fi
