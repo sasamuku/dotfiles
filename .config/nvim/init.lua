@@ -124,6 +124,19 @@ vim.opt.rtp:prepend(lazypath)
 
 -- プラグインの設定
 require("lazy").setup({
+  -- Colorscheme
+  {
+    "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require("tokyonight").setup({
+        style = "night",
+      })
+      vim.cmd([[colorscheme tokyonight]])
+    end,
+  },
+
   -- Telescope（ファジーファインダー）
   {
     "nvim-telescope/telescope.nvim",
@@ -143,7 +156,7 @@ require("lazy").setup({
           },
         },
       })
-      
+
       local builtin = require("telescope.builtin")
       -- 一般的なTelescope keymaps
       vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
@@ -158,6 +171,49 @@ require("lazy").setup({
     config = function()
       vim.keymap.set("n", "<leader>gs", ":Git<CR>", { desc = "Git status" })
       vim.keymap.set("n", "<leader>gd", ":Git diff --staged<CR>", { desc = "Git diff staged" })
+    end,
+  },
+
+  -- Lazygit
+  {
+    "kdheepak/lazygit.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    config = function()
+      vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { desc = "Open LazyGit" })
+    end,
+  },
+
+  -- File explorer
+  {
+    "nvim-tree/nvim-tree.lua",
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
+    config = function()
+      -- netrwを無効化（nvim-treeと競合するため）
+      vim.g.loaded_netrw = 1
+      vim.g.loaded_netrwPlugin = 1
+
+      require("nvim-tree").setup({
+        sort = {
+          sorter = "case_sensitive",
+        },
+        view = {
+          width = 30,
+        },
+        renderer = {
+          group_empty = true,
+        },
+        filters = {
+          dotfiles = false,
+        },
+      })
+
+      -- キーマップ
+      vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>", { desc = "Toggle file explorer" })
+      vim.keymap.set("n", "<leader>ef", ":NvimTreeFindFile<CR>", { desc = "Find current file in explorer" })
     end,
   },
 

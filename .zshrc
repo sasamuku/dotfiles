@@ -53,6 +53,8 @@ alias showz="cat ~/.zshrc"
 alias editz='$EDITOR ~/.zshrc'
 alias sourcez="source ~/.zshrc"
 alias be='bundle exec'
+alias cl='claude'
+alias lg='lazygit'
 
 # Android SDK
 export ANDROID_HOME=$HOME/Library/Android/sdk
