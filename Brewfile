@@ -38,6 +38,7 @@ cask "font-plemol-jp-nf"
 # cask "google-japanese-ime"
 
 vscode "anthropic.claude-code"
+vscode "asvetliakov.vscode-neovim"
 vscode "bierner.markdown-mermaid"
 vscode "biomejs.biome"
 vscode "dbaeumer.vscode-eslint"
