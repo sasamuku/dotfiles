@@ -49,14 +49,14 @@ end, { desc = "Copy relative file path" })
 -- ファイルパスとコード選択範囲をコピー
 vim.keymap.set("v", "<leader>cc", function()
   local path = get_current_file_path()
-  
+
   -- 選択範囲のテキストを取得
   vim.cmd('normal! "vy')
   local selected_text = vim.fn.getreg("v")
-  
+
   -- フォーマットを作成
   local formatted = "@" .. path .. "\n\n```\n" .. selected_text .. "\n```"
-  
+
   vim.fn.setreg("+", formatted)
   print("Copied: @" .. path .. " with selected text")
 end, { desc = "Copy file path with selected code" })
@@ -71,28 +71,28 @@ end, { desc = "Open file in GitHub at current commit" })
 -- GitHub でファイルを行番号付きで開く（ビジュアルモード）
 vim.keymap.set("v", "<leader>gh", function()
   local path = get_current_file_path()
-  
+
   -- 選択範囲を取得（ビジュアルモード中に取得）
   local start_line = vim.fn.line("v")
   local end_line = vim.fn.line(".")
-  
+
   -- 開始行と終了行を正しい順序にする
   if start_line > end_line then
     start_line, end_line = end_line, start_line
   end
-  
+
   -- 行番号が0の場合は現在行を使用
   if start_line == 0 then
     start_line = vim.fn.line(".")
   end
-  
+
   local line_part
   if start_line == end_line then
     line_part = ":" .. start_line
   else
     line_part = ":" .. start_line .. "-" .. end_line
   end
-  
+
   vim.cmd("!gh browse " .. path .. line_part .. " --commit")
   if start_line == end_line then
     print("Opening: " .. path .. " line " .. start_line .. " in GitHub at current commit")
@@ -227,7 +227,7 @@ require("lazy").setup({
     config = function()
       -- Setup mason first
       require("mason").setup()
-      
+
       -- Setup mason-lspconfig with handlers
       require("mason-lspconfig").setup({
         ensure_installed = { "ts_ls" },
@@ -245,14 +245,14 @@ require("lazy").setup({
           end,
         },
       })
-      
+
       -- LSPAttachイベントを使用してキーマッピングを設定
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('UserLspConfig', {}),
         callback = function(ev)
           -- Enable completion triggered by <c-x><c-o>
           vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
-          
+
           -- Buffer local mappings.
           local opts = { buffer = ev.buf }
           vim.keymap.set('n', '<F12>', vim.lsp.buf.definition, opts)
