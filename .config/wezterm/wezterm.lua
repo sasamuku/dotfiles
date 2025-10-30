@@ -127,6 +127,29 @@ config.keys = {
     mods = 'CMD',
     action = wezterm.action.SendKey { key = 'u', mods = 'CTRL' },
   },
+  -- Cursor movement
+  -- Option + Left/Right: word movement
+  {
+    key = 'LeftArrow',
+    mods = 'OPT',
+    action = wezterm.action.SendKey { key = 'b', mods = 'ALT' },
+  },
+  {
+    key = 'RightArrow',
+    mods = 'OPT',
+    action = wezterm.action.SendKey { key = 'f', mods = 'ALT' },
+  },
+  -- Command + Left/Right: line start/end
+  {
+    key = 'LeftArrow',
+    mods = 'CMD',
+    action = wezterm.action.SendKey { key = 'a', mods = 'CTRL' },
+  },
+  {
+    key = 'RightArrow',
+    mods = 'CMD',
+    action = wezterm.action.SendKey { key = 'e', mods = 'CTRL' },
+  },
 }
 
 -- Tab title format: show current directory
