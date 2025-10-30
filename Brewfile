@@ -16,6 +16,8 @@ brew "sheldon"
 brew "starship"
 brew "watch"
 
+cask "font-plemol-jp-nf"
+
 cask "1password"
 cask "1password-cli"
 cask "alfred"
