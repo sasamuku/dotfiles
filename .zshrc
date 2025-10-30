@@ -69,3 +69,8 @@ export PATH="$HOME/.claude/local:$PATH"
 
 # mise
 eval "$(mise activate zsh)"
+
+# Load custom functions
+if [[ -f "$HOME/.config/zsh/functions/wt.zsh" ]]; then
+    source "$HOME/.config/zsh/functions/wt.zsh"
+fi

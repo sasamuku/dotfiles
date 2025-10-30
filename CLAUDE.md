@@ -58,6 +58,18 @@ All scripts can be run independently.
 `.gitconfig` includes shortcuts, color schemes, and local config include.
 Personal settings (name, email) → `~/.gitconfig.local` (copy from `.gitconfig.local.sample`)
 
+### Git Worktree Manager (`wt`)
+
+Custom Zsh function for managing git worktrees efficiently:
+
+**Commands:**
+- `wt` - Show worktree list with fzf (displays branch, changed files, recent commits)
+- `wt add <branch>` - Create new branch and worktree in `.git/tmp_worktrees/<timestamp>_<branch>`
+- `wt remove <branch>` - Remove worktree and delete branch
+- `wt init` - Create `.wt_hook.sh` template for custom setup (e.g., copy `.env`, install deps)
+
+**Location:** `.config/zsh/functions/wt.zsh`
+
 ## MCP Servers
 
 Configured via `setup_claude_mcp.sh`: **playwright**, **context7**, **serena**

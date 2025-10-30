@@ -41,6 +41,11 @@ echo "📁 Creating Starship config symlink..."
 mkdir -p ~/.config
 ln -sf $(realpath $(dirname ${0}))/.config/starship.toml ~/.config/starship.toml
 
+# Zsh functions
+echo "📁 Creating Zsh functions symlink..."
+mkdir -p ~/.config/zsh/functions
+ln -sf $(realpath $(dirname ${0}))/.config/zsh/functions/wt.zsh ~/.config/zsh/functions/wt.zsh
+
 # Claude MCP setup
 echo "🔌 Setting up Claude MCP servers..."
 $(dirname ${0})/setup_claude_mcp.sh
