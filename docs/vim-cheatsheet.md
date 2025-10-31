@@ -146,10 +146,50 @@ vimtutor
 
 ## 📝 Neovimカスタムキーバインド
 
-このdotfilesで設定されているNeovim固有のキーバインドは `.config/nvim/init.lua` を参照してください。
+このdotfilesで設定されているNeovim固有のキーバインド（`.config/nvim/init.lua`）:
 
-- Leaderキー: `Space`
-- `jj`: インサートモード抜ける
-- `<Space>ff`: ファイル検索（Telescope）
-- `<Space>e`: ファイルエクスプローラー切替
-- その他詳細は `init.lua` に記載
+### 基本設定
+- **Leaderキー**: `Space`
+- **jj**: インサートモードを抜ける（素早く2回jを押す）
+
+### ファイル検索（Telescope）
+| キー | 説明 |
+|------|------|
+| `<Space>ff` | ファイル検索 |
+| `<Space>fg` | テキスト検索（Live grep） |
+| `<Space>fb` | バッファ検索 |
+
+### ファイルエクスプローラー（nvim-tree）
+| キー | 説明 |
+|------|------|
+| `<Space>e` | ファイルエクスプローラー開閉 |
+| `<Space>ef` | 現在のファイルをエクスプローラーで探す |
+
+### Git操作
+| キー | 説明 |
+|------|------|
+| `<Space>gs` | Git status（vim-fugitive） |
+| `<Space>gd` | Git diff --staged |
+| `<Space>gg` | LazyGit を開く |
+| `<Space>gh` | GitHub でファイルを開く（現在のコミット） |
+| `<Space>gh` (Visual) | GitHub で選択範囲を行番号付きで開く |
+
+### ファイルパス操作
+| キー | 説明 |
+|------|------|
+| `<Space>cp` | ファイルの相対パスをコピー |
+| `<Space>cc` (Visual) | ファイルパスと選択コードをフォーマット付きでコピー |
+
+### LSP（Language Server Protocol）
+| キー | 説明 |
+|------|------|
+| `F12` | 定義にジャンプ |
+| `Shift+F12` | 参照を表示 |
+| `K` | ホバーヘルプ |
+| `gi` | 実装にジャンプ |
+| `Ctrl+k` | シグネチャヘルプ |
+
+### その他
+| キー | 説明 |
+|------|------|
+| `<Space>r` | 設定を再読み込み（Lazy reload） |
