@@ -265,4 +265,15 @@ require("lazy").setup({
     end,
   },
 
+  -- IME自動切り替え（macOS）
+  {
+    "keaising/im-select.nvim",
+    config = function()
+      require("im_select").setup({
+        default_command = "macism",
+        default_im_select = "com.apple.keylayout.ABC",
+      })
+    end,
+  },
+
 })

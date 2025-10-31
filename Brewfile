@@ -1,4 +1,5 @@
 tap "homebrew/bundle"
+tap "laishulu/homebrew"
 
 brew "awscli"
 brew "codex"
@@ -9,6 +10,7 @@ brew "ghq"
 brew "git"
 brew "jq"
 brew "lazygit"
+brew "macism"
 brew "micro"
 brew "mise"
 brew "neovim"
