@@ -23,7 +23,7 @@
 .pryrc
 
 # Git Worktree Manager hooks
-.wt_hooks.sh
+.wt_hook.sh
 
 # Claude
 .claude/settings.local.json
