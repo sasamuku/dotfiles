@@ -1,13 +1,11 @@
 [user]
 	# User information will be loaded from .gitconfig.local
 	# Copy .gitconfig.local.sample to .gitconfig.local and update with your information
-	name = sasamuku
-	email = sasazawa3330@gmail.com
 
 [core]
 	editor = nvim
 	autocrlf = input
-	excludesfile = ~/.gitignore_global
+	excludesfile = ~/.gitignore
 
 [init]
 	defaultBranch = main

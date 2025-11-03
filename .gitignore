@@ -1,4 +1,7 @@
-# Secrets and sensitive files
+# This is intended as GLOBAL ~/.gitignore, not just this dotfiles repo. (But.. it's both.)
+# See .gitconfig: excludesFile = ~/.gitignore
+
+# Secrets and sensitive files (dotfiles repo specific)
 .zsh_secrets
 .zshrc.secrets
 .gitconfig.local
@@ -8,5 +11,20 @@
 # macOS
 .DS_Store
 
+# direnv
+.envrc
+
+# Editors and IDEs
+.vscode/
+.cursor/
+
+# Ruby
+*.gem
+.pryrc
+
+# Git Worktree Manager hooks
+.wt_hooks.sh
+
 # Claude
 .claude/settings.local.json
+
