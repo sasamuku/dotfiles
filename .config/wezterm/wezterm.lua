@@ -9,8 +9,6 @@ config.font = wezterm.font('PlemolJP Console NF', { weight = 'Regular' })
 config.font_size = 12.0
 
 -- Window
-config.initial_cols = 140
-config.initial_rows = 45
 config.window_background_opacity = 0.90
 config.macos_window_background_blur = 20
 config.window_decorations = 'RESIZE'
@@ -175,6 +173,12 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_wid
   end
 
   return tab.active_pane.title
+end)
+
+-- Maximize window on startup
+wezterm.on('gui-startup', function(cmd)
+  local tab, pane, window = wezterm.mux.spawn_window(cmd or {})
+  window:gui_window():maximize()
 end)
 
 return config
