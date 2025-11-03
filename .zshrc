@@ -1,6 +1,16 @@
 # Initialize sheldon plugin manager
 eval "$(sheldon source)"
 
+# Initialize completion system
+autoload -Uz compinit && compinit
+
+# Completion settings
+setopt auto_menu
+setopt auto_list
+setopt list_packed
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+
 # Initialize starship prompt
 eval "$(starship init zsh)"
 
