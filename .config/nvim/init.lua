@@ -137,6 +137,81 @@ require("lazy").setup({
     end,
   },
 
+  -- Statusline
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("lualine").setup({
+        options = {
+          theme = "tokyonight",
+          component_separators = { left = "|", right = "|" },
+          section_separators = { left = "", right = "" },
+        },
+        sections = {
+          lualine_a = { "mode" },
+          lualine_b = { "branch", "diff", "diagnostics" },
+          lualine_c = { { "filename", path = 1 } },
+          lualine_x = { "encoding", "fileformat", "filetype" },
+          lualine_y = { "progress" },
+          lualine_z = { "location" },
+        },
+      })
+    end,
+  },
+
+  -- Floating statusline for each window
+  {
+    "b0o/incline.nvim",
+    event = "VeryLazy",
+    config = function()
+      local helpers = require("incline.helpers")
+      require("incline").setup({
+        window = {
+          padding = 0,
+          margin = { horizontal = 0, vertical = 0 },
+        },
+        render = function(props)
+          local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+          if filename == "" then
+            filename = "[No Name]"
+          end
+          local ft_icon, ft_color = require("nvim-web-devicons").get_icon_color(filename)
+          local modified = vim.bo[props.buf].modified
+          return {
+            ft_icon and { " ", ft_icon, " ", guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or "",
+            " ",
+            { filename, gui = modified and "bold,italic" or "bold" },
+            " ",
+            guibg = "#44406e",
+          }
+        end,
+      })
+    end,
+  },
+
+  -- Keymap guide
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("which-key").setup({
+        preset = "modern",
+        delay = 500,
+      })
+
+      -- キーマップのグループ名を設定
+      require("which-key").add({
+        { "<leader>c", group = "Code/Copy" },
+        { "<leader>e", group = "Explorer" },
+        { "<leader>f", group = "Find" },
+        { "<leader>g", group = "Git" },
+        { "<leader>h", group = "Hunk" },
+        { "<leader>t", group = "Toggle" },
+      })
+    end,
+  },
+
   -- Telescope（ファジーファインダー）
   {
     "nvim-telescope/telescope.nvim",
@@ -182,6 +257,66 @@ require("lazy").setup({
     },
     config = function()
       vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { desc = "Open LazyGit" })
+    end,
+  },
+
+  -- Git signs
+  {
+    "lewis6991/gitsigns.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("gitsigns").setup({
+        signs = {
+          add = { text = "+" },
+          change = { text = "~" },
+          delete = { text = "_" },
+          topdelete = { text = "‾" },
+          changedelete = { text = "~" },
+        },
+        current_line_blame = true,  -- 常にBlame表示
+        current_line_blame_opts = {
+          delay = 300,
+        },
+        on_attach = function(bufnr)
+          local gs = package.loaded.gitsigns
+
+          local function map(mode, l, r, opts)
+            opts = opts or {}
+            opts.buffer = bufnr
+            vim.keymap.set(mode, l, r, opts)
+          end
+
+          -- Navigation
+          map("n", "]c", function()
+            if vim.wo.diff then return "]c" end
+            vim.schedule(function() gs.next_hunk() end)
+            return "<Ignore>"
+          end, { expr = true, desc = "Next hunk" })
+
+          map("n", "[c", function()
+            if vim.wo.diff then return "[c" end
+            vim.schedule(function() gs.prev_hunk() end)
+            return "<Ignore>"
+          end, { expr = true, desc = "Previous hunk" })
+
+          -- Actions
+          map("n", "<leader>hs", gs.stage_hunk, { desc = "Stage hunk" })
+          map("n", "<leader>hr", gs.reset_hunk, { desc = "Reset hunk" })
+          map("v", "<leader>hs", function() gs.stage_hunk({vim.fn.line("."), vim.fn.line("v")}) end, { desc = "Stage hunk" })
+          map("v", "<leader>hr", function() gs.reset_hunk({vim.fn.line("."), vim.fn.line("v")}) end, { desc = "Reset hunk" })
+          map("n", "<leader>hS", gs.stage_buffer, { desc = "Stage buffer" })
+          map("n", "<leader>hu", gs.undo_stage_hunk, { desc = "Undo stage hunk" })
+          map("n", "<leader>hR", gs.reset_buffer, { desc = "Reset buffer" })
+          map("n", "<leader>hp", gs.preview_hunk, { desc = "Preview hunk" })
+          map("n", "<leader>hb", function() gs.blame_line({full=true}) end, { desc = "Blame line" })
+          map("n", "<leader>tb", gs.toggle_current_line_blame, { desc = "Toggle blame" })
+          map("n", "<leader>hd", gs.diffthis, { desc = "Diff this" })
+          map("n", "<leader>hD", function() gs.diffthis("~") end, { desc = "Diff this ~" })
+
+          -- Text object
+          map({"o", "x"}, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select hunk" })
+        end,
+      })
     end,
   },
 
@@ -274,6 +409,17 @@ require("lazy").setup({
         default_im_select = "com.apple.keylayout.ABC",
       })
     end,
+  },
+
+  -- スムーズカーソルアニメーション
+  {
+    "sphamba/smear-cursor.nvim",
+    opts = {
+      stiffness = 0.8,               -- より速い反応速度（デフォルト: 0.6）
+      trailing_stiffness = 0.6,      -- トレイルも高速化（デフォルト: 0.45）
+      time_interval = 12,            -- フレームレート向上（デフォルト: 17ms）
+      distance_stop_animating = 0.2, -- 早めにアニメーション停止（デフォルト: 0.1）
+    },
   },
 
 })
