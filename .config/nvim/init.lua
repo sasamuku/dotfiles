@@ -37,7 +37,7 @@ local function get_current_file_path()
 end
 
 -- キーマッピング
-vim.keymap.set("i", "jj", "<ESC>", { desc = "jjでインサートモードを抜ける" })
+vim.keymap.set("i", "jj", "<esc><cmd>w<CR>", { desc = "jjでインサートモードを抜けて保存" })
 
 -- ファイルパス関連
 vim.keymap.set("n", "<leader>cp", function()
