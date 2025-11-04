@@ -31,6 +31,10 @@
 ## Claude
 .claude/settings.local.json
 
+## Serena
+.serena/project.yml
+.serena/.gitignore
+
 # Project Specific
 PLANS.md
 *.code-workspace
