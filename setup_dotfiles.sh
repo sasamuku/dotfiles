@@ -23,9 +23,9 @@ ln -sfn $(realpath $(dirname ${0}))/.claude/settings.json ~/.claude/settings.jso
 ln -sfn $(realpath $(dirname ${0}))/.claude/hooks ~/.claude/hooks
 
 # Serena config
-echo "📁 Creating Serena config symlink..."
-mkdir -p ~/.serena
-ln -sfn $(realpath $(dirname ${0}))/.serena/serena_config.yml ~/.serena/serena_config.yml
+if [ ! -f ~/.serena/serena_config.yml ]; then
+  echo "  ⚠️  Note: Copy .serena/serena_config.yml.sample to ~/.serena/serena_config.yml for Serena settings"
+fi
 
 # Neovim config
 echo "📁 Creating Neovim config symlink..."
@@ -62,5 +62,5 @@ echo ""
 echo "📝 Next steps:"
 echo "  1. Copy .gitconfig.local.sample to ~/.gitconfig.local for personal git settings"
 echo "  2. Copy .zsh_secrets.example to ~/.zsh_secrets for private environment variables"
-echo "  3. Edit .serena/serena_config.yml to add your project paths"
+echo "  3. Copy .serena/serena_config.yml.sample to ~/.serena/serena_config.yml and add your project paths"
 echo "  4. Restart Claude Code and your shell to apply the new settings"

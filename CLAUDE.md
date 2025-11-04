@@ -79,4 +79,5 @@ Configured via `setup_claude_mcp.sh`: **playwright**, **context7**, **serena**
 1. Sign in to 1Password
 2. Copy `.gitconfig.local.sample` → `~/.gitconfig.local` (personal git settings)
 3. Copy `.zsh_secrets.example` → `~/.zsh_secrets` (private env vars)
-4. Restart computer
+4. Copy `.serena/serena_config.yml.sample` → `~/.serena/serena_config.yml` (Serena project paths)
+5. Restart computer
