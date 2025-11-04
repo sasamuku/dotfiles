@@ -257,6 +257,14 @@ require("lazy").setup({
     },
     config = function()
       vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { desc = "Open LazyGit" })
+
+      -- lazygitのターミナルバッファでEscキーを押すとlazygitを閉じる
+      vim.api.nvim_create_autocmd("TermOpen", {
+        pattern = "*lazygit*",
+        callback = function()
+          vim.keymap.set("t", "<Esc>", "<cmd>close<CR>", { buffer = true, desc = "Close LazyGit" })
+        end,
+      })
     end,
   },
 
