@@ -343,6 +343,7 @@ require("lazy").setup({
         },
         filters = {
           dotfiles = false,
+          git_ignored = false,
         },
       })
 
