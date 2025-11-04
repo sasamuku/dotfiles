@@ -32,6 +32,7 @@
 .claude/settings.local.json
 
 ## Serena
+.serena/serena_config.yml
 .serena/project.yml
 .serena/.gitignore
 
