@@ -1,5 +1,4 @@
 web_dashboard: false
 projects:
-  - /Users/ryota.sasazawa/works/route06/liam
-# Add your project paths here, for example:
-# - /Users/sasamuku/ghq/github.com/yourname/yourproject
+  # Add your project paths here, for example:
+  # - /Users/yourname/ghq/github.com/yourname/yourproject
