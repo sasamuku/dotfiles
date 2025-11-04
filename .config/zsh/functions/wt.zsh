@@ -65,23 +65,16 @@ function wt() {
             return 1
         fi
 
-        # Get git directory
-        local git_dir=$(git rev-parse --git-dir 2>/dev/null)
-        if [[ -z "$git_dir" ]]; then
+        # Get project root and create worktree path
+        local project_root=$(git rev-parse --show-toplevel 2>/dev/null)
+        if [[ -z "$project_root" ]]; then
             echo "Not in a git repository"
             return 1
         fi
 
-        # Create tmp_worktrees directory if it doesn't exist
-        local tmp_worktrees_dir="$git_dir/tmp_worktrees"
-        if [[ ! -d "$tmp_worktrees_dir" ]]; then
-            mkdir -p "$tmp_worktrees_dir"
-        fi
-
-        # Generate directory name with timestamp
-        local timestamp=$(date +"%Y%m%d_%H%M%S")
-        local dir_name="${timestamp}_${branch_name}"
-        local worktree_path="$tmp_worktrees_dir/$dir_name"
+        local project_name=$(basename "$project_root")
+        local parent_dir=$(dirname "$project_root")
+        local worktree_path="$parent_dir/${project_name}-${branch_name}"
 
         # Create new branch and worktree
         git worktree add -b "$branch_name" "$worktree_path"
