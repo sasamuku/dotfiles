@@ -6,7 +6,7 @@ config.color_scheme = 'Tokyo Night'
 
 -- Font
 config.font = wezterm.font('PlemolJP Console NF', { weight = 'Regular' })
-config.font_size = 12.0
+config.font_size = 11.0
 
 -- Window
 config.window_background_opacity = 0.90
