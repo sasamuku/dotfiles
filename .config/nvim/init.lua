@@ -235,7 +235,9 @@ require("lazy").setup({
       local builtin = require("telescope.builtin")
       -- 一般的なTelescope keymaps
       vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
+      vim.keymap.set("n", "<C-p>", builtin.find_files, { desc = "Find files (VSCode style)" })
       vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Live grep" })
+      vim.keymap.set("n", "<C-f>", builtin.live_grep, { desc = "Live grep (VSCode style)" })
       vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find buffers" })
     end,
   },
@@ -257,6 +259,7 @@ require("lazy").setup({
     },
     config = function()
       vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { desc = "Open LazyGit" })
+      vim.keymap.set("n", "<C-g>", ":LazyGit<CR>", { desc = "Open LazyGit (VSCode style)" })
 
       -- lazygitのターミナルバッファでEscキーを押すとlazygitを閉じる
       vim.api.nvim_create_autocmd("TermOpen", {
@@ -357,6 +360,7 @@ require("lazy").setup({
 
       -- キーマップ
       vim.keymap.set("n", "<leader>ef", ":NvimTreeFindFile<CR>", { desc = "Find current file in explorer" })
+      vim.keymap.set("n", "<C-e>", ":NvimTreeFindFile<CR>", { desc = "Find current file in explorer (VSCode style)" })
     end,
   },
 
