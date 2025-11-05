@@ -2,6 +2,7 @@ tap "homebrew/bundle"
 tap "laishulu/homebrew"
 
 brew "awscli"
+brew "bat"
 brew "codex"
 brew "direnv"
 brew "fzf"
