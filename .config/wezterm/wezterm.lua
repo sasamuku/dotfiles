@@ -154,6 +154,14 @@ config.keys = {
     mods = 'CMD',
     action = wezterm.action.SendKey { key = 'e', mods = 'CTRL' },
   },
+  -- Maximize window (keep menu bar visible)
+  {
+    key = 'Enter',
+    mods = 'CMD|CTRL',
+    action = wezterm.action_callback(function(window, pane)
+      window:maximize()
+    end),
+  },
 }
 
 -- Tab title format: show current directory
