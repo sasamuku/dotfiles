@@ -46,6 +46,7 @@ ln -sfn $(realpath $(dirname ${0}))/.config/starship.toml ~/.config/starship.tom
 echo "📁 Creating Zsh functions symlink..."
 mkdir -p ~/.config/zsh/functions
 ln -sfn $(realpath $(dirname ${0}))/.config/zsh/functions/wt.zsh ~/.config/zsh/functions/wt.zsh
+ln -sfn $(realpath $(dirname ${0}))/.config/zsh/functions/ghq.zsh ~/.config/zsh/functions/ghq.zsh
 
 # Cursor config
 echo "📁 Creating Cursor config symlinks..."

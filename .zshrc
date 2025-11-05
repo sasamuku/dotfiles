@@ -84,3 +84,7 @@ eval "$(mise activate zsh)"
 if [[ -f "$HOME/.config/zsh/functions/wt.zsh" ]]; then
     source "$HOME/.config/zsh/functions/wt.zsh"
 fi
+
+if [[ -f "$HOME/.config/zsh/functions/ghq.zsh" ]]; then
+    source "$HOME/.config/zsh/functions/ghq.zsh"
+fi
