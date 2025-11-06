@@ -88,3 +88,4 @@ fi
 if [[ -f "$HOME/.config/zsh/functions/ghq.zsh" ]]; then
     source "$HOME/.config/zsh/functions/ghq.zsh"
 fi
+export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
