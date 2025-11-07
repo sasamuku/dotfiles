@@ -134,6 +134,49 @@ require("lazy").setup({
     config = function()
       require("tokyonight").setup({
         style = "night",
+        on_highlights = function(hl, c)
+          -- 補完メニューの背景と前景
+          hl.Pmenu = { bg = c.bg_popup, fg = c.fg }
+          hl.PmenuSel = { bg = c.bg_highlight, fg = c.fg, bold = true }
+
+          -- マッチした文字を目立たせる
+          hl.CmpItemAbbrMatch = { fg = c.blue, bold = true }
+          hl.CmpItemAbbrMatchFuzzy = { fg = c.blue }
+
+          -- ソース名の表示
+          hl.CmpItemMenu = { fg = c.magenta, italic = true }
+
+          -- Copilot提案（TokyoNight緑）
+          hl.CmpItemKindCopilot = { fg = c.green }
+
+          -- 関数とメソッド
+          hl.CmpItemKindFunction = { fg = c.magenta }
+          hl.CmpItemKindMethod = { fg = c.magenta }
+
+          -- 変数とフィールド
+          hl.CmpItemKindVariable = { fg = c.cyan }
+          hl.CmpItemKindField = { fg = c.cyan }
+
+          -- クラスと型
+          hl.CmpItemKindClass = { fg = c.orange }
+          hl.CmpItemKindInterface = { fg = c.orange }
+          hl.CmpItemKindStruct = { fg = c.orange }
+
+          -- キーワード
+          hl.CmpItemKindKeyword = { fg = c.blue }
+          hl.CmpItemKindOperator = { fg = c.blue }
+
+          -- 定数
+          hl.CmpItemKindConstant = { fg = c.yellow }
+          hl.CmpItemKindEnum = { fg = c.yellow }
+
+          -- モジュールとプロパティ
+          hl.CmpItemKindModule = { fg = c.teal }
+          hl.CmpItemKindProperty = { fg = c.teal }
+
+          -- スニペット
+          hl.CmpItemKindSnippet = { fg = c.red }
+        end,
       })
       vim.cmd([[colorscheme tokyonight]])
     end,
@@ -445,6 +488,27 @@ require("lazy").setup({
     end,
   },
 
+  -- GitHub Copilot
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup({
+        suggestion = { enabled = false },
+        panel = { enabled = false },
+      })
+    end,
+  },
+
+  {
+    "zbirenbaum/copilot-cmp",
+    dependencies = { "copilot.lua" },
+    config = function()
+      require("copilot_cmp").setup()
+    end,
+  },
+
   -- Autocompletion
   {
     "hrsh7th/nvim-cmp",
@@ -465,6 +529,17 @@ require("lazy").setup({
           expand = function(args)
             luasnip.lsp_expand(args.body)
           end,
+        },
+        window = {
+          completion = {
+            border = "rounded",
+            winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,CursorLine:PmenuSel,Search:None",
+            scrollbar = true,
+          },
+          documentation = {
+            border = "rounded",
+            winhighlight = "Normal:Pmenu,FloatBorder:Pmenu",
+          },
         },
         mapping = cmp.mapping.preset.insert({
           ["<C-b>"] = cmp.mapping.scroll_docs(-4),
@@ -492,10 +567,11 @@ require("lazy").setup({
           end, { "i", "s" }),
         }),
         sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-          { name = "luasnip" },
-          { name = "buffer" },
-          { name = "path" },
+          { name = "copilot", group_index = 2 },
+          { name = "nvim_lsp", group_index = 2 },
+          { name = "luasnip", group_index = 2 },
+          { name = "buffer", group_index = 2 },
+          { name = "path", group_index = 2 },
         }),
       })
     end,
