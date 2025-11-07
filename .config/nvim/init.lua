@@ -38,6 +38,8 @@ end
 
 -- キーマッピング
 vim.keymap.set("i", "jj", "<esc><cmd>w<CR>", { desc = "jjでインサートモードを抜けて保存" })
+vim.keymap.set("n", "<C-h>", "<cmd>bprevious<CR>", { desc = "前のバッファに移動" })
+vim.keymap.set("n", "<C-l>", "<cmd>bnext<CR>", { desc = "次のバッファに移動" })
 
 -- ファイルパス関連
 vim.keymap.set("n", "<leader>cp", function()
@@ -187,6 +189,22 @@ require("lazy").setup({
             guibg = "#44406e",
           }
         end,
+      })
+    end,
+  },
+
+  -- Bufferline
+  {
+    "akinsho/bufferline.nvim",
+    version = "*",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("bufferline").setup({
+        options = {
+          diagnostics = "nvim_lsp",
+          separator_style = "slant",
+          show_buffer_close_icons = false,
+        },
       })
     end,
   },
