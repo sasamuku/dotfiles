@@ -56,7 +56,7 @@ ln -sfn $(realpath $(dirname ${0}))/.config/cursor/keybindings.json ~/Library/Ap
 
 # Claude MCP setup
 echo "🔌 Setting up Claude MCP servers..."
-$(dirname ${0})/setup_claude_mcp.sh
+"$(dirname "${0}")/setup_claude_mcp.sh"
 
 echo "✅ Dotfiles setup completed!"
 echo ""
