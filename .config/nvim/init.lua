@@ -193,17 +193,24 @@ require("lazy").setup({
     end,
   },
 
-  -- Bufferline
+  -- Buffer tabs
   {
-    "akinsho/bufferline.nvim",
-    version = "*",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    "romgrk/barbar.nvim",
+    dependencies = {
+      "lewis6991/gitsigns.nvim",
+      "nvim-tree/nvim-web-devicons",
+    },
+    init = function()
+      vim.g.barbar_auto_setup = false -- lazy.nvimで明示的に設定する
+    end,
     config = function()
-      require("bufferline").setup({
-        options = {
-          diagnostics = "nvim_lsp",
-          separator_style = "slant",
-          show_buffer_close_icons = false,
+      require("barbar").setup({
+        animation = false,
+        insert_at_end = true,
+        icons = {
+          buffer_index = true,
+          buffer_number = false,
+          button = "x",
         },
       })
     end,
