@@ -56,6 +56,35 @@ wt remove feature/new-feature
 - worktreeディレクトリを強制削除
 - ブランチを削除（`git branch -D`）
 
+### `wt pr <PR-URL>` - GitHub PRからWorktreeを作成
+
+GitHub PRのブランチからworktreeを作成します。
+
+```bash
+wt pr https://github.com/owner/repo/pull/123
+# または
+wt pr 123
+```
+
+**動作:**
+- PR URLまたは番号からPR情報を取得（`gh` CLI使用）
+- PRブランチを`pr-<番号>`としてチェックアウト
+- `<project>-pr-<番号>/`にworktreeを作成
+- `.wt_hook.sh`が存在する場合は実行
+- 自動的に新しいworktreeに移動
+
+**例:**
+```bash
+$ wt pr https://github.com/user/repo/pull/42
+Fetching PR #42 information...
+PR branch: feature/new-ui
+Creating worktree for PR #42: pr-42
+Created worktree at: /path/to/repo-pr-42
+Branch: pr-42
+
+✅ Worktree ready for PR #42
+```
+
 ### `wt init` - Hookテンプレートを作成
 
 現在のディレクトリに`.wt_hook.sh`テンプレートファイルを生成します。
@@ -119,11 +148,14 @@ wt
 ### プルリクエストのレビュー
 
 ```bash
-# PRレビュー用のworktreeを作成
-wt add review/pr-123
+# PR用のworktreeを作成（自動でPRブランチをチェックアウト）
+wt pr https://github.com/owner/repo/pull/123
 
-# レビュー後、クリーンアップ
-wt remove review/pr-123
+# PRの内容を確認
+gh pr view 123
+
+# レビュー完了後、クリーンアップ
+wt remove pr-123
 ```
 
 ### 開発とテストの分離
@@ -153,11 +185,18 @@ wt add test/integration-tests
    - stashせずに異なるブランチをテスト
    - 現在の作業を中断せずにPRをレビュー
 
+5. **PRワークフロー**: `wt pr`コマンドを使用することで:
+   - 現在のブランチの環境を汚さずにPR専用環境を構築
+   - フォークからのPRも同一リポジトリのPRも同じコマンドで処理
+   - ワンコマンドでPRブランチからworktreeを作成
+   - レビュー完了後は`wt remove`で簡単にクリーンアップ
+
 ## 必要要件
 
 - Git 2.5+ (worktreeサポート)
 - fzf (ファジーファインダー)
 - Zsh shell
+- gh CLI (GitHubコマンドラインツール、`wt pr`コマンドに必要)
 
 ## 配置場所
 
