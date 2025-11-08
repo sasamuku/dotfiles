@@ -63,9 +63,10 @@ Personal settings (name, email) → `~/.gitconfig.local` (copy from `.gitconfig.
 Custom Zsh function for managing git worktrees efficiently:
 
 **Commands:**
-- `wt` - Show worktree list with fzf (displays branch, changed files, recent commits)
-- `wt add <branch>` - Create new branch and worktree in `.git/tmp_worktrees/<timestamp>_<branch>`
+- `wt` - Show worktree list with fzf; press `Ctrl+D` to delete selected worktree
+- `wt add <branch>` - Create new branch and worktree
 - `wt remove <branch>` - Remove worktree and delete branch
+- `wt clean` - Batch remove merged branches and their worktrees (interactive confirmation)
 - `wt init` - Create `.wt_hook.sh` template for custom setup (e.g., copy `.env`, install deps)
 
 **Location:** `.config/zsh/functions/wt.zsh`
