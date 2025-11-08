@@ -47,7 +47,21 @@ function wt() {
                 echo "───────────────────────────────────────────────────"
                 git -C "$worktree_path" log --oneline --color=always -10 2>/dev/null | sed "s/^/  /"
             ' \
-            --header="🌲 Git Worktree Manager | Press Enter to navigate" \
+            --bind='ctrl-d:execute-silent(
+                worktree_path=$(echo {} | awk "{print \$1}")
+                branch=$(echo {} | sed "s/.*\[//" | sed "s/\]//")
+
+                # Prevent deletion of main branch
+                if [[ "$branch" == "main" || "$branch" == "master" ]]; then
+                    echo "Cannot delete main/master branch" >&2
+                    exit 1
+                fi
+
+                # Remove worktree and branch
+                git worktree remove --force "$worktree_path" 2>/dev/null
+                git branch -D "$branch" 2>/dev/null
+            )+reload(git worktree list)' \
+            --header="🌲 Git Worktree Manager | Enter: navigate | Ctrl+D: delete" \
             --border \
             --height=80% \
             --layout=reverse \
@@ -270,7 +284,7 @@ EOF
     else
         echo "Unknown command: $cmd"
         echo "Usage:"
-        echo "  wt                 - Show worktree list with fzf"
+        echo "  wt                 - Show worktree list with fzf (Ctrl+D to delete)"
         echo "  wt add <branch>    - Create new branch and worktree"
         echo "  wt remove <branch> - Remove worktree and branch"
         echo "  wt pr <PR-URL>     - Create worktree from GitHub PR"
