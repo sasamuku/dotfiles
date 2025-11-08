@@ -4,6 +4,7 @@
 #   wt              - Show worktree list with fzf
 #   wt add <branch> - Create new branch and worktree
 #   wt remove <branch> - Remove worktree and branch
+#   wt clean        - Remove merged branches and their worktrees
 #   wt init         - Create .wt_hook.sh template
 
 function wt() {
@@ -183,12 +184,81 @@ EOF
         chmod +x .wt_hook.sh
         echo "Created .wt_hook.sh template"
 
+    elif [[ "$cmd" == "clean" ]]; then
+        # Get current branch
+        local current_branch=$(git branch --show-current)
+
+        # Get all merged branches (exclude main, master, and current branch)
+        local merged_branches=$(git branch --merged main | grep -v '^\*' | grep -v 'main$' | grep -v 'master$' | grep -v "^[* ]*${current_branch}$" | sed 's/^[ *]*//')
+
+        if [[ -z "$merged_branches" ]]; then
+            echo "No merged branches to clean up"
+            return 0
+        fi
+
+        echo "The following merged branches will be deleted:"
+        echo ""
+
+        local branches_to_delete=()
+        local worktrees_to_delete=()
+
+        while IFS= read -r branch; do
+            if [[ -n "$branch" ]]; then
+                branches_to_delete+=("$branch")
+
+                # Check if worktree exists for this branch
+                local worktree_info=$(git worktree list | grep "\[$branch\]")
+                if [[ -n "$worktree_info" ]]; then
+                    local worktree_path=$(echo "$worktree_info" | awk '{print $1}')
+                    worktrees_to_delete+=("$worktree_path")
+                    echo "  🌳 $branch (worktree: $worktree_path)"
+                else
+                    echo "  📌 $branch (no worktree)"
+                fi
+            fi
+        done <<< "$merged_branches"
+
+        echo ""
+        echo -n "Delete these branches and worktrees? (y/n): "
+        read -r confirmation
+
+        if [[ "$confirmation" != "y" && "$confirmation" != "Y" ]]; then
+            echo "Cancelled"
+            return 0
+        fi
+
+        echo ""
+        local deleted_count=0
+
+        for branch in "${branches_to_delete[@]}"; do
+            # Remove worktree if exists
+            local worktree_info=$(git worktree list | grep "\[$branch\]")
+            if [[ -n "$worktree_info" ]]; then
+                local worktree_path=$(echo "$worktree_info" | awk '{print $1}')
+                git worktree remove --force "$worktree_path" 2>/dev/null
+                if [[ $? -eq 0 ]]; then
+                    echo "✓ Removed worktree: $worktree_path"
+                fi
+            fi
+
+            # Delete branch
+            git branch -D "$branch" 2>/dev/null
+            if [[ $? -eq 0 ]]; then
+                echo "✓ Deleted branch: $branch"
+                ((deleted_count++))
+            fi
+        done
+
+        echo ""
+        echo "Cleaned up $deleted_count branch(es)"
+
     else
         echo "Unknown command: $cmd"
         echo "Usage:"
         echo "  wt                 - Show worktree list with fzf (Ctrl+D to delete)"
         echo "  wt add <branch>    - Create new branch and worktree"
         echo "  wt remove <branch> - Remove worktree and branch"
+        echo "  wt clean           - Remove merged branches and their worktrees"
         echo "  wt init            - Create .wt_hook.sh template"
         return 1
     fi
