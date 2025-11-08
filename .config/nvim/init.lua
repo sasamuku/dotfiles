@@ -48,6 +48,14 @@ vim.keymap.set("n", "<leader>cp", function()
   print("Copied: " .. path)
 end, { desc = "Copy relative file path" })
 
+-- フルパス（絶対パス）をコピー
+vim.keymap.set("n", "<leader>cP", function()
+  local path = vim.fn.expand("%:p")
+  local real_path = extract_real_path(path) or path
+  vim.fn.setreg("+", real_path)
+  print("Copied full path: " .. real_path)
+end, { desc = "Copy full (absolute) path" })
+
 -- ファイルパスとコード選択範囲をコピー
 vim.keymap.set("v", "<leader>cc", function()
   local path = get_current_file_path()
@@ -103,6 +111,17 @@ vim.keymap.set("v", "<leader>gh", function()
   end
 end, { desc = "Open file in GitHub with selected lines at current commit" })
 
+-- Finderでファイルを開く（macOS）
+vim.keymap.set("n", "<leader>fo", function()
+  local path = vim.fn.expand("%:p")
+  local real_path = extract_real_path(path) or path
+  if real_path and real_path ~= "" then
+    vim.fn.system({ "open", "-R", real_path })
+    print("Opened in Finder: " .. real_path)
+  else
+    print("No file to open")
+  end
+end, { desc = "Open file in Finder" })
 
 -- 設定再読み込み（lazy.nvim対応）
 vim.keymap.set("n", "<leader>r", function()
