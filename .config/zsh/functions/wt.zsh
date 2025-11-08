@@ -4,7 +4,6 @@
 #   wt              - Show worktree list with fzf
 #   wt add <branch> - Create new branch and worktree
 #   wt remove <branch> - Remove worktree and branch
-#   wt pr <PR-URL>  - Create worktree from GitHub PR
 #   wt init         - Create .wt_hook.sh template
 
 function wt() {
@@ -184,110 +183,12 @@ EOF
         chmod +x .wt_hook.sh
         echo "Created .wt_hook.sh template"
 
-    elif [[ "$cmd" == "pr" ]]; then
-        local pr_input=$2
-
-        if [[ -z "$pr_input" ]]; then
-            echo "Usage: wt pr <PR-number|PR-URL>"
-            return 1
-        fi
-
-        # Check if gh CLI is available
-        if ! command -v gh &> /dev/null; then
-            echo "Error: gh CLI is not installed"
-            echo "Install it with: brew install gh"
-            return 1
-        fi
-
-        # Get project root
-        local project_root=$(git rev-parse --show-toplevel 2>/dev/null)
-        if [[ -z "$project_root" ]]; then
-            echo "Not in a git repository"
-            return 1
-        fi
-
-        # Extract PR number from URL or use as-is
-        local pr_number=$(echo "$pr_input" | grep -oE '[0-9]+$')
-        if [[ -z "$pr_number" ]]; then
-            echo "Error: Could not extract PR number from: $pr_input"
-            return 1
-        fi
-
-        echo "Fetching PR #$pr_number information..."
-
-        # Get PR branch name
-        local head_ref=$(gh pr view "$pr_number" --json headRefName -q .headRefName 2>/dev/null)
-        if [[ -z "$head_ref" ]]; then
-            echo "Error: Could not fetch PR #$pr_number"
-            echo "Make sure the PR exists and you have access to it"
-            return 1
-        fi
-
-        local branch_name="pr-${pr_number}"
-
-        echo "PR branch: $head_ref"
-        echo "Creating worktree for PR #$pr_number: $branch_name"
-
-        # Check if PR branch already exists
-        if git show-ref --verify --quiet "refs/heads/$branch_name"; then
-            # Check if the branch is checked out in any worktree
-            local branch_worktree=$(git worktree list | grep "\[$branch_name\]" | awk '{print $1}')
-            if [[ -n "$branch_worktree" ]]; then
-                echo "Error: Branch $branch_name is currently checked out at: $branch_worktree"
-                echo "Please switch to a different branch or remove the worktree first:"
-                echo "  cd $branch_worktree && git checkout main"
-                echo "  or"
-                echo "  wt remove $branch_name"
-                return 1
-            fi
-            echo "Removing existing PR branch: $branch_name"
-            git branch -D "$branch_name" 2>/dev/null
-        fi
-
-        # Fetch the PR branch from remote
-        echo "Fetching remote branch..."
-        git fetch origin "pull/$pr_number/head:$branch_name" 2>/dev/null
-        if [[ $? -ne 0 ]]; then
-            echo "Error: Failed to fetch PR #$pr_number"
-            return 1
-        fi
-
-        # Create worktree from the fetched branch
-        local project_name=$(basename "$project_root")
-        local parent_dir=$(dirname "$project_root")
-        local worktree_path="$parent_dir/${project_name}-${branch_name}"
-
-        git worktree add "$worktree_path" "$branch_name"
-
-        if [[ $? -eq 0 ]]; then
-            echo "Created worktree at: $worktree_path"
-            echo "Branch: $branch_name"
-
-            cd "$worktree_path"
-
-            # Execute .wt_hook.sh if it exists in the project root
-            if [[ -f "$project_root/.wt_hook.sh" ]]; then
-                echo "Executing .wt_hook.sh..."
-                export WT_WORKTREE_PATH="$worktree_path"
-                export WT_BRANCH_NAME="$branch_name"
-                export WT_PROJECT_ROOT="$project_root"
-                source "$project_root/.wt_hook.sh"
-                unset WT_WORKTREE_PATH
-                unset WT_BRANCH_NAME
-                unset WT_PROJECT_ROOT
-            fi
-
-            echo ""
-            echo "✅ Worktree ready for PR #$pr_number"
-        fi
-
     else
         echo "Unknown command: $cmd"
         echo "Usage:"
         echo "  wt                 - Show worktree list with fzf (Ctrl+D to delete)"
         echo "  wt add <branch>    - Create new branch and worktree"
         echo "  wt remove <branch> - Remove worktree and branch"
-        echo "  wt pr <PR-URL>     - Create worktree from GitHub PR"
         echo "  wt init            - Create .wt_hook.sh template"
         return 1
     fi
