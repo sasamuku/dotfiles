@@ -3,6 +3,7 @@
 # Usage:
 #   wt              - Show worktree list with fzf
 #   wt add <branch> - Create new branch and worktree
+#   wt co <branch>  - Checkout existing branch to worktree
 #   wt remove <branch> - Remove worktree and branch
 #   wt clean        - Remove merged branches and their worktrees
 #   wt init         - Create .wt_hook.sh template
@@ -252,11 +253,95 @@ EOF
         echo ""
         echo "Cleaned up $deleted_count branch(es)"
 
+    elif [[ "$cmd" == "co" ]]; then
+        local branch_input=$2
+
+        if [[ -z "$branch_input" ]]; then
+            echo "Usage: wt co <branch>"
+            return 1
+        fi
+
+        # Check if we're in a git repository
+        local project_root=$(git rev-parse --show-toplevel 2>/dev/null)
+        if [[ -z "$project_root" ]]; then
+            echo "Not in a git repository"
+            return 1
+        fi
+
+        # Parse branch name (handle origin/branch format)
+        local remote_name=""
+        local branch_name="$branch_input"
+
+        if [[ "$branch_input" =~ ^([^/]+)/(.+)$ ]]; then
+            # Check if it's a remote reference (e.g., origin/feature/branch)
+            local potential_remote="${match[1]}"
+            if git remote | grep -q "^${potential_remote}$"; then
+                remote_name="$potential_remote"
+                branch_name="${match[2]}"
+            fi
+        fi
+
+        # Check if branch is already checked out in a worktree
+        local existing_worktree=$(git worktree list | grep "\[$branch_name\]" | awk '{print $1}')
+        if [[ -n "$existing_worktree" ]]; then
+            echo "Error: Branch '$branch_name' is already checked out at: $existing_worktree"
+            return 1
+        fi
+
+        local project_name=$(basename "$project_root")
+        local parent_dir=$(dirname "$project_root")
+        local worktree_path="$parent_dir/${project_name}-${branch_name}"
+
+        # Check if local branch exists
+        if git show-ref --verify --quiet "refs/heads/$branch_name"; then
+            echo "Creating worktree from local branch: $branch_name"
+            git worktree add "$worktree_path" "$branch_name"
+        else
+            # Local branch doesn't exist, try remote
+            echo "Local branch not found, checking remote..."
+
+            # Use specified remote or default to origin
+            local target_remote="${remote_name:-origin}"
+
+            # Fetch from remote
+            echo "Fetching from $target_remote..."
+            git fetch "$target_remote" 2>/dev/null
+
+            # Check if remote branch exists
+            if git show-ref --verify --quiet "refs/remotes/$target_remote/$branch_name"; then
+                echo "Creating worktree from remote branch: $target_remote/$branch_name"
+                git worktree add -b "$branch_name" "$worktree_path" --track "$target_remote/$branch_name"
+            else
+                echo "Error: Branch '$branch_name' not found in local or remote '$target_remote'"
+                return 1
+            fi
+        fi
+
+        if [[ $? -eq 0 ]]; then
+            echo "Created worktree at: $worktree_path"
+            echo "Branch: $branch_name"
+
+            cd "$worktree_path"
+
+            # Execute .wt_hook.sh if it exists in the project root
+            if [[ -f "$project_root/.wt_hook.sh" ]]; then
+                echo "Executing .wt_hook.sh..."
+                export WT_WORKTREE_PATH="$worktree_path"
+                export WT_BRANCH_NAME="$branch_name"
+                export WT_PROJECT_ROOT="$project_root"
+                source "$project_root/.wt_hook.sh"
+                unset WT_WORKTREE_PATH
+                unset WT_BRANCH_NAME
+                unset WT_PROJECT_ROOT
+            fi
+        fi
+
     else
         echo "Unknown command: $cmd"
         echo "Usage:"
         echo "  wt                 - Show worktree list with fzf (Ctrl+D to delete)"
         echo "  wt add <branch>    - Create new branch and worktree"
+        echo "  wt co <branch>     - Checkout existing branch to worktree"
         echo "  wt remove <branch> - Remove worktree and branch"
         echo "  wt clean           - Remove merged branches and their worktrees"
         echo "  wt init            - Create .wt_hook.sh template"
