@@ -38,8 +38,6 @@ end
 
 -- キーマッピング
 vim.keymap.set("i", "jj", "<esc><cmd>w<CR>", { desc = "jjでインサートモードを抜けて保存" })
-vim.keymap.set("n", "<C-h>", "<cmd>bprevious<CR>", { desc = "前のバッファに移動" })
-vim.keymap.set("n", "<C-l>", "<cmd>bnext<CR>", { desc = "次のバッファに移動" })
 
 -- ファイルパス関連
 vim.keymap.set("n", "<leader>cp", function()
@@ -255,29 +253,6 @@ require("lazy").setup({
     end,
   },
 
-  -- Buffer tabs
-  {
-    "romgrk/barbar.nvim",
-    dependencies = {
-      "lewis6991/gitsigns.nvim",
-      "nvim-tree/nvim-web-devicons",
-    },
-    init = function()
-      vim.g.barbar_auto_setup = false -- lazy.nvimで明示的に設定する
-    end,
-    config = function()
-      require("barbar").setup({
-        animation = false,
-        insert_at_end = true,
-        icons = {
-          buffer_index = true,
-          buffer_number = false,
-          button = "x",
-        },
-      })
-    end,
-  },
-
   -- Keymap guide
   {
     "folke/which-key.nvim",
@@ -328,6 +303,29 @@ require("lazy").setup({
       vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Live grep" })
       vim.keymap.set("n", "<C-f>", builtin.live_grep, { desc = "Live grep (VSCode style)" })
       vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find buffers" })
+    end,
+  },
+
+  -- Cybu (VSCode-style Ctrl+Tab buffer switcher)
+  {
+    "ghillb/cybu.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons", "nvim-lua/plenary.nvim" },
+    config = function()
+      require("cybu").setup({
+        display_time = 800,  -- メニュー表示時間（ミリ秒）
+        behavior = {
+          mode = {
+            last_used = {
+              switch = "immediate",    -- すぐにバッファ切り替え
+              view = "paging",         -- ページング表示
+            },
+          },
+        },
+      })
+
+      -- VSCode風のCtrl+Tabでバッファ切り替え
+      vim.keymap.set("n", "<C-Tab>", "<Plug>(CybuLastusedNext)", { desc = "Next buffer (MRU)" })
+      vim.keymap.set("n", "<C-S-Tab>", "<Plug>(CybuLastusedPrev)", { desc = "Previous buffer (MRU)" })
     end,
   },
 
