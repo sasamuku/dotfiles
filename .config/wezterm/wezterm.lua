@@ -72,15 +72,30 @@ config.keys = {
     mods = 'CMD',
     action = wezterm.action.SpawnTab 'CurrentPaneDomain',
   },
+  -- Ctrl+Tab: Neovim実行中はNeovimに渡し、それ以外はWeztermタブ切り替え
   {
     key = 'Tab',
     mods = 'CTRL',
-    action = wezterm.action.ActivateTabRelative(1),
+    action = wezterm.action_callback(function(window, pane)
+      local process_name = pane:get_foreground_process_name()
+      if process_name and process_name:find("nvim") then
+        window:perform_action(wezterm.action.SendKey { key = 'Tab', mods = 'CTRL' }, pane)
+      else
+        window:perform_action(wezterm.action.ActivateTabRelative(1), pane)
+      end
+    end),
   },
   {
     key = 'Tab',
     mods = 'CTRL|SHIFT',
-    action = wezterm.action.ActivateTabRelative(-1),
+    action = wezterm.action_callback(function(window, pane)
+      local process_name = pane:get_foreground_process_name()
+      if process_name and process_name:find("nvim") then
+        window:perform_action(wezterm.action.SendKey { key = 'Tab', mods = 'CTRL|SHIFT' }, pane)
+      else
+        window:perform_action(wezterm.action.ActivateTabRelative(-1), pane)
+      end
+    end),
   },
   {
     key = '[',
