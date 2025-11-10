@@ -312,7 +312,7 @@ require("lazy").setup({
     dependencies = { "nvim-tree/nvim-web-devicons", "nvim-lua/plenary.nvim" },
     config = function()
       require("cybu").setup({
-        display_time = 800,  -- メニュー表示時間（ミリ秒）
+        display_time = 750,  -- メニュー表示時間（ミリ秒）
         behavior = {
           mode = {
             last_used = {
