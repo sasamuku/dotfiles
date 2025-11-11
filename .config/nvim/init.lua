@@ -69,6 +69,60 @@ vim.keymap.set("v", "<leader>cc", function()
   print("Copied: @" .. path .. " with selected text")
 end, { desc = "Copy file path with selected code" })
 
+-- GitHub リモートURL をコピー
+vim.keymap.set("n", "<leader>cr", function()
+  local path = get_current_file_path()
+  local url = vim.fn.system("gh browse " .. path .. " --commit --no-browser 2>&1")
+  url = url:gsub("%s+$", "")  -- 末尾の改行を削除
+
+  if vim.v.shell_error == 0 then
+    vim.fn.setreg("+", url)
+    print("Copied GitHub URL: " .. url)
+  else
+    print("Error: Could not get GitHub URL")
+  end
+end, { desc = "Copy GitHub remote URL" })
+
+-- GitHub リモートURL をコピー（行番号付き、ビジュアルモード）
+vim.keymap.set("v", "<leader>cr", function()
+  local path = get_current_file_path()
+
+  -- 選択範囲を取得
+  local start_line = vim.fn.line("v")
+  local end_line = vim.fn.line(".")
+
+  -- 開始行と終了行を正しい順序にする
+  if start_line > end_line then
+    start_line, end_line = end_line, start_line
+  end
+
+  -- 行番号が0の場合は現在行を使用
+  if start_line == 0 then
+    start_line = vim.fn.line(".")
+  end
+
+  local line_part
+  if start_line == end_line then
+    line_part = ":" .. start_line
+  else
+    line_part = ":" .. start_line .. "-" .. end_line
+  end
+
+  local url = vim.fn.system("gh browse " .. path .. line_part .. " --commit --no-browser 2>&1")
+  url = url:gsub("%s+$", "")  -- 末尾の改行を削除
+
+  if vim.v.shell_error == 0 then
+    vim.fn.setreg("+", url)
+    if start_line == end_line then
+      print("Copied GitHub URL with line " .. start_line)
+    else
+      print("Copied GitHub URL with lines " .. start_line .. "-" .. end_line)
+    end
+  else
+    print("Error: Could not get GitHub URL")
+  end
+end, { desc = "Copy GitHub remote URL with lines" })
+
 -- GitHub でファイルを開く
 vim.keymap.set("n", "<leader>gh", function()
   local path = get_current_file_path()
