@@ -735,4 +735,27 @@ require("lazy").setup({
     },
   },
 
+  -- スクロールバー
+  {
+    "petertriho/nvim-scrollbar",
+    event = "VeryLazy",
+    config = function()
+      require("scrollbar").setup({
+        handle = {
+          color = "#7aa2f7",  -- TokyoNightの青
+        },
+        marks = {
+          Search = { color = "#ff9e64" },  -- 検索マーク（オレンジ）
+          Error = { color = "#f7768e" },   -- エラー（赤）
+          Warn = { color = "#e0af68" },    -- 警告（黄）
+          Info = { color = "#0db9d7" },    -- 情報（シアン）
+          Hint = { color = "#1abc9c" },    -- ヒント（緑）
+          Misc = { color = "#9d7cd8" },    -- その他（紫）
+        },
+      })
+      -- gitsignsとの統合
+      require("scrollbar.handlers.gitsigns").setup()
+    end,
+  },
+
 })
