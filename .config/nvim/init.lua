@@ -443,6 +443,10 @@ require("lazy").setup({
           dotfiles = false,
           git_ignored = false,
         },
+        update_focused_file = {
+          enable = true,      -- 現在のファイルに追随
+          update_root = false, -- ルートディレクトリは自動変更しない
+        },
       })
 
       -- キーマップ
