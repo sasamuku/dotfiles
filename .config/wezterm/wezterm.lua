@@ -61,7 +61,7 @@ config.inactive_pane_hsb = {
 
 -- Misc
 config.scrollback_lines = 10000
-config.enable_scroll_bar = false
+config.enable_scroll_bar = true
 config.audible_bell = 'Disabled'
 
 -- Keybindings
