@@ -16,11 +16,27 @@ Create a new issue in a GitHub repository using the GitHub CLI.
    - Technical requirements and dependencies
    - Potential implementation approaches
    - Impact and risks
-4. **Structure the issue**: Create a well-structured issue with:
+4. **Draft the issue**: Prepare a well-structured issue with:
    - Clear title
    - Detailed body with background, requirements, and technical considerations
    - Use proper markdown formatting
    - Follow template format if available
+5. **Present draft and get user approval**: Show the complete issue draft to the user:
+   ```
+   Issue Draft:
+
+   Title: [proposed title]
+
+   Body:
+   [complete issue body with all sections]
+
+   Do you approve this issue? (y/n)
+   If changes are needed, please specify what adjustments are required.
+   ```
+
+   **IMPORTANT**: Wait for explicit user approval before proceeding to issue creation.
+
+6. **Create the issue**: After approval, create the issue using `gh issue create`
 
 ### Arguments
 $ARGUMENTS
