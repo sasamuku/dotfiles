@@ -9,6 +9,7 @@ echo "🔧 Setting up dotfiles..."
 echo "📝 Setting up Git configuration..."
 ln -sfn $(realpath $(dirname ${0}))/.gitconfig ~/.gitconfig
 ln -sfn $(realpath $(dirname ${0}))/.gitignore ~/.gitignore
+ln -sfn $(realpath $(dirname ${0}))/.ignore ~/.ignore
 if [ ! -f ~/.gitconfig.local ]; then
   echo "  ⚠️  Note: Copy .gitconfig.local.sample to ~/.gitconfig.local for personal git settings"
 fi
