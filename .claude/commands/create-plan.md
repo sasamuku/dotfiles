@@ -98,6 +98,7 @@ The PLANS.md should include these sections:
 - Keep it concise but comprehensive
 - Format as a living document that can evolve
 - Use markdown checkboxes `- [ ]` for trackable tasks
+- **IMPORTANT**: Show preview and get user approval (y/n) before creating PLANS.md
 
 ### Issue Comment Sync (when Issue-linked)
 
