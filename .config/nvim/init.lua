@@ -285,13 +285,35 @@ require("lazy").setup({
           file_ignore_patterns = {
             "%.git/",
             "node_modules/",
-            "%.DS_Store"
+            "%.DS_Store",
+            "%.cache/",
+            "build/",
+            "dist/",
+            "target/",
+            "%.next/",
+            "%.nuxt/",
+            "%.output/",
+            "coverage/",
+            "%.lock$",
+            "package%-lock%.json",
+            "yarn%.lock",
+            "pnpm%-lock%.yaml",
+          },
+          -- プレビューのファイルサイズ制限（100KB）
+          preview = {
+            filesize_limit = 0.1,
+            timeout = 250,
+          },
+          -- ソート戦略の最適化
+          sorting_strategy = "ascending",
+          layout_config = {
+            prompt_position = "top",
           },
         },
         pickers = {
           find_files = {
             hidden = true,
-            no_ignore = true,
+            -- no_ignoreを削除: .gitignoreを尊重する
           },
         },
       })
