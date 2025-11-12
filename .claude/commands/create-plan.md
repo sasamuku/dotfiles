@@ -37,46 +37,59 @@ last_synced: 2025-11-12T10:30:00Z
 
 The PLANS.md should include these sections:
 
-1. **Purpose / Big Picture**
+1. **Purpose / Overview**
 
    - Project goal summary
-   - User benefits
-   - Expected user-visible behavior
+   - Core value proposition
+   - What problem this solves
 
-2. **Initial Requirements & Scope**
+2. **Context & Direction**
 
-   - High-level requirements
-   - Key features list
-   - In-scope vs. out-of-scope items
+   - Problem background
+   - Design philosophy
+   - Key constraints
 
-3. **Milestones & Deliverables**
+3. **Validation & Acceptance Criteria**
 
-   - Work phases breakdown
-   - Specific deliverables
-   - Acceptance criteria
+   - Testable acceptance criteria
+   - Test scenarios
+   - Success metrics
 
-4. **Progress**
+4. **Specification**
 
-   - Checkbox task list for granular tracking
-   - Completion status
-   - Progress dates
+   - System specifications
+   - Architecture decisions
+   - Design details
 
-5. **Surprises & Discoveries**
+5. **Open Questions**
 
-   - Unexpected learnings
-   - Technical challenges
-   - New insights
+   - Unresolved questions
+   - Options under consideration
+   - Blockers and uncertainties
 
-6. **Decision Log**
+6. **Discoveries & Insights**
+
+   - Technical discoveries
+   - Implementation learnings
+   - Unexpected findings
+
+7. **Decision Log**
 
    - Key decisions with dates
-   - Reasoning and context
-   - Supporting references
+   - Rationale and context
+   - Trade-offs considered
 
-7. **Outcomes & Retrospectives**
+8. **Outcomes & Retrospectives**
+
    - Milestone results
    - Lessons learned
    - What went well / could improve
+
+9. **Follow-up Issues**
+
+   - Future work items
+   - Out-of-scope tasks
+   - Technical debt
 
 ### Guidelines
 
