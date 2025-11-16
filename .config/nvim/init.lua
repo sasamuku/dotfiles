@@ -334,8 +334,14 @@ require("lazy").setup({
     "nvim-telescope/telescope.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
+      local actions = require("telescope.actions")
       require("telescope").setup({
         defaults = {
+          mappings = {
+            i = {
+              ["<esc>"] = actions.close,  -- インサートモードでESC 1回で閉じる
+            },
+          },
           file_ignore_patterns = {
             "%.git/",
             "node_modules/",
