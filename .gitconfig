@@ -25,7 +25,7 @@
 	mg = merge
 	cm = commit
 	pr = !gh pr view --web 2>/dev/null || gh pr create --web
-	rp = "!open $(git config --get remote.origin.url | sed 's|git@github.com:|https://github.com/|' | sed 's|\\.git$||')"
+	rp = !gh browse
 
 	# Worktree management
 	wa = worktree add
