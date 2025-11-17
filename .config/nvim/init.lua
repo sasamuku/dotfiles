@@ -388,26 +388,41 @@ require("lazy").setup({
     end,
   },
 
-  -- Cybu (VSCode-style Ctrl+Tab buffer switcher)
+  -- Buffer Manager (VSCode-style Ctrl+Tab buffer switcher)
   {
-    "ghillb/cybu.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons", "nvim-lua/plenary.nvim" },
+    "j-morano/buffer_manager.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
-      require("cybu").setup({
-        display_time = 750,  -- メニュー表示時間（ミリ秒）
-        behavior = {
-          mode = {
-            last_used = {
-              switch = "immediate",    -- すぐにバッファ切り替え
-              view = "paging",         -- ページング表示
-            },
+      require("buffer_manager").setup({
+        select_menu_item_commands = {
+          edit = {
+            key = "<CR>",
+            command = "edit"
           },
+          v = {
+            key = "<C-v>",
+            command = "vsplit"
+          },
+          h = {
+            key = "<C-h>",
+            command = "split"
+          }
         },
+        focus_alternate_buffer = false,
+        short_file_names = true,
+        short_term_names = true,
+        loop_nav = true,
+        order_buffers = "lastused",  -- 最近使用した順に表示
+        show_indicators = "after",
       })
 
-      -- VSCode風のCtrl+Tabでバッファ切り替え
-      vim.keymap.set("n", "<C-Tab>", "<Plug>(CybuLastusedNext)", { desc = "Next buffer (MRU)" })
-      vim.keymap.set("n", "<C-S-Tab>", "<Plug>(CybuLastusedPrev)", { desc = "Previous buffer (MRU)" })
+      local bmui = require("buffer_manager.ui")
+
+      -- Ctrl+Tabでバッファメニューを開く
+      vim.keymap.set("n", "<C-Tab>", bmui.toggle_quick_menu, { desc = "Open buffer menu" })
+
+      -- 次/前のバッファへ移動（メニューを開かずに）
+      vim.keymap.set("n", "<C-S-Tab>", bmui.nav_prev, { desc = "Previous buffer (MRU)" })
     end,
   },
 
