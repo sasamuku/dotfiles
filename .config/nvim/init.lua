@@ -516,6 +516,24 @@ require("lazy").setup({
     end,
   },
 
+  -- Diffview
+  {
+    "sindrets/diffview.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("diffview").setup({
+        enhanced_diff_hl = true,  -- より見やすいdiff表示
+        use_icons = true,
+      })
+
+      -- キーマップ
+      vim.keymap.set("n", "<leader>gv", ":DiffviewOpen<CR>", { desc = "Open Diffview" })
+      vim.keymap.set("n", "<leader>gc", ":DiffviewClose<CR>", { desc = "Close Diffview" })
+      vim.keymap.set("n", "<leader>gh", ":DiffviewFileHistory %<CR>", { desc = "File history (current file)" })
+      vim.keymap.set("n", "<leader>gH", ":DiffviewFileHistory<CR>", { desc = "File history (all)" })
+    end,
+  },
+
   -- File explorer
   {
     "nvim-tree/nvim-tree.lua",
