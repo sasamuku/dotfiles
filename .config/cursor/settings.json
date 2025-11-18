@@ -102,5 +102,6 @@
       "*.local",
       ".claude/settings.local.json"
     ],
-    "vscode-neovim.neovimInitVimPaths.darwin": "~/.config/nvim/init.lua"
+    "vscode-neovim.neovimInitVimPaths.darwin": "~/.config/nvim/init.lua",
+    "workbench.panel.defaultLocation": "right"
 }
