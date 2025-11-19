@@ -25,6 +25,19 @@ else
     echo "⚠️  sheldon not found. Install it with: brew install sheldon"
 fi
 
+# Setup fzf shell integration
+echo "🔍 Setting up fzf shell integration..."
+if command -v brew &> /dev/null && brew list fzf &> /dev/null; then
+    FZF_INSTALL_SCRIPT="$(brew --prefix)/opt/fzf/install"
+    if [[ -f "$FZF_INSTALL_SCRIPT" ]]; then
+        # Run fzf install script non-interactively
+        "$FZF_INSTALL_SCRIPT" --key-bindings --completion --no-update-rc
+        echo "✅ fzf shell integration configured"
+    fi
+else
+    echo "⚠️  fzf not found. Install it with: brew install fzf"
+fi
+
 echo "✅ Zsh setup complete!"
 echo ""
 echo "📝 Next steps:"
