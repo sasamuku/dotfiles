@@ -2,19 +2,19 @@
 
 set -e
 
-# Get the dotfiles directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Get the dotfiles directory (parent of scripts/)
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # Create symlinks for zsh config files
 echo "📁 Creating zsh config symlinks..."
-ln -sf "${SCRIPT_DIR}/.zshrc" "${ZDOTDIR:-$HOME}/.zshrc"
-ln -sf "${SCRIPT_DIR}/.zprofile" "${ZDOTDIR:-$HOME}/.zprofile"
-ln -sf "${SCRIPT_DIR}/.zshenv" "${ZDOTDIR:-$HOME}/.zshenv"
+ln -sf "${DOTFILES_DIR}/.zshrc" "${ZDOTDIR:-$HOME}/.zshrc"
+ln -sf "${DOTFILES_DIR}/.zprofile" "${ZDOTDIR:-$HOME}/.zprofile"
+ln -sf "${DOTFILES_DIR}/.zshenv" "${ZDOTDIR:-$HOME}/.zshenv"
 
 # Create sheldon config directory and symlink
 echo "📁 Creating sheldon config symlink..."
 mkdir -p "${HOME}/.config"
-ln -sf "${SCRIPT_DIR}/.config/sheldon" "${HOME}/.config/sheldon"
+ln -sf "${DOTFILES_DIR}/.config/sheldon" "${HOME}/.config/sheldon"
 
 # Install sheldon plugins
 echo "📦 Installing sheldon plugins..."
