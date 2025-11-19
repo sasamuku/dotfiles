@@ -19,7 +19,3 @@ use = ["{{ name }}.zsh"]
 # Syntax highlighting (must be loaded after other plugins)
 [plugins.zsh-syntax-highlighting]
 github = "zsh-users/zsh-syntax-highlighting"
-
-# History substring search
-[plugins.zsh-history-substring-search]
-github = "zsh-users/zsh-history-substring-search"

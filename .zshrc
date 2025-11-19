@@ -21,17 +21,26 @@ SAVEHIST=1000000
 setopt inc_append_history
 setopt share_history
 
-# peco
-function peco-history-selection() {
-    BUFFER=`history -n 1 | tail -r | awk '!a[$0]++' | peco`
-    CURSOR=$#BUFFER
-    zle reset-prompt
-}
+# fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-zle -N peco-history-selection
-bindkey '^R' peco-history-selection
+# fzf options
+export FZF_DEFAULT_OPTS='
+  --height 40%
+  --layout=reverse
+  --border
+  --preview-window=right:60%
+  --bind ctrl-/:toggle-preview
+'
 
-# cdr with peco
+# fzf history search with Ctrl+R (shows matching entries as you type)
+export FZF_CTRL_R_OPTS="
+  --preview 'echo {}'
+  --preview-window down:3:wrap
+  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+"
+
+# cdr with fzf
 if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
     autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
     add-zsh-hook chpwd chpwd_recent_dirs
@@ -40,16 +49,16 @@ if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]
     zstyle ':chpwd:*' recent-dirs-max 1000
     zstyle ':chpwd:*' recent-dirs-file "$HOME/.cache/chpwd-recent-dirs"
 fi
-function peco-cdr () {
-    local selected_dir="$(cdr -l | sed 's/^[0-9]\+ \+//' | peco --prompt="cdr >" --query "$LBUFFER")"
+function fzf-cdr () {
+    local selected_dir="$(cdr -l | sed 's/^[0-9]\+ \+//' | fzf --prompt="cdr > " --query "$LBUFFER")"
     if [ -n "$selected_dir" ]; then
         BUFFER="cd `echo $selected_dir | awk '{print$2}'`"
         CURSOR=$#BUFFER
         zle reset-prompt
     fi
 }
-zle -N peco-cdr
-bindkey '^G' peco-cdr
+zle -N fzf-cdr
+bindkey '^G' fzf-cdr
 
 # environment varibles
 export CLICOLOR=1
