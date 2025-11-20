@@ -55,5 +55,47 @@
   "key": "ctrl+shift+g",
   "command": "-workbench.view.scm",
   "when": "workbench.scm.active"
+},
+{
+  "key": "cmd+[",
+  "command": "workbench.action.terminal.focusPrevious",
+  "when": "terminalFocus && terminalHasBeenCreated && !terminalEditorFocus || terminalFocus && terminalProcessSupported && !terminalEditorFocus"
+},
+{
+  "key": "shift+cmd+[",
+  "command": "-workbench.action.terminal.focusPrevious",
+  "when": "terminalFocus && terminalHasBeenCreated && !terminalEditorFocus || terminalFocus && terminalProcessSupported && !terminalEditorFocus"
+},
+{
+  "key": "cmd+]",
+  "command": "workbench.action.terminal.focusNext",
+  "when": "terminalFocus && terminalHasBeenCreated && !terminalEditorFocus || terminalFocus && terminalProcessSupported && !terminalEditorFocus"
+},
+{
+  "key": "shift+cmd+]",
+  "command": "-workbench.action.terminal.focusNext",
+  "when": "terminalFocus && terminalHasBeenCreated && !terminalEditorFocus || terminalFocus && terminalProcessSupported && !terminalEditorFocus"
+},
+{
+  "key": "ctrl+`",
+  "command": "workbench.action.focusFirstEditorGroup"
+},
+{
+  "key": "cmd+1",
+  "command": "-workbench.action.focusFirstEditorGroup"
+},
+{
+  "key": "ctrl+1",
+  "command": "workbench.action.terminal.toggleTerminal",
+  "when": "terminal.active"
+},
+{
+  "key": "ctrl+`",
+  "command": "-workbench.action.terminal.toggleTerminal",
+  "when": "terminal.active"
+},
+{
+  "key": "ctrl+1",
+  "command": "-workbench.action.openEditorAtIndex1"
 }
 ]
