@@ -103,5 +103,6 @@
       ".claude/settings.local.json"
     ],
     "vscode-neovim.neovimInitVimPaths.darwin": "~/.config/nvim/init.lua",
-    "workbench.panel.defaultLocation": "right"
+    "workbench.panel.defaultLocation": "right",
+    "window.zoomLevel": -1
 }
