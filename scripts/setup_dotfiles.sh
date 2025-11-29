@@ -22,6 +22,7 @@ ln -sfn $(realpath $(dirname ${0}))/.claude/commands ~/.claude/commands
 ln -sfn $(realpath $(dirname ${0}))/.claude/CLAUDE.md ~/.claude/CLAUDE.md
 ln -sfn $(realpath $(dirname ${0}))/.claude/settings.json ~/.claude/settings.json
 ln -sfn $(realpath $(dirname ${0}))/.claude/hooks ~/.claude/hooks
+ln -sfn $(realpath $(dirname ${0}))/.claude/agents ~/.claude/agents
 
 # Serena config
 if [ ! -f ~/.serena/serena_config.yml ]; then
