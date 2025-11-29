@@ -7,9 +7,10 @@ echo "🔧 Setting up dotfiles..."
 
 # Git configuration
 echo "📝 Setting up Git configuration..."
-ln -sfn $(realpath $(dirname ${0}))/.gitconfig ~/.gitconfig
-ln -sfn $(realpath $(dirname ${0}))/.gitignore ~/.gitignore
-ln -sfn $(realpath $(dirname ${0}))/.ignore ~/.ignore
+DOTFILES_DIR=$(realpath $(dirname ${0})/..)
+ln -sfn ${DOTFILES_DIR}/.gitconfig ~/.gitconfig
+ln -sfn ${DOTFILES_DIR}/.gitignore ~/.gitignore
+ln -sfn ${DOTFILES_DIR}/.ignore ~/.ignore
 if [ ! -f ~/.gitconfig.local ]; then
   echo "  ⚠️  Note: Copy .gitconfig.local.sample to ~/.gitconfig.local for personal git settings"
 fi
@@ -18,11 +19,11 @@ fi
 echo "🔧 Setting up Claude Code configuration..."
 echo "📁 Creating Claude settings symlinks..."
 mkdir -p ~/.claude
-ln -sfn $(realpath $(dirname ${0}))/.claude/commands ~/.claude/commands
-ln -sfn $(realpath $(dirname ${0}))/.claude/CLAUDE.md ~/.claude/CLAUDE.md
-ln -sfn $(realpath $(dirname ${0}))/.claude/settings.json ~/.claude/settings.json
-ln -sfn $(realpath $(dirname ${0}))/.claude/hooks ~/.claude/hooks
-ln -sfn $(realpath $(dirname ${0}))/.claude/agents ~/.claude/agents
+ln -sfn ${DOTFILES_DIR}/.claude/commands ~/.claude/commands
+ln -sfn ${DOTFILES_DIR}/.claude/CLAUDE.md ~/.claude/CLAUDE.md
+ln -sfn ${DOTFILES_DIR}/.claude/settings.json ~/.claude/settings.json
+ln -sfn ${DOTFILES_DIR}/.claude/hooks ~/.claude/hooks
+ln -sfn ${DOTFILES_DIR}/.claude/agents ~/.claude/agents
 
 # Serena config
 if [ ! -f ~/.serena/serena_config.yml ]; then
@@ -32,29 +33,29 @@ fi
 # Neovim config
 echo "📁 Creating Neovim config symlink..."
 mkdir -p ~/.config/nvim
-ln -sfn $(realpath $(dirname ${0}))/.config/nvim/init.lua ~/.config/nvim/init.lua
+ln -sfn ${DOTFILES_DIR}/.config/nvim/init.lua ~/.config/nvim/init.lua
 
 # WezTerm config
 echo "📁 Creating WezTerm config symlink..."
 mkdir -p ~/.config/wezterm
-ln -sfn $(realpath $(dirname ${0}))/.config/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
+ln -sfn ${DOTFILES_DIR}/.config/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
 
 # Starship config
 echo "📁 Creating Starship config symlink..."
 mkdir -p ~/.config
-ln -sfn $(realpath $(dirname ${0}))/.config/starship.toml ~/.config/starship.toml
+ln -sfn ${DOTFILES_DIR}/.config/starship.toml ~/.config/starship.toml
 
 # Zsh functions
 echo "📁 Creating Zsh functions symlink..."
 mkdir -p ~/.config/zsh/functions
-ln -sfn $(realpath $(dirname ${0}))/.config/zsh/functions/wt.zsh ~/.config/zsh/functions/wt.zsh
-ln -sfn $(realpath $(dirname ${0}))/.config/zsh/functions/ghq.zsh ~/.config/zsh/functions/ghq.zsh
+ln -sfn ${DOTFILES_DIR}/.config/zsh/functions/wt.zsh ~/.config/zsh/functions/wt.zsh
+ln -sfn ${DOTFILES_DIR}/.config/zsh/functions/ghq.zsh ~/.config/zsh/functions/ghq.zsh
 
 # Cursor config
 echo "📁 Creating Cursor config symlinks..."
 mkdir -p ~/Library/Application\ Support/Cursor/User
-ln -sfn $(realpath $(dirname ${0}))/.config/cursor/settings.json ~/Library/Application\ Support/Cursor/User/settings.json
-ln -sfn $(realpath $(dirname ${0}))/.config/cursor/keybindings.json ~/Library/Application\ Support/Cursor/User/keybindings.json
+ln -sfn ${DOTFILES_DIR}/.config/cursor/settings.json ~/Library/Application\ Support/Cursor/User/settings.json
+ln -sfn ${DOTFILES_DIR}/.config/cursor/keybindings.json ~/Library/Application\ Support/Cursor/User/keybindings.json
 
 # Claude MCP setup
 echo "🔌 Setting up Claude MCP servers..."
