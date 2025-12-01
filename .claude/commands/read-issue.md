@@ -8,7 +8,7 @@ Use the `gh` command to fetch the GitHub issue specified in the arguments and pr
 
 ### Steps
 1. Extract the issue number from the arguments (format: `#123` or just `123`)
-2. Use `gh issue view <issue-number> --json number,title,body,state,url` to fetch the issue details
+2. Use `gh issue view <issue-number> --json number,title,body,state,url,comments` to fetch the issue details including all comments
 3. Parse the issue body to find sub-issues:
    - Look for task list patterns: `- [ ] #123` or `- [x] #456`
    - Extract all sub-issue numbers
