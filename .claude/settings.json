@@ -173,5 +173,8 @@
     "type": "command",
     "command": "input=$(cat); model=$(echo \"$input\" | jq -r '.model.display_name // \"Claude\"'); style=$(echo \"$input\" | jq -r '.output_style.name // \"default\"'); cwd=$(echo \"$input\" | jq -r '.workspace.current_dir'); project=$(echo \"$input\" | jq -r '.workspace.project_dir'); if [ \"$cwd\" != \"$project\" ] && [[ \"$cwd\" == \"$project\"/* ]]; then rel_path=\"$(basename \"$project\")/$(echo \"$cwd\" | sed \"s|^$project/||\")\"; else rel_path=\"$(basename \"$cwd\")\"; fi; if git -C \"$cwd\" rev-parse --is-inside-work-tree >/dev/null 2>&1; then branch=$(git -C \"$cwd\" branch --show-current 2>/dev/null || echo \"detached\"); printf \"\\033[2m%s\\033[0m \\033[36m%s\\033[0m \\033[2m|\\033[0m \\033[33m%s\\033[0m \\033[2m|\\033[0m \\033[35m%s\\033[0m\" \"$model\" \"$rel_path\" \"$branch\" \"$style\"; else printf \"\\033[2m%s\\033[0m \\033[36m%s\\033[0m \\033[2m|\\033[0m \\033[35m%s\\033[0m\" \"$model\" \"$rel_path\" \"$style\"; fi"
   },
+  "enabledPlugins": {
+    "frontend-design@claude-code-plugins": true
+  },
   "alwaysThinkingEnabled": true
 }
