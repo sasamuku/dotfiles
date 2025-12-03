@@ -104,5 +104,8 @@
     ],
     "vscode-neovim.neovimInitVimPaths.darwin": "~/.config/nvim/init.lua",
     "workbench.panel.defaultLocation": "right",
-    "window.zoomLevel": -1
+    "window.zoomLevel": -1,
+    "extensions.experimental.affinity": {
+      "asvetliakov.vscode-neovim": 1
+    }
 }
