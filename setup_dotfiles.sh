@@ -26,8 +26,12 @@ ln -sfn ${DOTFILES_DIR}/.claude/hooks ~/.claude/hooks
 ln -sfn ${DOTFILES_DIR}/.claude/agents ~/.claude/agents
 
 # Serena config
+echo "🔧 Setting up Serena configuration..."
+mkdir -p ~/.serena
+ln -sfn ${DOTFILES_DIR}/.serena/serena_config.yml ~/.serena/serena_config.yml
 if [ ! -f ~/.serena/serena_config.yml ]; then
-  echo "  ⚠️  Note: Copy .serena/serena_config.yml.sample to ~/.serena/serena_config.yml for Serena settings"
+  echo "  ⚠️  Warning: Serena config symlink created but source file not found"
+  echo "  Copy .serena/serena_config.yml.sample to .serena/serena_config.yml in the dotfiles repo"
 fi
 
 # Neovim config
