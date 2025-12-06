@@ -5,7 +5,7 @@ Personal macOS dotfiles and setup automation.
 ## Quick Start
 
 ```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/sasamuku/dotfiles/master/setup.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/sasamuku/dotfiles/main/setup.sh)"
 ```
 
 ## What's Included
