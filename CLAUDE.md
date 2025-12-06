@@ -32,6 +32,7 @@ All setup scripts can be run independently.
 - `.zshrc`, `.zprofile`, `.zshenv` - Zsh configs
 - `.config/sheldon/plugins.toml` - sheldon plugin manager config
 - `.config/starship.toml` - Starship prompt config
+- `.config/mise/config.toml` - mise version manager (global)
 - `.gitconfig` - Git aliases and settings
 - `.gitconfig.local.sample` → `~/.gitconfig.local` (personal git settings)
 - `.zsh_secrets.example` → `~/.zsh_secrets` (private env vars)
@@ -47,7 +48,7 @@ All setup scripts can be run independently.
 - Plugins: completion, syntax-highlighting, autosuggestions, history-substring-search
 - **Starship** prompt (fast, customizable, cross-shell)
 - **peco** keybindings: `Ctrl+R` (history), `Ctrl+G` (directory)
-- **mise** for tool versions: Node.js 22.14.0, Go 1.21.2, Ruby 3.2.2
+- **mise** for tool versions: Node.js 25.2.1, Go 1.23.2, Ruby 3.2.2
 
 ### Key Aliases
 - `.zshrc`: `ls`, `showz`, `editz`, `sourcez`, `be`, `ghql`, `dc`, `nf`, `ng`, `devc`

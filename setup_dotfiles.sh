@@ -49,6 +49,11 @@ echo "📁 Creating Starship config symlink..."
 mkdir -p ~/.config
 ln -sfn ${DOTFILES_DIR}/.config/starship.toml ~/.config/starship.toml
 
+# mise config
+echo "📁 Creating mise config symlink..."
+mkdir -p ~/.config/mise
+ln -sfn ${DOTFILES_DIR}/.config/mise/config.toml ~/.config/mise/config.toml
+
 # Zsh functions
 echo "📁 Creating Zsh functions symlink..."
 mkdir -p ~/.config/zsh/functions
