@@ -33,7 +33,7 @@ echo "➕ Adding serena MCP server..."
 if echo "$MCP_LIST" | grep -q "serena"; then
     echo "   ⏭️  serena already exists, skipping..."
 else
-    "$CLAUDE_PATH" mcp add serena --scope user -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant
+    "$CLAUDE_PATH" mcp add serena --scope user -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context claude-code
 fi
 
 echo "🎉 Claude MCP setup completed!"
