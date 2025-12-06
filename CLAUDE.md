@@ -16,14 +16,14 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/sasamuku/dotfiles/master/s
 ### Script Dependency Tree
 ```
 setup.sh (Main wrapper)
-├── scripts/setup_brew.sh (Homebrew + packages)
-├── scripts/setup_zsh.sh (Zsh + sheldon)
-├── scripts/setup_dotfiles.sh (Dotfiles: Git, Claude, Serena, Neovim)
-│   └── scripts/setup_claude_mcp.sh (MCP servers)
-└── scripts/setup_macos.sh (macOS preferences)
+├── setup_brew.sh (Homebrew + packages)
+├── setup_zsh.sh (Zsh + sheldon)
+├── setup_dotfiles.sh (Dotfiles: Git, Claude, Serena, Neovim)
+│   └── setup_claude_mcp.sh (MCP servers)
+└── setup_macos.sh (macOS preferences)
 ```
 
-All scripts in `scripts/` can be run independently.
+All setup scripts can be run independently.
 
 ## Repository Structure
 
@@ -73,7 +73,7 @@ Custom Zsh function for managing git worktrees efficiently:
 
 ## MCP Servers
 
-Configured via `scripts/setup_claude_mcp.sh`: **playwright**, **context7**, **serena**
+Configured via `setup_claude_mcp.sh`: **playwright**, **context7**, **serena**
 
 ## Post-Setup Steps
 

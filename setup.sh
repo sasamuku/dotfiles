@@ -14,28 +14,28 @@ echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "📦 Step 1/4: Homebrew and Packages"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-"${SCRIPT_DIR}/scripts/setup_brew.sh"
+"${SCRIPT_DIR}/setup_brew.sh"
 echo ""
 
 # 2. Zsh configuration
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "🐚 Step 2/4: Zsh and Sheldon"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-"${SCRIPT_DIR}/scripts/setup_zsh.sh"
+"${SCRIPT_DIR}/setup_zsh.sh"
 echo ""
 
 # 3. Dotfiles (Claude, Serena, Neovim)
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "🔧 Step 3/4: Dotfiles (Claude, Serena, Neovim)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-"${SCRIPT_DIR}/scripts/setup_dotfiles.sh"
+"${SCRIPT_DIR}/setup_dotfiles.sh"
 echo ""
 
 # 4. macOS system preferences
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "⚙️  Step 4/4: macOS System Preferences"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-"${SCRIPT_DIR}/scripts/setup_macos.sh"
+"${SCRIPT_DIR}/setup_macos.sh"
 echo ""
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

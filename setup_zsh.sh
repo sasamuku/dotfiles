@@ -2,8 +2,8 @@
 
 set -e
 
-# Get the dotfiles directory (parent of scripts/)
-DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Get the dotfiles directory
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Create symlinks for zsh config files
 echo "📁 Creating zsh config symlinks..."

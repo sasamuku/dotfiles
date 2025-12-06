@@ -7,7 +7,7 @@ echo "🔧 Setting up dotfiles..."
 
 # Git configuration
 echo "📝 Setting up Git configuration..."
-DOTFILES_DIR=$(realpath $(dirname ${0})/..)
+DOTFILES_DIR=$(realpath $(dirname ${0}))
 ln -sfn ${DOTFILES_DIR}/.gitconfig ~/.gitconfig
 ln -sfn ${DOTFILES_DIR}/.gitignore ~/.gitignore
 ln -sfn ${DOTFILES_DIR}/.ignore ~/.ignore
