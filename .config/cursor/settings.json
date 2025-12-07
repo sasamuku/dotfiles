@@ -107,5 +107,6 @@
     "window.zoomLevel": -1,
     "extensions.experimental.affinity": {
       "asvetliakov.vscode-neovim": 1
-    }
+    },
+    "claudeCode.preferredLocation": "panel"
 }
