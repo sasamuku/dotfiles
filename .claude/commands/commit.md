@@ -2,6 +2,10 @@
 
 This slash command guides you through creating logical, well-structured commits following Conventional Commits specification.
 
+## Options
+
+- `-y`: Skip user approval and proceed directly with commit creation
+
 ## Execution Steps
 
 ### 1. Check Current Changes
@@ -50,6 +54,8 @@ If changes are needed, please specify what adjustments are required.
 ```
 
 **IMPORTANT**: Wait for explicit user approval before proceeding to commit creation.
+
+**Exception**: If the `-y` option is provided, skip the approval step and proceed directly to commit creation.
 
 ### 4. Type Check and Lint (Before Each Commit)
 
@@ -129,6 +135,8 @@ footer (optional)
 
 ## Example Workflow
 
+### Standard workflow (with confirmation)
+
 ```
 User: /commit
 
@@ -160,10 +168,40 @@ Claude:
    [Repeats for each commit]
 ```
 
+### Auto-approve workflow (with -y option)
+
+```
+User: /commit -y
+
+Claude:
+1. Checking current changes...
+   - Current branch: feat/user-auth
+   - 5 files changed, 3 files added
+
+2. Analyzing changes...
+   - Authentication feature: 3 files
+   - Tests: 2 files
+   - Documentation: 1 file
+   - Dependencies: 2 files
+
+3. Commit plan (auto-approved with -y):
+   [Shows detailed plan]
+
+4. Running type check and lint...
+   - Type check: passed
+   - Lint: passed
+
+5. Creating commit 1/4: feat(auth): add user authentication feature
+   [Stages files and creates commit]
+
+6. Running type check and lint...
+   [Repeats for each commit]
+```
+
 ## Notes
 
 - **No branch creation**: Do not create new branches during this command
 - **Type check/lint only**: Do not run tests (user handles this separately)
-- **Interactive**: Always confirm the plan with the user before executing
+- **Interactive**: Always confirm the plan with the user before executing (unless `-y` option is provided)
 - **Strict format**: Follow Conventional Commits without emojis
 - **One at a time**: Create commits sequentially, not in batch
