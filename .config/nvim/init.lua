@@ -566,6 +566,7 @@ require("lazy").setup({
       })
 
       -- キーマップ
+      vim.keymap.set("n", "<leader>ee", ":NvimTreeToggle<CR>", { desc = "Toggle file explorer" })
       vim.keymap.set("n", "<leader>ef", ":NvimTreeFindFile<CR>", { desc = "Find current file in explorer" })
       vim.keymap.set("n", "<C-e>", ":NvimTreeFindFile<CR>", { desc = "Find current file in explorer (VSCode style)" })
     end,
