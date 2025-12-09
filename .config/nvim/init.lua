@@ -536,39 +536,87 @@ require("lazy").setup({
 
   -- File explorer
   {
-    "nvim-tree/nvim-tree.lua",
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
     dependencies = {
+      "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
+      "MunifTanjim/nui.nvim",
     },
     config = function()
-      -- netrwを無効化（nvim-treeと競合するため）
+      -- netrwを無効化（neo-treeと競合するため）
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
 
-      require("nvim-tree").setup({
-        sort = {
-          sorter = "case_sensitive",
+      require("neo-tree").setup({
+        close_if_last_window = true,
+        popup_border_style = "rounded",
+        enable_git_status = true,
+        enable_diagnostics = true,
+        default_component_configs = {
+          indent = {
+            padding = 0,
+            with_expanders = true,
+          },
+          icon = {
+            folder_closed = "",
+            folder_open = "",
+            folder_empty = "",
+          },
+          git_status = {
+            symbols = {
+              added = "+",
+              modified = "~",
+              deleted = "✖",
+              renamed = "➜",
+              untracked = "★",
+              ignored = "◌",
+              unstaged = "✗",
+              staged = "✓",
+              conflict = "",
+            },
+          },
         },
-        view = {
+        window = {
+          position = "left",
           width = 30,
+          mappings = {
+            ["<space>"] = "none",
+            ["o"] = "open",
+          },
         },
-        renderer = {
-          group_empty = true,
+        filesystem = {
+          follow_current_file = {
+            enabled = true,
+            leave_dirs_open = false,
+          },
+          filtered_items = {
+            hide_dotfiles = false,
+            hide_gitignored = false,
+            hide_by_name = {
+              ".DS_Store",
+            },
+          },
+          use_libuv_file_watcher = true,
         },
-        filters = {
-          dotfiles = false,
-          git_ignored = false,
+        buffers = {
+          follow_current_file = {
+            enabled = true,
+          },
         },
-        update_focused_file = {
-          enable = true,      -- 現在のファイルに追随
-          update_root = false, -- ルートディレクトリは自動変更しない
+        git_status = {
+          window = {
+            position = "float",
+          },
         },
       })
 
       -- キーマップ
-      vim.keymap.set("n", "<leader>ee", ":NvimTreeToggle<CR>", { desc = "Toggle file explorer" })
-      vim.keymap.set("n", "<leader>ef", ":NvimTreeFindFile<CR>", { desc = "Find current file in explorer" })
-      vim.keymap.set("n", "<C-e>", ":NvimTreeFindFile<CR>", { desc = "Find current file in explorer (VSCode style)" })
+      vim.keymap.set("n", "<leader>ee", ":Neotree toggle<CR>", { desc = "Toggle file explorer" })
+      vim.keymap.set("n", "<leader>ef", ":Neotree reveal<CR>", { desc = "Find current file in explorer" })
+      vim.keymap.set("n", "<C-e>", ":Neotree reveal<CR>", { desc = "Find current file in explorer (VSCode style)" })
+      vim.keymap.set("n", "<leader>eb", ":Neotree buffers<CR>", { desc = "Show buffers in explorer" })
+      vim.keymap.set("n", "<leader>eg", ":Neotree git_status<CR>", { desc = "Show git status in explorer" })
     end,
   },
 
