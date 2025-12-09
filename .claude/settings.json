@@ -163,7 +163,7 @@
           },
           {
             "type": "command",
-            "command": "echo 'Done' | nohup say > /dev/null 2>&1 &"
+            "command": "input=$(cat); cwd=$(echo \"$input\" | jq -r '.cwd // empty'); dir=$(basename \"${cwd:-$PWD}\"); say Done; osascript -e \"display notification \\\"$dir\\\" with title \\\"Claude Done\\\"\""
           }
         ]
       }
