@@ -584,6 +584,7 @@ require("lazy").setup({
             ["<space>"] = "none",
             ["o"] = "open",
             ["<C-f>"] = "none",
+            ["<C-b>"] = "close_window",
           },
         },
         filesystem = {
@@ -616,6 +617,7 @@ require("lazy").setup({
       vim.keymap.set("n", "<leader>ee", ":Neotree toggle<CR>", { desc = "Toggle file explorer" })
       vim.keymap.set("n", "<leader>ef", ":Neotree reveal<CR>", { desc = "Find current file in explorer" })
       vim.keymap.set("n", "<C-e>", ":Neotree reveal<CR>", { desc = "Find current file in explorer (VSCode style)" })
+      vim.keymap.set("n", "<C-b>", ":Neotree toggle<CR>", { desc = "Toggle sidebar (VSCode style)" })
       vim.keymap.set("n", "<leader>eb", ":Neotree buffers<CR>", { desc = "Show buffers in explorer" })
       vim.keymap.set("n", "<leader>eg", ":Neotree git_status<CR>", { desc = "Show git status in explorer" })
     end,
