@@ -583,6 +583,7 @@ require("lazy").setup({
           mappings = {
             ["<space>"] = "none",
             ["o"] = "open",
+            ["<C-f>"] = "none",
           },
         },
         filesystem = {
