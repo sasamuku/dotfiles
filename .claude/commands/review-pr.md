@@ -18,6 +18,7 @@ Perform a thorough code review of the GitHub Pull Request. Assumes the current b
    - Check for code quality, patterns, and potential issues
    - Look for missing tests or documentation
    - Identify security concerns or performance issues
+   - When reviewing library/framework usage, use context7 MCP to fetch latest documentation if needed
 6. Provide structured feedback with:
    - Summary of changes
    - Positive aspects
