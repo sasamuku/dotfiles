@@ -141,6 +141,7 @@
     ],
     "defaultMode": "acceptEdits"
   },
+  "model": "opus",
   "hooks": {
     "PreToolUse": [
       {
@@ -176,6 +177,5 @@
   "enabledPlugins": {
     "frontend-design@claude-code-plugins": true
   },
-  "alwaysThinkingEnabled": true,
-  "model": "opus"
+  "alwaysThinkingEnabled": false
 }
