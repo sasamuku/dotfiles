@@ -166,12 +166,10 @@ copy_items=(".env" ".claude")
 
 for item in "${copy_items[@]}"; do
     if [[ -f "$WT_PROJECT_ROOT/$item" ]]; then
-        # Copy file
         cp "$WT_PROJECT_ROOT/$item" "$item"
         echo "Copied file $item to worktree"
     elif [[ -d "$WT_PROJECT_ROOT/$item" ]]; then
-        # Copy directory recursively
-        cp -r "$WT_PROJECT_ROOT/$item" "$item"
+        rsync -a "$WT_PROJECT_ROOT/$item/" "$item/"
         echo "Copied directory $item to worktree"
     fi
 done
