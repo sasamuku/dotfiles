@@ -22,6 +22,13 @@ else
     "$CLAUDE_PATH" mcp add chrome-devtools --scope user -- npx chrome-devtools-mcp@latest
 fi
 
+echo "➕ Adding deepwiki MCP server..."
+if echo "$MCP_LIST" | grep -q "deepwiki"; then
+    echo "   ⏭️  deepwiki already exists, skipping..."
+else
+    "$CLAUDE_PATH" mcp add --scope user --transport http deepwiki https://mcp.deepwiki.com/mcp
+fi
+
 echo "🎉 Claude MCP setup completed!"
 echo ""
 echo "📋 Current MCP servers:"
