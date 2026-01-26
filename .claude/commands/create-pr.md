@@ -32,28 +32,27 @@ This guide explains how to create pull requests using GitHub CLI in our project.
 
    ```bash
    # Basic command structure
-   gh pr create --draft --title "✨(scope): Your descriptive title" --body "Your PR description" --base main
+   gh pr create --draft --title "feat(scope): your descriptive title" --body "Your PR description" --base main
    ```
 
    For more complex PR descriptions with proper formatting, use the `--body-file` option with the exact PR template structure:
 
    ```bash
    # Create PR with proper template structure
-   gh pr create --draft --title "✨(scope): Your descriptive title" --body-file .github/pull_request_template.md --base main
+   gh pr create --draft --title "feat(scope): your descriptive title" --body-file .github/pull_request_template.md --base main
    ```
 
 ## Best Practices
 
 1. **Language**: Always use English for PR titles and descriptions
 
-2. **PR Title Format**: Use conventional commit format with emojis
+2. **PR Title Format**: Use Conventional Commits format (no emojis)
 
-   - Always include an appropriate emoji at the beginning of the title
-   - Use the actual emoji character (not the code representation like `:sparkles:`)
+   - Follow the same format as commit messages: `type(scope): description`
    - Examples:
-     - `✨(supabase): Add staging remote configuration`
-     - `🐛(auth): Fix login redirect issue`
-     - `📝(readme): Update installation instructions`
+     - `feat(supabase): add staging remote configuration`
+     - `fix(auth): fix login redirect issue`
+     - `docs(readme): update installation instructions`
 
 3. **Description Template**: Always use our PR template structure from @.github/pull_request_template.md:
 
