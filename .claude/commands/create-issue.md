@@ -17,7 +17,7 @@ Create a new issue in a GitHub repository using the GitHub CLI.
    - Potential implementation approaches
    - Impact and risks
 4. **Draft the issue**: Prepare a well-structured issue with:
-   - Clear title
+   - Clear title (do NOT use Conventional Commits format like `fix:`, `feat:`, `chore:` - that's for PR/commit titles only)
    - Detailed body with background, requirements, and technical considerations
    - Use proper markdown formatting
    - Follow template format if available
