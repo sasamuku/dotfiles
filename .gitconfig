@@ -22,6 +22,7 @@
 	co = checkout
 	br = branch
 	ft = fetch
+	pl = pull
 	mg = merge
 	cm = commit
 	pr = !gh pr view --web 2>/dev/null || gh pr create --web
