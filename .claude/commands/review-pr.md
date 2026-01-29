@@ -4,28 +4,39 @@ description: Comprehensive PR review with code analysis and feedback
 
 ## Task
 
-Perform a thorough code review of the GitHub Pull Request. Assumes the current branch matches the PR branch.
+Perform a thorough code review of a GitHub Pull Request.
 
 ### Steps
+
 1. Extract PR number from the argument (supports PR URL like `https://github.com/owner/repo/pull/123` or just number like `123`)
-2. Use `gh pr view <number>` to fetch PR information (title, description, author, status)
-3. Use `gh pr diff <number>` to get the list of changed files
-4. Use `gh api` to fetch existing review comments:
-   - `gh api repos/{owner}/{repo}/pulls/{number}/comments` for line comments
-   - `gh api repos/{owner}/{repo}/pulls/{number}/reviews` for review summaries
-5. Analyze the changes:
-   - Read modified files and understand the changes
-   - Check for code quality, patterns, and potential issues
-   - Look for missing tests or documentation
-   - Identify security concerns or performance issues
-   - When reviewing library/framework usage, use context7 MCP to fetch latest documentation if needed
-6. Provide structured feedback with:
-   - Summary of changes
-   - Positive aspects
-   - Areas for improvement
-   - Specific recommendations
+
+2. Fetch PR information:
+   ```bash
+   gh pr view <number>
+   ```
+
+3. Get the diff:
+   ```bash
+   gh pr diff <number>
+   ```
+
+4. Fetch existing review comments:
+   ```bash
+   gh api repos/{owner}/{repo}/pulls/{number}/comments
+   gh api repos/{owner}/{repo}/pulls/{number}/reviews
+   ```
+
+5. Use **code-reviewer** agent to perform the review with:
+   - PR title and description
+   - All changed files (diff)
+   - Existing review comments for context
 
 ### Arguments
+
 Required: PR number or PR URL (e.g., `123` or `https://github.com/owner/repo/pull/123`)
 
 $ARGUMENTS
+
+### Output
+
+The code-reviewer agent will provide structured feedback organized by priority (Critical, Warning, Suggestion) with specific file locations and fix recommendations.
