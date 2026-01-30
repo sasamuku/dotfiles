@@ -23,6 +23,8 @@ Create a sub-issue linked to a parent GitHub issue using the sub-issue API.
    ```bash
    ISSUE_URL=$(gh issue create --title "$TITLE" --body "$BODY" --label "sub-issue")
    ISSUE_NUMBER=$(echo $ISSUE_URL | grep -o '[0-9]*$')
+   # IMPORTANT: Use .id (integer), NOT .node_id (string)
+   # The sub_issue_id parameter requires an integer ID
    SUB_ISSUE_ID=$(gh api /repos/{owner}/{repo}/issues/$ISSUE_NUMBER --jq .id)
    gh api --method POST /repos/{owner}/{repo}/issues/{parent-number}/sub_issues \
      -F "sub_issue_id=$SUB_ISSUE_ID"
