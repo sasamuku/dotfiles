@@ -151,7 +151,7 @@ function wt() {
             return 1
         fi
 
-        # Create .wt_hook.sh with copy template
+        # Create .wt_hook.sh with copy and symlink template
         cat > .wt_hook.sh << 'EOF'
 #!/bin/bash
 # .wt_hook.sh - Executed after 'wt add' command in worktree directory
@@ -160,10 +160,15 @@ function wt() {
 # - $WT_BRANCH_NAME: Name of the branch
 # - $WT_PROJECT_ROOT: Path to the original project root
 
-# Files and directories to copy from project root to worktree directory
-# Add or remove file/directory names as needed
-copy_items=(".env" ".claude")
+# Files and directories to COPY from project root to worktree
+# Use this when each worktree needs independent copies
+copy_items=()
 
+# Files and directories to SYMLINK from project root to worktree
+# Use this when worktrees should share the same files (e.g., .env, .claude)
+link_items=()
+
+# Copy items
 for item in "${copy_items[@]}"; do
     if [[ -f "$WT_PROJECT_ROOT/$item" ]]; then
         cp "$WT_PROJECT_ROOT/$item" "$item"
@@ -171,6 +176,19 @@ for item in "${copy_items[@]}"; do
     elif [[ -d "$WT_PROJECT_ROOT/$item" ]]; then
         rsync -a "$WT_PROJECT_ROOT/$item/" "$item/"
         echo "Copied directory $item to worktree"
+    fi
+done
+
+# Symlink items (relative paths for portability)
+project_name=$(basename "$WT_PROJECT_ROOT")
+for item in "${link_items[@]}"; do
+    if [[ -e "$WT_PROJECT_ROOT/$item" ]]; then
+        if [[ -e "$item" || -L "$item" ]]; then
+            echo "Skipped $item (already exists)"
+        else
+            ln -s "../$project_name/$item" "$item"
+            echo "Linked $item -> ../$project_name/$item"
+        fi
     fi
 done
 
