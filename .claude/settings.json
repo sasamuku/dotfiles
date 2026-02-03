@@ -180,7 +180,8 @@
     "example-skills@anthropic-agent-skills": true,
     "serena@claude-plugins-official": true,
     "context7@claude-plugins-official": true,
-    "playwright@claude-plugins-official": true
+    "playwright@claude-plugins-official": true,
+    "postgres-best-practices@supabase-agent-skills": true
   },
   "alwaysThinkingEnabled": false
 }
