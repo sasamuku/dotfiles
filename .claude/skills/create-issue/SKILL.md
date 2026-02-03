@@ -12,8 +12,10 @@ Create a new GitHub issue using GitHub CLI.
 
 $ARGUMENTS
 
-- When arguments provided: Create issue based on given content
-- When empty: Detect context from conversation and suggest creating an issue
+Examples:
+- `Add dark mode support` - Create issue with this description
+- `Bug: login fails on Safari` - Create bug report
+- (empty) - Detect context from conversation and suggest issue
 
 ## Process
 

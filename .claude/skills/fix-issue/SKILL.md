@@ -25,8 +25,5 @@ $ARGUMENTS
 4. Search the codebase for relevant files
 5. Implement the necessary changes
 6. Write and run tests to verify the fix
-7. Ensure code passes linting and type checking:
-   ```bash
-   pnpm lint
-   ```
+7. Run linting and type checking (if available in project)
 8. Create a descriptive commit message following Conventional Commits

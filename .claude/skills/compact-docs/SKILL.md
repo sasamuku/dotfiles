@@ -11,7 +11,7 @@ Compress and optimize documentation files.
 
 ## Arguments
 
-Path to the markdown file to be compressed.
+Path to the markdown file to be compressed (e.g., `docs/README.md`, `CONTRIBUTING.md`).
 
 $ARGUMENTS
 
