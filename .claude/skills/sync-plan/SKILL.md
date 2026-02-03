@@ -1,6 +1,6 @@
 ---
 name: sync-plan
-description: Sync PLANS.md content to linked GitHub issue comment
+description: Sync PLANS.md content to linked GitHub issue comment. Use when PLANS.md is updated and changes need to be reflected in the GitHub issue.
 disable-model-invocation: true
 ---
 

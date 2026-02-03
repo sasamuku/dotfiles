@@ -1,6 +1,6 @@
 ---
 name: compact-docs
-description: Compression command to reduce documentation redundancy and improve clarity
+description: Compress, reduce, optimize, or shrink documentation files. Use when docs are verbose, redundant, or need consolidation for clarity.
 disable-model-invocation: true
 allowed-tools: Read, Edit
 ---

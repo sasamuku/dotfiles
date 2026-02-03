@@ -1,101 +1,92 @@
 ---
 name: summarize-epic
-description: GitHub Epic issueの実装内容を概略表示・要約
+description: Summarize GitHub Epic issue with sub-issues and related PRs. Use when reviewing epic progress or getting implementation overview.
 disable-model-invocation: true
 ---
 
 # Summarize Epic
 
-指定したGitHub Epic issueとその配下のsub-issue、関連PRの実装内容を集約して要約します。
+Aggregate and summarize a GitHub Epic issue with its sub-issues and related PRs.
 
 ## Arguments
 
-`<epic-issue-url>`: GitHub Epic issue URL (例: https://github.com/owner/repo/issues/123)
+`<epic-issue-url>`: GitHub Epic issue URL (e.g., https://github.com/owner/repo/issues/123)
 
 $ARGUMENTS
 
-## 処理手順
+## Steps
 
-### 1. Epic issue情報の取得
+### 1. Fetch Epic Issue
 
-- URLからrepository名とissue番号を抽出
-- Epic issueの詳細（title, body, state, comments）を取得
+- Extract repository name and issue number from URL
+- Get Epic details (title, body, state, comments)
 
-### 2. Sub-issueの取得
-
-GitHub Sub-issues API を使用:
+### 2. Fetch Sub-issues
 
 ```bash
 gh api repos/<owner>/<repo>/issues/<epic-number>/sub_issues --paginate --jq '.[].number'
 ```
 
-- 失敗時は他の手段を試さず、エラーとして報告
-- 成功時: 各sub-issueの状態を集計（完了/進行中）
+- On failure: Report error as-is
+- On success: Aggregate sub-issue states (completed/in-progress)
 
-### 3. 関連PRの取得
+### 3. Fetch Related PRs
 
-- GraphQL APIでissueのタイムラインからPR取得
-- PR本文でissue番号を検索
-- Epic本文からPR番号を直接抽出
-- 各PRの詳細（title, state, mergedAt, additions, deletions, files）を取得
+- Use GraphQL API to get PRs from issue timeline
+- Search PR bodies for issue references
+- Extract PR numbers from Epic body
+- Get PR details (title, state, mergedAt, additions, deletions, files)
 
-### 4. 出力format
+### 4. Output Format
 
 ```markdown
-# Epic issue概要
+# Epic Summary
 
-## 📋 基本情報
+## Basic Info
 - **Epic**: <url>
-- **状態**: <state>
+- **State**: <state>
 - **Assignees**: <assignee-list>
 
-## 📝 Epic概要
-<Epic本文の要約>
+## Overview
+<Epic body summary>
 
-## 💬 重要なコメント
-<Epic Issueのコメントから重要な決定事項や変更点>
+## Key Comments
+<Important decisions and changes from Epic comments>
 
-## 🔗 Sub-issue進捗
-- **完了**: <completed>/<total> issues
-- **進捗率**: <percentage>%
+## Sub-issue Progress
+- **Completed**: <completed>/<total> issues
+- **Progress**: <percentage>%
 
-## 🚀 実装Highlight
+## Implementation Highlights
 
-### マージ済み変更
-- <pr-url>: <主要な変更点の要約>
+### Merged Changes
+- <pr-url>: <summary of main changes>
 
-### 進行中の作業
-- <pr-url>: <変更内容の概要>
+### In Progress
+- <pr-url>: <change overview>
 
-## 📊 全体進捗
-- **完了**: <completed>/<total> issue
-- **進捗率**: <percentage>%
-- **残作業**: <未着手または進行中のタスクリスト>
+## Overall Progress
+- **Completed**: <completed>/<total> issues
+- **Progress**: <percentage>%
+- **Remaining**: <pending or in-progress tasks>
 
-## ⚠️ 課題・乖離点
-<Epic記載内容と実装の相違点、Blockerや懸念事項>
+## Issues & Gaps
+<Discrepancies between Epic spec and implementation, blockers, concerns>
 
-## 📅 今後の予定
-<次のステップやマイルストーン>
+## Next Steps
+<Upcoming milestones>
 ```
 
-## エラーハンドリング
-
-- 権限エラー: Private repositoryへのアクセス権限を確認
-- Issue番号の解析エラー: URL形式の妥当性を検証
-- API制限: Rate limitに達した場合は待機または分割実行を提案
-- Sub-issue取得失敗: エラーメッセージをそのまま表示
-
-## 実装コマンド例
+## Commands
 
 ```bash
-# Epic issue取得
+# Epic issue
 gh issue view <number> --repo <owner>/<repo> --json title,body,state,comments
 
-# Sub-issue取得
+# Sub-issues
 gh api repos/<owner>/<repo>/issues/<epic-number>/sub_issues --paginate --jq '.[].number'
 
-# PR検索（GraphQL）
+# Related PRs (GraphQL)
 gh api graphql -f query='
   {
     repository(owner: "<owner>", name: "<repo>") {
@@ -104,13 +95,7 @@ gh api graphql -f query='
           nodes {
             ... on CrossReferencedEvent {
               source {
-                ... on PullRequest {
-                  number
-                  title
-                  state
-                  merged
-                  mergedAt
-                }
+                ... on PullRequest { number title state merged mergedAt }
               }
             }
           }
@@ -120,6 +105,6 @@ gh api graphql -f query='
   }
 '
 
-# PR詳細取得
+# PR details
 gh pr view <pr-number> --repo <owner>/<repo> --json title,body,state,mergedAt,additions,deletions,changedFiles
 ```
