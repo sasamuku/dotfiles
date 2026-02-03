@@ -2,6 +2,7 @@
 name: implement-plan
 description: Implement features from PLANS.md using the plan-driven-coder agent
 disable-model-invocation: true
+context: fork
 ---
 
 # Implement Plan
