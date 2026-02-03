@@ -1,1 +1,0 @@
-Pull the latest changes from branch: $ARGUMENTS (default: origin main). Resolve conflicts if any occur.

@@ -1,10 +1,18 @@
 ---
-name: committing-and-pushing
-description: Commits changes and pushes to remote repository. Use when: user wants to commit and push in one flow.
+name: commit-and-push
+description: Commit changes and push to remote repository
+disable-model-invocation: true
 ---
 
-# Commit and Push Skill
+# Commit and Push
 
-Execute `/commit-and-push` slash command.
+Commit changes and push to remote repository.
 
-See [commit-and-push.md](../../commands/commit-and-push.md) for workflow.
+## Task
+
+Execute the following workflow:
+
+1. **Create commits** following `/commit` skill workflow
+2. **Push to remote** following `/push` skill workflow
+
+See the individual skills for detailed steps.

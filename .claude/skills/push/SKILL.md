@@ -1,10 +1,23 @@
 ---
-name: pushing-commits
-description: Pushes commits to remote repository. Use when: user wants to push, upload commits, or send changes to remote.
+name: push
+description: Pushes commits to remote repository. Use when user wants to push, upload commits, or send changes to remote.
+disable-model-invocation: true
 ---
 
-# Push Skill
+# Push
 
-Execute `/push` slash command.
+Push commits to remote repository.
 
-See [push.md](../../commands/push.md) for workflow.
+## Task
+
+Push the current branch commits to the remote repository.
+
+```bash
+git push
+```
+
+If upstream is not set:
+
+```bash
+git push -u origin $(git branch --show-current)
+```

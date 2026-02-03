@@ -1,10 +1,19 @@
 ---
-name: committing-and-creating-pr
-description: Commits changes, pushes to remote, and creates a draft PR. Use when: user wants to commit and create PR in one flow.
+name: commit-and-pr
+description: Commit changes, push to remote, and create a draft pull request
+disable-model-invocation: true
 ---
 
-# Commit and PR Skill
+# Commit and PR
 
-Execute `/commit-and-pr` slash command.
+Commit changes, push to remote, and create a draft pull request.
 
-See [commit-and-pr.md](../../commands/commit-and-pr.md) for workflow.
+## Task
+
+Execute the following workflow:
+
+1. **Create commits** following `/commit` skill workflow
+2. **Push to remote** following `/push` skill workflow
+3. **Create draft PR** following `/create-pr` skill workflow
+
+See the individual skills for detailed steps.

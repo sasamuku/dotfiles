@@ -1,12 +1,23 @@
 ---
-name: implementing-plan
-description: Implement features documented in PLANS.md using plan-driven-coder agent. Use when: user mentions implementing a plan, building from PLANS.md, working on planned features, executing documented tasks, or when PLANS.md exists and implementation is requested.
+name: implement-plan
+description: Implement features from PLANS.md using the plan-driven-coder agent
+disable-model-invocation: true
 ---
 
-# Implement Plan Skill
+# Implement Plan
 
-Use the `plan-driven-coder` agent to implement features from PLANS.md.
+Use the plan-driven-coder agent to implement features from PLANS.md.
 
-Execute `/implement-plan` slash command, or invoke the agent directly.
+## Arguments
 
-See [implement-plan.md](../../commands/implement-plan.md) for workflow.
+$ARGUMENTS
+
+If no arguments provided, read PLANS.md and implement the next uncompleted item.
+
+## Task
+
+The agent will:
+
+1. Read PLANS.md for implementation details
+2. Implement code following the documented plan
+3. Update PLANS.md with status and discoveries

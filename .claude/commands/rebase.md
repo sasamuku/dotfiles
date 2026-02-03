@@ -1,1 +1,0 @@
-Fetch and rebase current branch onto: $ARGUMENTS (default: origin/main). Resolve conflicts if any occur.

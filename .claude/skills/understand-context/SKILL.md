@@ -1,10 +1,20 @@
 ---
-name: understanding-work-context
-description: Analyzes current git status and work in progress. Use when: user wants to understand current state, check work status, or see what's changed.
+name: understand-context
+description: Understand the current work status and project context
+disable-model-invocation: true
 ---
 
-# Understand Context Skill
+# Understand Context
 
-Execute `/understand-context` slash command.
+Analyze the current work status and project context.
 
-See [understand-context.md](../../commands/understand-context.md) for workflow.
+## Task
+
+Run `git status` and analyze:
+
+- Current branch
+- Modified files
+- Untracked files
+- Staged changes
+
+Provide a summary of the current work in progress.

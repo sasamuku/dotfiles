@@ -1,10 +1,21 @@
 ---
-name: merging-branch
-description: Merges a branch into current branch with conflict resolution. Use when: user wants to merge, combine branches, or integrate changes.
+name: merge
+description: Merges a branch into current branch with conflict resolution. Use when user wants to merge, combine branches, or integrate changes.
+disable-model-invocation: true
 ---
 
-# Merge Skill
+# Merge
 
-Execute `/merge` or `/merge <branch>` slash command.
+Merge branch: $ARGUMENTS (default: origin main) into current branch.
 
-See [merge.md](../../commands/merge.md) for workflow.
+## Task
+
+Merge the specified branch into the current branch. Resolve conflicts if any occur.
+
+```bash
+git merge $ARGUMENTS
+# or default:
+git merge origin main
+```
+
+If conflicts occur, analyze and resolve them, then complete the merge.
