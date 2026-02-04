@@ -181,7 +181,8 @@
     "serena@claude-plugins-official": true,
     "context7@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
-    "postgres-best-practices@supabase-agent-skills": true
+    "postgres-best-practices@supabase-agent-skills": true,
+    "claude-mem@thedotmack": true
   },
   "alwaysThinkingEnabled": false
 }
