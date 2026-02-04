@@ -73,6 +73,7 @@ alias editz='$EDITOR ~/.zshrc'
 alias sourcez="source ~/.zshrc"
 alias be='bundle exec'
 alias cl='claude'
+alias ccr='npx @sasazame/ccresume@latest'
 alias lg='lazygit'
 
 # Android SDK
