@@ -1,9 +1,9 @@
-tap "homebrew/bundle"
 tap "laishulu/homebrew"
+tap "oven-sh/bun"
 
 brew "awscli"
 brew "bat"
-brew "codex"
+brew "bun"
 brew "direnv"
 brew "fzf"
 brew "gh"
