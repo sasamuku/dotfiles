@@ -100,3 +100,5 @@ if [[ -f "$HOME/.config/zsh/functions/ghq.zsh" ]]; then
 fi
 export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+
+alias claude-mem='bun "$HOME/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
