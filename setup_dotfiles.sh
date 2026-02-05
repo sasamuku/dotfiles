@@ -67,6 +67,11 @@ mkdir -p ~/Library/Application\ Support/Cursor/User
 ln -sfn ${DOTFILES_DIR}/.config/cursor/settings.json ~/Library/Application\ Support/Cursor/User/settings.json
 ln -sfn ${DOTFILES_DIR}/.config/cursor/keybindings.json ~/Library/Application\ Support/Cursor/User/keybindings.json
 
+# Zed config
+echo "📁 Creating Zed config symlink..."
+mkdir -p ~/.config/zed
+ln -sfn ${DOTFILES_DIR}/.config/zed/settings.json ~/.config/zed/settings.json
+
 # Claude MCP setup
 echo "🔌 Setting up Claude MCP servers..."
 "$(dirname "${0}")/setup_claude_mcp.sh"
