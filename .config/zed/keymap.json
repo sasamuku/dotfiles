@@ -1,0 +1,8 @@
+[
+  {
+    "context": "Terminal",
+    "bindings": {
+      "cmd-shift-d": "pane::SplitDown"
+    }
+  }
+]
