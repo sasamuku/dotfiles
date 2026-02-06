@@ -4,5 +4,11 @@
     "bindings": {
       "cmd-shift-d": "pane::SplitDown"
     }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-shift-g": "git_panel::ToggleFocus"
+    }
   }
 ]
