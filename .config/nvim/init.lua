@@ -536,90 +536,67 @@ require("lazy").setup({
 
   -- File explorer
   {
-    "nvim-neo-tree/neo-tree.nvim",
-    branch = "v3.x",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons",
-      "MunifTanjim/nui.nvim",
-    },
+    "nvim-tree/nvim-tree.lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      -- netrwを無効化（neo-treeと競合するため）
+      -- netrwを無効化
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
 
-      require("neo-tree").setup({
-        close_if_last_window = true,
-        popup_border_style = "rounded",
-        enable_git_status = true,
-        enable_diagnostics = true,
-        default_component_configs = {
-          indent = {
-            padding = 0,
-            with_expanders = true,
-          },
-          icon = {
-            folder_closed = "",
-            folder_open = "",
-            folder_empty = "",
-          },
-          git_status = {
-            symbols = {
-              added = "+",
-              modified = "~",
-              deleted = "✖",
-              renamed = "➜",
-              untracked = "★",
-              ignored = "◌",
-              unstaged = "✗",
-              staged = "✓",
-              conflict = "",
-            },
-          },
+      require("nvim-tree").setup({
+        sync_root_with_cwd = true,
+        respect_buf_cwd = true,
+        update_focused_file = {
+          enable = true,
+          update_cwd = false,
         },
-        window = {
-          position = "left",
+        view = {
           width = 30,
-          mappings = {
-            ["<space>"] = "none",
-            ["o"] = "open",
-            ["<C-f>"] = "none",
-            ["<C-b>"] = "close_window",
-          },
+          side = "left",
         },
-        filesystem = {
-          follow_current_file = {
-            enabled = true,
-            leave_dirs_open = false,
-          },
-          filtered_items = {
-            hide_dotfiles = false,
-            hide_gitignored = false,
-            hide_by_name = {
-              ".DS_Store",
+        renderer = {
+          icons = {
+            glyphs = {
+              folder = {
+                default = "",
+                open = "",
+                empty = "",
+              },
+              git = {
+                unstaged = "✗",
+                staged = "✓",
+                unmerged = "",
+                renamed = "➜",
+                untracked = "★",
+                deleted = "✖",
+                ignored = "◌",
+              },
             },
           },
-          use_libuv_file_watcher = true,
         },
-        buffers = {
-          follow_current_file = {
-            enabled = true,
-          },
+        filters = {
+          dotfiles = false,
+          custom = { ".DS_Store" },
         },
-        git_status = {
-          window = {
-            position = "float",
+        git = {
+          enable = true,
+          ignore = false,
+        },
+        filesystem_watchers = {
+          enable = true,  -- ファイル変更を自動検知
+        },
+        actions = {
+          open_file = {
+            quit_on_open = false,
           },
         },
       })
 
       -- キーマップ
-      vim.keymap.set("n", "<leader>ee", ":Neotree toggle<CR>", { desc = "Toggle file explorer" })
-      vim.keymap.set("n", "<leader>ef", ":Neotree reveal<CR>", { desc = "Find current file in explorer" })
-      vim.keymap.set("n", "<C-e>", ":Neotree reveal<CR>", { desc = "Find current file in explorer (VSCode style)" })
-      vim.keymap.set("n", "<C-b>", ":Neotree toggle<CR>", { desc = "Toggle sidebar (VSCode style)" })
-      vim.keymap.set("n", "<leader>eb", ":Neotree buffers<CR>", { desc = "Show buffers in explorer" })
-      vim.keymap.set("n", "<leader>eg", ":Neotree git_status<CR>", { desc = "Show git status in explorer" })
+      vim.keymap.set("n", "<leader>ee", ":NvimTreeToggle<CR>", { desc = "Toggle file explorer" })
+      vim.keymap.set("n", "<leader>ef", ":NvimTreeFindFile<CR>", { desc = "Find current file in explorer" })
+      vim.keymap.set("n", "<C-e>", ":NvimTreeFindFile<CR>", { desc = "Find current file in explorer (VSCode style)" })
+      vim.keymap.set("n", "<C-b>", ":NvimTreeToggle<CR>", { desc = "Toggle sidebar (VSCode style)" })
     end,
   },
 
