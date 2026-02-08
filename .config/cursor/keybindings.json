@@ -76,26 +76,4 @@
   "command": "-workbench.action.terminal.focusNext",
   "when": "terminalFocus && terminalHasBeenCreated && !terminalEditorFocus || terminalFocus && terminalProcessSupported && !terminalEditorFocus"
 },
-{
-  "key": "ctrl+`",
-  "command": "workbench.action.focusFirstEditorGroup"
-},
-{
-  "key": "cmd+1",
-  "command": "-workbench.action.focusFirstEditorGroup"
-},
-{
-  "key": "ctrl+1",
-  "command": "workbench.action.terminal.toggleTerminal",
-  "when": "terminal.active"
-},
-{
-  "key": "ctrl+`",
-  "command": "-workbench.action.terminal.toggleTerminal",
-  "when": "terminal.active"
-},
-{
-  "key": "ctrl+1",
-  "command": "-workbench.action.openEditorAtIndex1"
-}
 ]
