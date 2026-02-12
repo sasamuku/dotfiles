@@ -20,6 +20,7 @@ cask "ngrok"
 brew "node"
 brew "sheldon"
 brew "starship"
+brew "tmux"
 brew "watch"
 
 cask "1password"
