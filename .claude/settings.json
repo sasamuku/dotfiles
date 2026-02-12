@@ -183,7 +183,8 @@
     "context7@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
     "postgres-best-practices@supabase-agent-skills": true,
-    "claude-mem@thedotmack": false
+    "claude-mem@thedotmack": false,
+    "ralph-loop@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": false
 }
