@@ -36,6 +36,9 @@
 .serena/project.yml
 .serena/.gitignore
 
+# Scratch Directory
+scratch/
+
 # Project Specific
 PLANS.md
 *.code-workspace
