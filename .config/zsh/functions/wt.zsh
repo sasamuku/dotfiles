@@ -179,15 +179,14 @@ for item in "${copy_items[@]}"; do
     fi
 done
 
-# Symlink items (relative paths for portability)
-project_name=$(basename "$WT_PROJECT_ROOT")
+# Symlink items (absolute paths to avoid breakage with nested paths)
 for item in "${link_items[@]}"; do
     if [[ -e "$WT_PROJECT_ROOT/$item" ]]; then
         if [[ -e "$item" || -L "$item" ]]; then
             echo "Skipped $item (already exists)"
         else
-            ln -s "../$project_name/$item" "$item"
-            echo "Linked $item -> ../$project_name/$item"
+            ln -s "$WT_PROJECT_ROOT/$item" "$item"
+            echo "Linked $item -> $WT_PROJECT_ROOT/$item"
         fi
     fi
 done
