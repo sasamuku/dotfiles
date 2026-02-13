@@ -189,35 +189,68 @@ vimtutor
 
 ### 基本設定
 - **Leaderキー**: `Space`
-- **jj**: インサートモードを抜ける（素早く2回jを押す）
+- **jj**: インサートモードを抜けて保存（素早く2回jを押す）
 
 ### ファイル検索（Telescope）
 | キー | 説明 |
 |------|------|
 | `<Space>ff` | ファイル検索 |
+| `Ctrl+p` | ファイル検索（VSCode風） |
 | `<Space>fg` | テキスト検索（Live grep） |
+| `Ctrl+f` | テキスト検索（VSCode風） |
 | `<Space>fb` | バッファ検索 |
+
+### バッファ管理（buffer_manager）
+| キー | 説明 |
+|------|------|
+| `Ctrl+Tab` | バッファメニューを開く |
+| `Ctrl+Shift+Tab` | 前のバッファへ（MRU順） |
 
 ### ファイルエクスプローラー（nvim-tree）
 | キー | 説明 |
 |------|------|
-| `<Space>e` | ファイルエクスプローラー開閉 |
+| `<Space>ee` | ファイルエクスプローラー開閉 |
+| `Ctrl+b` | ファイルエクスプローラー開閉（VSCode風） |
 | `<Space>ef` | 現在のファイルをエクスプローラーで探す |
+| `Ctrl+e` | 現在のファイルをエクスプローラーで探す（VSCode風） |
 
-### Git操作
+### Git操作（fugitive / lazygit / diffview）
 | キー | 説明 |
 |------|------|
 | `<Space>gs` | Git status（vim-fugitive） |
 | `<Space>gd` | Git diff --staged |
 | `<Space>gg` | LazyGit を開く |
-| `<Space>gh` | GitHub でファイルを開く（現在のコミット） |
-| `<Space>gh` (Visual) | GitHub で選択範囲を行番号付きで開く |
+| `Ctrl+g` | LazyGit を開く（VSCode風） |
+| `<Space>gv` | Diffview を開く |
+| `<Space>gc` | Diffview を閉じる |
+| `<Space>gh` | 現在のファイルの Git 履歴（Diffview） |
+| `<Space>gH` | 全ファイルの Git 履歴（Diffview） |
 
-### ファイルパス操作
+### Git hunk操作（gitsigns）
+| キー | 説明 |
+|------|------|
+| `]c` | 次の変更箇所へジャンプ |
+| `[c` | 前の変更箇所へジャンプ |
+| `<Space>hs` | hunk をステージ |
+| `<Space>hr` | hunk をリセット |
+| `<Space>hS` | バッファ全体をステージ |
+| `<Space>hu` | hunk のステージを取り消し |
+| `<Space>hR` | バッファ全体をリセット |
+| `<Space>hp` | hunk をプレビュー |
+| `<Space>hb` | 行の blame を表示 |
+| `<Space>tb` | 行の blame 表示を切り替え |
+| `<Space>hd` | diff を表示 |
+| `<Space>hD` | diff を表示（HEAD~比較） |
+
+### ファイルパス・URL操作
 | キー | 説明 |
 |------|------|
 | `<Space>cp` | ファイルの相対パスをコピー |
+| `<Space>cP` | ファイルの絶対パスをコピー |
 | `<Space>cc` (Visual) | ファイルパスと選択コードをフォーマット付きでコピー |
+| `<Space>cr` | GitHub リモートURLをコピー |
+| `<Space>cr` (Visual) | GitHub リモートURLを行番号付きでコピー |
+| `<Space>fo` | Finder でファイルを表示 |
 
 ### LSP（Language Server Protocol）
 | キー | 説明 |
