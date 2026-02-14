@@ -41,9 +41,42 @@ $ARGUMENTS
 
 ## Output
 
-The code-reviewer agent provides structured feedback organized by priority:
-- **Critical**: Security issues, bugs
-- **Warning**: Code quality concerns
-- **Suggestion**: Improvements
+For each finding, assign:
+- **ID**: Sequential number (e.g., #1, #2, #3)
+- **Priority**:
+  - 🔴 **Critical** - Security vulnerabilities, bugs, data loss risks - must fix
+  - 🟡 **Warning** - Code quality concerns, potential issues - should fix
+  - 🟢 **Suggestion** - Improvements, style, readability - nice to have
 
-With specific file locations and fix recommendations.
+### Output Format
+
+Present to user as a table:
+
+```
+## PR Review Summary
+
+### Overview
+- **Purpose**: One-sentence summary of what this PR aims to achieve
+- **Approach**: Brief description of how the changes accomplish the purpose
+
+### Findings
+
+| ID | Priority | File | Summary |
+|----|----------|------|---------|
+| #1 | 🔴 Critical | src/auth.ts:42 | SQL injection via unsanitized user input |
+| #2 | 🟡 Warning | src/api.ts:15 | Missing error handling in async call |
+| #3 | 🟢 Suggestion | src/utils.ts:8 | Extract duplicated logic into helper |
+...
+
+### Details
+
+**#1** 🔴 Critical - src/auth.ts:42
+> Description of the issue
+Recommendation: How to fix it
+
+**#2** 🟡 Warning - src/api.ts:15
+> Description of the issue
+Recommendation: How to fix it
+
+...
+```
