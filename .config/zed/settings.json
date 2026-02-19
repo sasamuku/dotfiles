@@ -7,6 +7,11 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 1000
+    }
+  },
   "file_scan_exclusions": ["**/node_modules"],
   "terminal": {
     "dock": "right"
