@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Handover
 
-Generate a `HANDOVER.md` at the project root to preserve session context for future sessions.
+Generate a handover file to preserve session context for future sessions.
 
 ## Steps
 
@@ -30,9 +30,16 @@ git diff --cached
 git log --oneline -10
 ```
 
-### 3. Generate HANDOVER.md
+### 3. Determine Save Location
 
-Write `HANDOVER.md` at the project root with the following sections:
+Check if a `scratch/` directory exists at the project root:
+
+- **If `scratch/` exists**: Save as `scratch/<descriptive-name>.md` (e.g. `scratch/auth-refactor-handover.md`). Choose a name that reflects the session's work.
+- **If `scratch/` does not exist**: Save as `HANDOVER.md` at the project root.
+
+### 4. Generate Handover File
+
+Write the handover file with the following sections:
 
 ```markdown
 # Handover
@@ -59,7 +66,7 @@ Write `HANDOVER.md` at the project root with the following sections:
 - [Files that were created or modified]
 ```
 
-### 4. Confirm
+### 5. Confirm
 
 Show the generated content to the user for review.
 
@@ -68,6 +75,7 @@ Show the generated content to the user for review.
 - Keep each section concise; bullet points only
 - Omit empty sections
 - Focus on information that would be lost when context resets
-- `HANDOVER.md` is for session-specific context; project-level rules belong in `CLAUDE.md`
+- The handover file is for session-specific context; project-level rules belong in `CLAUDE.md`
+- `scratch/` is gitignored but shared across worktrees, making it ideal for handover files
 
 $ARGUMENTS
