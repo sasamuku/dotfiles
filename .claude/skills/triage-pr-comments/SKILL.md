@@ -93,6 +93,7 @@ gh api repos/{owner}/{repo}/pulls/{pr_number}/comments -X POST \
 
 - **Only reply to comments that were actually addressed**
 - Reference commit hash when a fix was made (e.g., "Fixed in abc123")
+  - **Before replying with a commit hash, ensure the commit is pushed to the remote** (`git push` if needed) so the link resolves on GitHub
 - For "won't fix" decisions, explain reasoning
 - Skip comments still pending investigation
 - Keep replies concise
