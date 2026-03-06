@@ -23,7 +23,7 @@ Follow `@.claude/skills/plan-from-issue/SKILL.md` with the issue number from arg
 
 ### Phase 2: Implement Plan
 
-Follow `@.claude/skills/implement-plan/SKILL.md` to implement all items from PLANS.md.
+Follow `@.claude/skills/implement-from-plan/SKILL.md` to implement all items from PLANS.md.
 
 ### Phase 3: Commit Changes
 
