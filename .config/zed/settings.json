@@ -19,6 +19,9 @@
   "vim_mode": true,
   "ui_font_size": 14.0,
   "buffer_font_size": 11.0,
+  "buffer_font_features": {
+    "calt": false
+  },
   "theme": {
     "mode": "system",
     "light": "One Light",
