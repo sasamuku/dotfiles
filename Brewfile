@@ -1,6 +1,7 @@
 tap "laishulu/homebrew"
 tap "oven-sh/bun"
 
+brew "agent-browser"
 brew "awscli"
 brew "bat"
 brew "bun"
