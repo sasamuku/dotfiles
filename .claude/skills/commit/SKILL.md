@@ -21,6 +21,7 @@ git branch --show-current
 git status
 git diff
 git diff --cached
+git log --oneline -5
 ```
 
 ### 2. Analyze Changes
