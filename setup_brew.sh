@@ -33,11 +33,6 @@ else
     echo "Homebrew is already installed"
 fi
 
-# Update Homebrew
-echo "🔄 Updating Homebrew..."
-brew update
-brew upgrade
-
 # Install packages from local Brewfile
 echo "📦 Installing packages from Brewfile..."
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
