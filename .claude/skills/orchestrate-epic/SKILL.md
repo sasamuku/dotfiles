@@ -31,8 +31,8 @@ $ARGUMENTS
 - If anything is unclear or ambiguous, asks the user (via leader) before proceeding
 - Implements the changes only after understanding is sufficient
 - Runs tests/lint if available
-- Commits and creates a PR
-- Reports completion back
+- Reports implementation to the user for review (does NOT commit yet)
+- After user approval, commits via `/commit -y` and creates PR via `/create-pr`
 - Does NOT decide what to work on — the leader decides
 
 ## Workflow
@@ -92,10 +92,17 @@ For each open sub-issue (in order):
      5. Follow existing code patterns and conventions
      6. Run tests and linting if configured
 
-     Phase C: Deliver
-     7. Commit with a descriptive message referencing #<number>
-     8. Push and create a PR that closes #<number>
-     9. Report what you did: files changed, PR URL, any blockers
+     Phase C: Report
+     7. STOP and report what you implemented:
+        - Files changed and summary of changes
+        - Test results
+        - Any concerns or open questions
+     8. WAIT for user review. Do NOT commit or create PR yet.
+
+     Phase D: Deliver (only after user approval)
+     9. Use /commit -y to commit changes
+     10. Push and use /create-pr to create a PR that closes #<number>
+     11. Report PR URL
      ```
 3. **Inform user**:
    ```
@@ -104,10 +111,11 @@ For each open sub-issue (in order):
    - Give instructions: tell me what to relay
    - Skip: say "skip" to move on
    ```
-4. **On completion**: Review the member's result and report:
-   - Files changed, branch, PR URL
-   - Any errors or blockers
-5. **Confirm**: Ask user before starting the next sub-issue
+4. **On implementation complete**: Member reports changes. Leader relays to user for review.
+5. **User review**: User reviews the changes, requests fixes if needed.
+   - If fixes needed: Leader relays to member via SendMessage. Member fixes and reports again.
+   - If approved: Leader tells member to proceed to Phase D (commit & PR).
+6. **On PR created**: Report PR URL and ask user before starting the next sub-issue.
 
 ### Interacting with Members
 
