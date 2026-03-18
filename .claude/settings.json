@@ -66,7 +66,8 @@
       "mcp__serena__find_referencing_symbols",
       "mcp__serena__onboarding",
       "mcp__serena__think_about_collected_information",
-      "mcp__playwright__browser_evaluate"
+      "mcp__playwright__browser_evaluate",
+      "Bash(git commit:*)"
     ],
     "deny": [
       "Bash(rm -rf /)",
@@ -138,12 +139,9 @@
       "mcp__serena__insert_after_symbol",
       "mcp__serena__insert_before_symbol"
     ],
-    "ask": [
-      "Bash(git commit:*)"
-    ],
+    "ask": [],
     "defaultMode": "acceptEdits"
   },
-  "model": "opus",
   "hooks": {
     "PreToolUse": [
       {
