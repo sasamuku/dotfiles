@@ -62,47 +62,16 @@ $ARGUMENTS
 For each open sub-issue (in order):
 
 1. **Announce**: Print `Starting member-<issue-number> on #<number>: <title>`
-2. **Launch member**: Use the Agent tool with:
-   - `name: "member-<issue-number>"`
-   - `isolation: "worktree"`
-   - `mode: "auto"`
-   - Prompt:
-     ```
-     You are a MEMBER of an Epic orchestration team.
-     Your assignment: Sub-issue #<number> in <owner>/<repo>.
-     Title: <title>
-     URL: <url>
-
-     Details:
-     <body>
-
-     Instructions — follow the /feature-dev workflow:
-
-     Phase A: Understand
-     1. Use /feature-dev to deeply explore the codebase architecture
-        related to this sub-issue
-     2. Identify existing patterns, conventions, and dependencies
-     3. If anything is unclear or ambiguous about the requirements,
-        ASK the user before proceeding — do NOT guess.
-        Questions will be relayed through the leader.
-
-     Phase B: Implement
-     4. Only after understanding is sufficient, implement the changes
-     5. Follow existing code patterns and conventions
-     6. Run tests and linting if configured
-
-     Phase C: Report
-     7. STOP and report what you implemented:
-        - Files changed and summary of changes
-        - Test results
-        - Any concerns or open questions
-     8. WAIT for user review. Do NOT commit or create PR yet.
-
-     Phase D: Deliver (only after user approval)
-     9. Use /commit -y to commit changes
-     10. Push and use /create-pr to create a PR that closes #<number>
-     11. Report PR URL
-     ```
+2. **Launch member**: Use the Agent tool with `subagent_type: "epic-member"`. CRITICAL: you MUST set `isolation: "worktree"`.
+   ```
+   Agent({
+     name: "member-<issue-number>",
+     subagent_type: "epic-member",
+     isolation: "worktree",
+     prompt: "Your assignment: Sub-issue #<number> in <owner>/<repo>.\nTitle: <title>\nURL: <url>\n\nDetails:\n<body>"
+   })
+   ```
+   The agent definition at `@.claude/agents/epic-member.md` handles the workflow (understand → implement → report → deliver).
 3. **Member runs in foreground**: User can see progress in real time.
 4. **On Phase C (Report)**: Member reports changes. User reviews directly.
    - If fixes needed: User gives feedback, leader relays via SendMessage. Member fixes and reports again.
