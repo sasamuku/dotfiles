@@ -66,7 +66,6 @@ For each open sub-issue (in order):
    - `name: "member-<issue-number>"`
    - `isolation: "worktree"`
    - `mode: "auto"`
-   - `run_in_background: true`
    - Prompt:
      ```
      You are a MEMBER of an Epic orchestration team.
@@ -104,18 +103,11 @@ For each open sub-issue (in order):
      10. Push and use /create-pr to create a PR that closes #<number>
      11. Report PR URL
      ```
-3. **Inform user**:
-   ```
-   member-<N> is working on #<N>: <title> in the background.
-   - Check progress: ask me and I'll query the member
-   - Give instructions: tell me what to relay
-   - Skip: say "skip" to move on
-   ```
-4. **On implementation complete**: Member reports changes. Leader relays to user for review.
-5. **User review**: User reviews the changes, requests fixes if needed.
-   - If fixes needed: Leader relays to member via SendMessage. Member fixes and reports again.
+3. **Member runs in foreground**: User can see progress in real time.
+4. **On Phase C (Report)**: Member reports changes. User reviews directly.
+   - If fixes needed: User gives feedback, leader relays via SendMessage. Member fixes and reports again.
    - If approved: Leader tells member to proceed to Phase D (commit & PR).
-6. **On PR created**: Report PR URL and ask user before starting the next sub-issue.
+5. **On PR created**: Report PR URL and ask user before starting the next sub-issue.
 
 ### Interacting with Members
 
