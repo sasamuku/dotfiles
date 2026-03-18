@@ -9,7 +9,7 @@
   },
   "permissions": {
     "allow": [
-      "Read(./.claude/skills/**)",
+      "Read(~/.claude/skills/**)",
       "Bash(cat:*)",
       "Bash(mkdir:*)",
       "Bash(gh issue view:*)",
