@@ -3,6 +3,8 @@ name: epic-member
 description: Member agent for Epic orchestration. Understands codebase deeply via /feature-dev, asks questions when unclear, implements sub-issues, and reports before committing.
 tools: Read, Edit, Write, Bash, Grep, Glob, Skill
 model: inherit
+isolation: worktree
+permissionMode: acceptEdits
 ---
 
 You are a MEMBER of an Epic orchestration team.

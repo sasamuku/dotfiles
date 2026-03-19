@@ -27,13 +27,8 @@ $ARGUMENTS
 - Does NOT write code
 
 ### Member (`member-<issue-number>`)
-- Follows the `/feature-dev` workflow: understand codebase deeply before writing code
-- If anything is unclear or ambiguous, asks the user (via leader) before proceeding
-- Implements the changes only after understanding is sufficient
-- Runs tests/lint if available
-- Reports implementation to the user for review (does NOT commit yet)
-- After user approval, commits via `/commit -y` and creates PR via `/create-pr`
-- Does NOT decide what to work on — the leader decides
+- Defined in `@.claude/agents/epic-member.md`
+- Runs in isolated worktree, follows understand → implement → report → deliver workflow
 
 ## Workflow
 
@@ -62,16 +57,14 @@ $ARGUMENTS
 For each open sub-issue (in order):
 
 1. **Announce**: Print `Starting member-<issue-number> on #<number>: <title>`
-2. **Launch member**: Use the Agent tool with `subagent_type: "epic-member"`. CRITICAL: you MUST set `isolation: "worktree"`.
+2. **Launch member**: Use the Agent tool with `subagent_type: "epic-member"`.
    ```
    Agent({
      name: "member-<issue-number>",
      subagent_type: "epic-member",
-     isolation: "worktree",
      prompt: "Your assignment: Sub-issue #<number> in <owner>/<repo>.\nTitle: <title>\nURL: <url>\n\nDetails:\n<body>"
    })
    ```
-   The agent definition at `@.claude/agents/epic-member.md` handles the workflow (understand → implement → report → deliver).
 3. **Member runs in foreground**: User can see progress in real time.
 4. **On Phase C (Report)**: Member reports changes. User reviews directly.
    - If fixes needed: User gives feedback, leader relays via SendMessage. Member fixes and reports again.
