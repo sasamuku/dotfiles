@@ -29,8 +29,6 @@
       "Bash(npm view:*)",
       "Bash(npm install:*)",
       "Bash(find:*)",
-      "Bash(ls:*)",
-      "Bash(cat:*)",
       "Bash(grep:*)",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
@@ -150,6 +148,17 @@
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/hook_pre_commands.sh"
+          }
+        ]
+      }
+    ],
+    "WorktreeCreate": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/hook_worktree_create.sh"
           }
         ]
       }
