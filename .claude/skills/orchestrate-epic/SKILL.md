@@ -62,6 +62,7 @@ For each open sub-issue (in order):
    Agent({
      name: "member-<issue-number>",
      subagent_type: "epic-member",
+     isolation: "worktree",
      prompt: "Your assignment: Sub-issue #<number> in <owner>/<repo>.\nTitle: <title>\nURL: <url>\n\nDetails:\n<body>"
    })
    ```
