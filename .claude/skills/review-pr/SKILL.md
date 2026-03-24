@@ -13,10 +13,6 @@ Perform a thorough code review of a GitHub Pull Request.
 $ARGUMENTS
 
 - **First argument** (required): PR number or PR URL (e.g., `123` or `https://github.com/owner/repo/pull/123`)
-- **Second argument** (optional): Confidence level — `H` (High) / `M` (Middle) / `L` (Low). Defaults to `M`.
-  - **H (High)**: The reviewer is already familiar with this domain and tech stack. Skip explanations and focus exclusively on review findings.
-  - **M (Middle)**: Balanced mode — provide concise explanations alongside review findings. (Default)
-  - **L (Low)**: The reviewer is new to this domain or tech stack. Explain every code change thoroughly — what it does, why it exists, how it fits into the architecture, and any relevant background concepts.
 
 ## Steps
 
@@ -38,32 +34,25 @@ $ARGUMENTS
    - Summary: one plain-language sentence — include the business/product **background** so even someone on day 1 of the project understands why this PR exists
    - Type, Scope, Impact, Size — fill in the table so the reviewer can gauge effort and risk at a glance
 
-5. Write the **Key Changes** section, adapting depth based on confidence level:
+5. Write the **Reading Guide** section — a numbered list showing which files to read and in what order, so the reviewer has a mental map before diving into the diff:
+
+   - Analyze the diff and determine the optimal reading order. Start from the file that establishes the core intent of the PR (e.g., domain model, API contract, schema change), then proceed to files that build on or depend on it.
+   - For each file, write one line: the file path and its **role** — how it contributes to achieving the PR's stated purpose.
+   - Mark new files with `(new)`.
+
+6. Write the **Key Changes** section:
 
    Group all changes into logical semantic units. Each group represents a cohesive purpose spanning one or more files. Order groups so the reviewer can understand the PR from top to bottom.
 
-   **For all levels**, each group has:
+   Each group has:
    - A short descriptive title
    - List of relevant files
-
-   **Level L (Low)** — explain thoroughly:
-   - **Context**: explain where in the architecture these files sit, their role, and how they relate to other parts of the system (2-3 sentences)
-   - Explain **what** the change does, **why** it exists, and **how** it works step-by-step
-   - Quote key code snippets with line-by-line annotations
-   - Define all project-specific terms, abbreviations, domain jargon, and relevant technical concepts on first use
-   - Add "Background" callouts for prerequisite knowledge (e.g., design patterns, protocols, framework conventions)
-
-   **Level M (Middle)** — balanced (default):
    - **Context**: briefly explain where in the architecture these files sit and their role (1 sentence)
    - Explain **what** the change does and **why** it exists
    - Quote key code snippets to illustrate the change
    - If project-specific terms, abbreviations, or domain jargon appear, add a short inline explanation on first use
 
-   **Level H (High)** — minimal explanation:
-   - List files with a one-line summary of what changed
-   - Only add context if the change is architecturally surprising or non-obvious
-
-6. Classify each finding by priority:
+7. Classify each finding by priority:
    - 🔴 **Critical** - Security vulnerabilities, bugs, data loss risks
    - 🟡 **Warning** - Code quality concerns, potential issues
    - 🟢 **Suggestion** - Improvements, style, readability
@@ -83,6 +72,12 @@ $ARGUMENTS
 | **Scope** | Authentication — password reset flow |
 | **Impact** | Expired reset links will now correctly show an error instead of silently succeeding |
 | **Size** | 3 files changed, +45 / -12 lines |
+
+### Reading Guide
+
+1. `src/auth.ts` — Core change: adds token expiry validation logic
+2. `src/middleware.ts` — Integrates the new validation into the request pipeline
+3. `src/errors.ts` (new) — Defines `TokenExpiredError` used by the validation
 
 ### Key Changes
 
