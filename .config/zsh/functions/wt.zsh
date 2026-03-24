@@ -90,7 +90,8 @@ function wt() {
 
         local project_name=$(basename "$project_root")
         local parent_dir=$(dirname "$project_root")
-        local worktree_path="$parent_dir/${project_name}-${branch_name}"
+        local safe_name=${branch_name//\//-}
+        local worktree_path="$parent_dir/${project_name}-${safe_name}"
 
         # Create new branch and worktree
         git worktree add -b "$branch_name" "$worktree_path"
@@ -305,7 +306,8 @@ EOF
 
         local project_name=$(basename "$project_root")
         local parent_dir=$(dirname "$project_root")
-        local worktree_path="$parent_dir/${project_name}-${branch_name}"
+        local safe_name=${branch_name//\//-}
+        local worktree_path="$parent_dir/${project_name}-${safe_name}"
 
         # Check if local branch exists
         if git show-ref --verify --quiet "refs/heads/$branch_name"; then

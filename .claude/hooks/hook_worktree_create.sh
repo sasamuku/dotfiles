@@ -26,7 +26,8 @@ PROJECT_ROOT=$(git -C "$CWD" rev-parse --show-toplevel 2>/dev/null) || {
 
 PROJECT_NAME=$(basename "$PROJECT_ROOT")
 PARENT_DIR=$(dirname "$PROJECT_ROOT")
-WORKTREE_PATH="$PARENT_DIR/${PROJECT_NAME}-${NAME}"
+SAFE_NAME=$(echo "$NAME" | tr '/' '-')
+WORKTREE_PATH="$PARENT_DIR/${PROJECT_NAME}-${SAFE_NAME}"
 
 if ! git -C "$PROJECT_ROOT" worktree add -b "$NAME" "$WORKTREE_PATH" >&2; then
     echo "Failed to create worktree" >&2
