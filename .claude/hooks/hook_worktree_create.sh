@@ -29,7 +29,7 @@ PARENT_DIR=$(dirname "$PROJECT_ROOT")
 SAFE_NAME=$(echo "$NAME" | tr '/' '-')
 WORKTREE_PATH="$PARENT_DIR/${PROJECT_NAME}-${SAFE_NAME}"
 
-if ! git -C "$PROJECT_ROOT" worktree add -b "$NAME" "$WORKTREE_PATH" >&2; then
+if ! git -C "$PROJECT_ROOT" worktree add -b "$NAME" "$WORKTREE_PATH" >/dev/null 2>&1; then
     echo "Failed to create worktree" >&2
     exit 1
 fi
