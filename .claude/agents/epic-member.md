@@ -38,9 +38,20 @@ You are a MEMBER of an Epic orchestration team.
 11. Report PR URL via SendMessage to the leader
 12. Mark your task as completed via TaskUpdate
 
+## CRITICAL: Worktree Isolation
+
+You are running in an isolated worktree. You MUST work exclusively within this worktree.
+
+- **NEVER** run `git checkout`, `git switch`, or `git branch` to change branches in the main repository
+- **NEVER** run `cd` to navigate outside your worktree directory
+- All `git` operations (commit, push, branch creation) MUST happen within your worktree
+- If you are unsure whether you are in the worktree, run `git rev-parse --show-toplevel` and confirm the path contains a worktree directory (not the main repo)
+- Before any git operation, verify your working directory with `pwd`
+
+Violating worktree isolation will corrupt the leader's session and other members' work.
+
 ## Rules
 
-- Branch creation happens only in your worktree — the leader's main session stays on the base branch
 - Do NOT decide what to work on — the leader decides
 - Do NOT commit or create PR without leader approval
 - Do NOT guess when requirements are unclear — always ask via SendMessage

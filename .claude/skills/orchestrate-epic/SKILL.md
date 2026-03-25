@@ -84,7 +84,7 @@ Agent({
   team_name: "epic-<epic-number>",
   isolation: "worktree",
   run_in_background: true,
-  prompt: "Team: epic-<epic-number>\nTask ID: <task-id>\nYour assignment: Sub-issue #<number> in <owner>/<repo>.\nTitle: <title>\nURL: <url>\n\nDetails:\n<body>"
+  prompt: "Team: epic-<epic-number>\nTask ID: <task-id>\nYour assignment: Sub-issue #<number> in <owner>/<repo>.\nTitle: <title>\nURL: <url>\n\nDetails:\n<body>\n\nREMINDER: You are in an isolated worktree. NEVER checkout/switch branches in the main repo. Stay in your worktree directory. Run `pwd` before any git operation to confirm."
 })
 ```
 
