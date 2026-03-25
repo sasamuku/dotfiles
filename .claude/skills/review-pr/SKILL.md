@@ -34,28 +34,28 @@ $ARGUMENTS
    - Summary: one plain-language sentence — include the business/product **background** so even someone on day 1 of the project understands why this PR exists
    - Type, Scope, Impact, Size — fill in the table so the reviewer can gauge effort and risk at a glance
 
-5. Write the **Reading Guide** section — a numbered list showing which files to read and in what order, so the reviewer has a mental map before diving into the diff:
+5. Write the **Key Changes** section — a narrative walkthrough that tells the story of the PR's changes file by file. The reviewer should understand the full picture before opening the diff:
 
-   - Analyze the diff and determine the optimal reading order. Start from the file that establishes the core intent of the PR (e.g., domain model, API contract, schema change), then proceed to files that build on or depend on it.
-   - For each file, write one line: the file path and its **role** — how it contributes to achieving the PR's stated purpose.
-   - Mark new files with `(new)`.
+   - Analyze the diff and determine the optimal reading order. Typically: data structures / domain models first, then core logic, then integration / orchestration, then UI / presentation, then tests / stories last.
+   - For each file, write a **numbered block**:
+     - Line 1: The file path in bold backticks, tagged with `(new)`, `(modified)`, `(deleted)`, or `(renamed)` as appropriate
+     - Lines 2+: Write as if explaining to someone who just joined the project. Cover:
+       - What this file is responsible for in the codebase (architectural context)
+       - What specifically was changed or added in this PR and why
+       - How it connects to the previous and next files in the reading order
+       - Any non-obvious design decisions or trade-offs worth noting
+     - Quote key code snippets with inline comments to make the explanation concrete. Show the most important type, function signature, or logic block so the reviewer knows what to look for in the diff.
+   - If project-specific terms, abbreviations, or domain jargon appear, add a short inline explanation on first use.
+   - The reader should be able to review the diff confidently after reading this section alone, without needing to ask the author for context.
 
-6. Write the **Key Changes** section:
-
-   Group all changes into logical semantic units. Each group represents a cohesive purpose spanning one or more files. Order groups so the reviewer can understand the PR from top to bottom.
-
-   Each group has:
-   - A short descriptive title
-   - List of relevant files
-   - **Context**: briefly explain where in the architecture these files sit and their role (1 sentence)
-   - Explain **what** the change does and **why** it exists
-   - Quote key code snippets to illustrate the change
-   - If project-specific terms, abbreviations, or domain jargon appear, add a short inline explanation on first use
-
-7. Classify each finding by priority:
-   - 🔴 **Critical** - Security vulnerabilities, bugs, data loss risks
-   - 🟡 **Warning** - Code quality concerns, potential issues
-   - 🟢 **Suggestion** - Improvements, style, readability
+6. Write the **Findings** section. For each issue found by the code-reviewer agent:
+   - Classify by priority:
+     - 🔴 **Critical** - Security vulnerabilities, bugs, data loss risks
+     - 🟡 **Warning** - Code quality concerns, potential issues
+     - 🟢 **Suggestion** - Improvements, style, readability
+   - Specify the file and line number (e.g., `src/auth.ts:42`)
+   - Describe the issue concisely
+   - Provide a concrete recommendation for how to fix it
 
 ## Output Format
 
@@ -73,31 +73,53 @@ $ARGUMENTS
 | **Impact** | Expired reset links will now correctly show an error instead of silently succeeding |
 | **Size** | 3 files changed, +45 / -12 lines |
 
-### Reading Guide
-
-1. `src/auth.ts` — Core change: adds token expiry validation logic
-2. `src/middleware.ts` — Integrates the new validation into the request pipeline
-3. `src/errors.ts` (new) — Defines `TokenExpiredError` used by the validation
-
 ### Key Changes
 
-#### 1. Add token expiry validation
-**Context**: `src/auth.ts` is the core authentication module that handles all token operations.
-**Purpose**: Reject expired password-reset tokens before processing the reset.
-**Files**: `src/auth.ts`, `src/middleware.ts`
+1. **`src/errors.ts`** (new)
+   Start here. This project uses custom error classes to distinguish between different failure modes in the authentication flow. This PR introduces `TokenExpiredError`, thrown when a user attempts a password reset with an expired token. By giving it a dedicated class, downstream code (middleware in #3) can catch it specifically and return the correct HTTP status.
 
-> ```ts
-> // src/auth.ts:12-18
-> function validateToken(token: string) {
->   if (isExpired(token)) {
->     throw new TokenExpiredError("Reset token has expired")
->   }
-> }
-> ```
-This new validation runs before the password is updated. Previously, `resetPassword()` accepted any structurally valid token regardless of expiry.
+   ```ts
+   // src/errors.ts:1-6
+   // A dedicated error class so middleware can distinguish "expired token"
+   // from other auth failures and return 401 instead of a generic 500.
+   export class TokenExpiredError extends Error {
+     constructor(message = "Reset token has expired") {
+       super(message);
+     }
+   }
+   ```
 
-#### 2. <Title>
-...
+   Both auth.ts (#2) and middleware.ts (#3) import this type, so reading it first gives you the vocabulary for the rest of the PR.
+
+2. **`src/auth.ts`** (modified)
+   The core authentication module handling login, logout, and password reset. The bug being fixed is that `resetPassword()` previously accepted any structurally valid token without checking its expiry, so expired links silently succeeded. This PR adds `validateToken()` at the top of the reset flow:
+
+   ```ts
+   // src/auth.ts:12-18
+   // Called before any password update — rejects stale tokens early
+   // so no side effects (DB writes, emails) happen on invalid requests.
+   function validateToken(token: string) {
+     if (isExpired(token)) {
+       throw new TokenExpiredError("Reset token has expired");
+     }
+   }
+   ```
+
+   This function throws the `TokenExpiredError` defined in #1. The next file (#3) handles what happens when this error reaches the HTTP layer.
+
+3. **`src/middleware.ts`** (modified)
+   The centralized error-handling layer that translates domain exceptions into HTTP responses. This PR adds a catch clause for `TokenExpiredError` from #1:
+
+   ```ts
+   // src/middleware.ts:25-28
+   // Without this clause, the TokenExpiredError from auth.ts
+   // would bubble up as an unhandled 500.
+   if (error instanceof TokenExpiredError) {
+     return res.status(401).json({ message: error.message });
+   }
+   ```
+
+   This ensures the client receives a meaningful 401 rejection instead of a confusing server error.
 
 ---
 
