@@ -37,14 +37,14 @@ $ARGUMENTS
 5. Write the **Key Changes** section — a narrative walkthrough that tells the story of the PR's changes file by file. The reviewer should understand the full picture before opening the diff:
 
    - Analyze the diff and determine the optimal reading order. Typically: data structures / domain models first, then core logic, then integration / orchestration, then UI / presentation, then tests / stories last.
-   - For each file, write a **numbered block**:
-     - Line 1: The file path in bold backticks, tagged with `(new)`, `(modified)`, `(deleted)`, or `(renamed)` as appropriate
+   - For each file, write a **`#### N.` heading block** (e.g. `#### 1.`, `#### 2.`). Do NOT use markdown numbered lists (`1.` at line start) — use `####` headings to avoid nested-numbering conflicts:
+     - The heading line: `#### N.` followed by the file path in bold backticks, tagged with `(new)`, `(modified)`, `(deleted)`, or `(renamed)` as appropriate
      - Lines 2+: Write as if explaining to someone who just joined the project. Cover:
        - What this file is responsible for in the codebase (architectural context)
        - What specifically was changed or added in this PR and why
        - How it connects to the previous and next files in the reading order
        - Any non-obvious design decisions or trade-offs worth noting
-     - Quote key code snippets with inline comments to make the explanation concrete. Show the most important type, function signature, or logic block so the reviewer knows what to look for in the diff.
+     - Quote key code snippets with inline comments to make the explanation concrete. Show the most important type, function signature, or logic block so the reviewer knows what to look for in the diff. Wrap code blocks in a `>` blockquote so they render cleanly in Claude Code output.
    - If project-specific terms, abbreviations, or domain jargon appear, add a short inline explanation on first use.
    - The reader should be able to review the diff confidently after reading this section alone, without needing to ask the author for context.
 
@@ -75,51 +75,54 @@ $ARGUMENTS
 
 ### Key Changes
 
-1. **`src/errors.ts`** (new)
-   Start here. This project uses custom error classes to distinguish between different failure modes in the authentication flow. This PR introduces `TokenExpiredError`, thrown when a user attempts a password reset with an expired token. By giving it a dedicated class, downstream code (middleware in #3) can catch it specifically and return the correct HTTP status.
+#### 1. **`src/errors.ts`** (new)
 
-   ```ts
-   // src/errors.ts:1-6
-   // A dedicated error class so middleware can distinguish "expired token"
-   // from other auth failures and return 401 instead of a generic 500.
-   export class TokenExpiredError extends Error {
-     constructor(message = "Reset token has expired") {
-       super(message);
-     }
-   }
-   ```
+Start here. This project uses custom error classes to distinguish between different failure modes in the authentication flow. This PR introduces `TokenExpiredError`, thrown when a user attempts a password reset with an expired token. By giving it a dedicated class, downstream code (middleware in #3) can catch it specifically and return the correct HTTP status.
 
-   Both auth.ts (#2) and middleware.ts (#3) import this type, so reading it first gives you the vocabulary for the rest of the PR.
+> ```ts
+> // src/errors.ts:1-6
+> // A dedicated error class so middleware can distinguish "expired token"
+> // from other auth failures and return 401 instead of a generic 500.
+> export class TokenExpiredError extends Error {
+>   constructor(message = "Reset token has expired") {
+>     super(message);
+>   }
+> }
+> ```
 
-2. **`src/auth.ts`** (modified)
-   The core authentication module handling login, logout, and password reset. The bug being fixed is that `resetPassword()` previously accepted any structurally valid token without checking its expiry, so expired links silently succeeded. This PR adds `validateToken()` at the top of the reset flow:
+Both auth.ts (#2) and middleware.ts (#3) import this type, so reading it first gives you the vocabulary for the rest of the PR.
 
-   ```ts
-   // src/auth.ts:12-18
-   // Called before any password update — rejects stale tokens early
-   // so no side effects (DB writes, emails) happen on invalid requests.
-   function validateToken(token: string) {
-     if (isExpired(token)) {
-       throw new TokenExpiredError("Reset token has expired");
-     }
-   }
-   ```
+#### 2. **`src/auth.ts`** (modified)
 
-   This function throws the `TokenExpiredError` defined in #1. The next file (#3) handles what happens when this error reaches the HTTP layer.
+The core authentication module handling login, logout, and password reset. The bug being fixed is that `resetPassword()` previously accepted any structurally valid token without checking its expiry, so expired links silently succeeded. This PR adds `validateToken()` at the top of the reset flow:
 
-3. **`src/middleware.ts`** (modified)
-   The centralized error-handling layer that translates domain exceptions into HTTP responses. This PR adds a catch clause for `TokenExpiredError` from #1:
+> ```ts
+> // src/auth.ts:12-18
+> // Called before any password update — rejects stale tokens early
+> // so no side effects (DB writes, emails) happen on invalid requests.
+> function validateToken(token: string) {
+>   if (isExpired(token)) {
+>     throw new TokenExpiredError("Reset token has expired");
+>   }
+> }
+> ```
 
-   ```ts
-   // src/middleware.ts:25-28
-   // Without this clause, the TokenExpiredError from auth.ts
-   // would bubble up as an unhandled 500.
-   if (error instanceof TokenExpiredError) {
-     return res.status(401).json({ message: error.message });
-   }
-   ```
+This function throws the `TokenExpiredError` defined in #1. The next file (#3) handles what happens when this error reaches the HTTP layer.
 
-   This ensures the client receives a meaningful 401 rejection instead of a confusing server error.
+#### 3. **`src/middleware.ts`** (modified)
+
+The centralized error-handling layer that translates domain exceptions into HTTP responses. This PR adds a catch clause for `TokenExpiredError` from #1:
+
+> ```ts
+> // src/middleware.ts:25-28
+> // Without this clause, the TokenExpiredError from auth.ts
+> // would bubble up as an unhandled 500.
+> if (error instanceof TokenExpiredError) {
+>   return res.status(401).json({ message: error.message });
+> }
+> ```
+
+This ensures the client receives a meaningful 401 rejection instead of a confusing server error.
 
 ---
 
