@@ -30,7 +30,7 @@ $ARGUMENTS
 - Does NOT create branches — stays on the base branch (the branch active at invocation)
 
 ### Member (`member-<issue-number>`)
-- Defined in `@.claude/agents/epic-member.md`
+- Defined in `@.claude/agents/worktree-worker.md`
 - Runs in background with `isolation: "worktree"`
 - Works exclusively within the worktree
 - Follows understand → implement → report → deliver workflow
@@ -70,7 +70,7 @@ $ARGUMENTS
 ```
 Agent({
   name: "member-<issue-number>",
-  subagent_type: "epic-member",
+  subagent_type: "worktree-worker",
   isolation: "worktree",
   run_in_background: true,
   prompt: "Your assignment: Sub-issue #<number> in <owner>/<repo>.\nTitle: <title>\nURL: <url>\n\nDetails:\n<body>\n\nSend your report to: team-lead\n\nREMINDER: You are in an isolated worktree. NEVER checkout/switch branches in the main repo. Stay in your worktree directory. Run `pwd` before any git operation to confirm."
