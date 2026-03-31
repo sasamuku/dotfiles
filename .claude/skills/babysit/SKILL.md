@@ -1,7 +1,6 @@
 ---
 name: babysit
 description: Autonomously triage PR review comments, apply necessary fixes, commit, push, and reply to comments. Designed for use with /loop 5m /babysit to continuously babysit PRs.
-disable-model-invocation: true
 allowed-tools: Bash(git *), Bash(gh *), Read, Edit, Write
 ---
 
