@@ -54,7 +54,17 @@ For each comment, decide and act without user input:
 
 Run @.claude/skills/commit/SKILL.md with `-y` option, then @.claude/skills/push/SKILL.md.
 
-### Step 6: Reply to each comment
+### Step 6: Verify push before replying
+
+Before posting any reply that references a commit hash, confirm the commit is pushed:
+
+```bash
+git log origin/$(git branch --show-current)..HEAD --oneline
+```
+
+If the commit is not yet pushed, run @.claude/skills/push/SKILL.md first.
+
+### Step 7: Reply to each comment
 
 For every comment processed, post a reply autonomously:
 
@@ -73,7 +83,7 @@ Reply templates:
 | Investigated, no change needed | `Investigated — current implementation handles this correctly.` |
 | Info, skipped | `Noted.` |
 
-### Step 7: Report
+### Step 8: Report
 
 ```
 ✅ Fixed #1, #3 — committed and pushed (abc1234)
