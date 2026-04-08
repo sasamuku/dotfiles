@@ -48,7 +48,17 @@ $ARGUMENTS
    - If project-specific terms, abbreviations, or domain jargon appear, add a short inline explanation on first use.
    - The reader should be able to review the diff confidently after reading this section alone, without needing to ask the author for context.
 
-6. Write the **Findings** section. For each issue found by the code-reviewer agent:
+6. Write the **Findings** section. Before writing any finding, apply the following filters **in order**. A finding that fails any filter MUST be discarded:
+
+   **Filter 1 — Author intent**: Ask "why might the author have written it this way?" Read the surrounding code, call sites, and related files to look for a deliberate reason. If a plausible intentional design exists, do not flag it.
+
+   **Filter 2 — Full path verification**: Trace the execution path end-to-end. For concurrency concerns, trace all transaction boundaries and lock acquisitions. For state management, trace all producers and consumers. Do not flag based on a single code location in isolation.
+
+   **Filter 3 — Concrete impact**: Articulate the specific, observable bug or failure that would occur. "Could theoretically..." or "for consistency..." is not sufficient. If you cannot describe a realistic scenario where the code breaks, do not flag it.
+
+   **Filter 4 — No quota**: Zero findings is a valid and good outcome. Do not fabricate or lower the bar to produce output. A clean PR deserves a clean review.
+
+   For each finding that passes all filters:
    - Classify by priority:
      - 🔴 **Critical** - Security vulnerabilities, bugs, data loss risks
      - 🟡 **Warning** - Code quality concerns, potential issues
