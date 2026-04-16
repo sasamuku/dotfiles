@@ -6,6 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a personal dotfiles repository for macOS setup and configuration management. It contains shell scripts for automated macOS setup, Homebrew package management, and various development tool configurations.
 
+## Workflow Notes
+
+This is a personal repository — direct pushes to `main` are allowed. No PR review or feature branch workflow is required.
+
 ## Setup Commands
 
 ### Full Setup (new machine)
