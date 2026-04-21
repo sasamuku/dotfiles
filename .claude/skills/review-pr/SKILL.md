@@ -58,12 +58,16 @@ $ARGUMENTS
 
    **Filter 4 — No quota**: Zero findings is a valid and good outcome. Do not fabricate or lower the bar to produce output. A clean PR deserves a clean review.
 
+   When there are no findings, write `No findings.` as the section body. Do not render an empty table, and do not omit the section.
+
+   Present findings as a table matching the Output Format below. Do not use bullet lists.
+
    For each finding that passes all filters:
    - Classify by priority:
      - 🔴 **Critical** - Security vulnerabilities, bugs, data loss risks
      - 🟡 **Warning** - Code quality concerns, potential issues
      - 🟢 **Suggestion** - Improvements, style, readability
-   - Specify the file and line number (e.g., `src/auth.ts:42`)
+   - Specify the file and line number (e.g., `src/auth.ts:42`). If the absolute line number cannot be determined from the diff (e.g., only hunk headers are available), fall back to `file (function_name)` or `file (symbol_name)` form.
    - Describe the issue concisely
    - Provide a concrete recommendation for how to fix it
 
