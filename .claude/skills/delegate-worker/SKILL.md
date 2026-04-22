@@ -19,6 +19,7 @@ $ARGUMENTS
 Build the worker's prompt from the arguments. Include:
 
 - **Task description**: what the worker should do
+- **Task type**: if the task is investigation / analysis only (no code changes), explicitly state "report only, do not implement or commit" in the prompt so the worker doesn't over-reach into implementation
 - **Issue context** (if an issue URL is provided): fetch details with `gh issue view` and include title, body, and URL so the worker can create a PR that closes it
 - **Relevant context**: file paths, error messages, or reproduction steps the user mentioned
 
@@ -33,6 +34,8 @@ Agent({
   prompt: "<prepared prompt>\n\nIn your first report, include the absolute path of your worktree so the parent session can cd into it.\n\nSend your report to: main"
 })
 ```
+
+`Send your report to: main` — here `main` refers to the **parent session name** (the default name of the top-level Claude Code session), not a git branch. The worker uses this as the `to` field when calling SendMessage.
 
 ### 3. Follow the worker into its worktree
 
@@ -52,4 +55,4 @@ Notes:
 - The worker reports progress via SendMessage. Review each report as it arrives.
 - If fixes are needed, relay feedback via `SendMessage(to: "worker")`.
 - If approved, tell the worker to proceed to deliver (commit & push, or PR if an issue was assigned).
-- When done, send `SendMessage(to: "worker", message: {type: "shutdown_request"})`, then `ExitWorktree({ action: "keep" })` to return the session to the original directory.
+- Once the worker reports completion (final report — e.g. "PR opened at ...", "commit pushed", or for investigation tasks "report ready"), send `SendMessage(to: "worker", message: {type: "shutdown_request"})`, then `ExitWorktree({ action: "keep" })` to return the session to the original directory. Do not wait for downstream events like PR merge — shut down once the worker's deliverable is in.
