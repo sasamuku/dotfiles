@@ -36,6 +36,9 @@
 .serena/project.yml
 .serena/.gitignore
 
+## Playwright MCP
+.playwright-mcp/
+
 # Scratch Directory
 scratch/
 scratch
