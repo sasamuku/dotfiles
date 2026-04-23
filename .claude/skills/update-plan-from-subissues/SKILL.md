@@ -6,52 +6,52 @@ disable-model-invocation: true
 
 # Update Plan from Sub-issues
 
-Update PLANS.md by analyzing linked sub-issues and reflecting their current state.
+連携済みのサブ Issue を分析し、その現在の状態を PLANS.md に反映して更新する。
 
-## Arguments
+## 引数
 
 $ARGUMENTS
 
-## Process
+## プロセス
 
-### 1. Read PLANS.md frontmatter
+### 1. PLANS.md のフロントマターを読み取る
 
-Extract `issue:` field (parent issue number). If not found, exit with error.
+`issue:` フィールド (親 Issue 番号) を抽出する。見つからない場合はエラーで終了する。
 
-### 2. Fetch sub-issues from parent
+### 2. 親 Issue からサブ Issue を取得する
 
 ```bash
 gh api repos/{owner}/{repo}/issues/{issue}/sub_issues \
   --jq '.[] | {number, title, state}'
 ```
 
-### 3. Analyze sub-issues and PLANS.md content
+### 3. サブ Issue と PLANS.md の内容を分析する
 
-For each sub-issue:
+各サブ Issue について:
 ```bash
 gh issue view {sub-issue-number} --json number,title,body,state
 ```
 
-Identify what needs updating:
-- **Validation & Acceptance Criteria**: Mark completed items
-- **Open Questions**: Remove resolved questions
-- **Discoveries & Insights**: Add findings from discussions
-- **Decision Log**: Add decisions made in sub-issues
-- **Follow-up Issues**: Update with new sub-issues
+更新が必要な箇所を特定する:
+- **Validation & Acceptance Criteria**: 完了済み項目にチェックを付ける
+- **Open Questions**: 解決済みの問いを削除する
+- **Discoveries & Insights**: 議論から得られた発見を追加する
+- **Decision Log**: サブ Issue で下された決定を追加する
+- **Follow-up Issues**: 新しいサブ Issue で内容を更新する
 
-### 4. Update PLANS.md
+### 4. PLANS.md を更新する
 
-- Use Edit tool to update existing content
-- Mark checkboxes `- [x]` for completed sub-issues
-- Keep existing structure unchanged
+- Edit ツールで既存の内容を更新する
+- 完了済みのサブ Issue のチェックボックスを `- [x]` に変更する
+- 既存の構造は変更しない
 
-### 5. Sync to GitHub (optional)
+### 5. GitHub へ同期する (任意)
 
-After updating, offer to run `/sync-plan`.
+更新後、`/sync-plan` の実行を提案する。
 
-## Guidelines
+## ガイドライン
 
-- Do NOT add new sections
-- Do NOT duplicate current information
-- Only update content reflecting sub-issue progress
-- Preserve existing narrative and structure
+- 新しいセクションを追加しない
+- 既存の情報を重複させない
+- サブ Issue の進捗を反映する内容のみ更新する
+- 既存のナラティブと構造を維持する

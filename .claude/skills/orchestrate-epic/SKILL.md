@@ -7,66 +7,66 @@ argument-hint: <epic-issue-url>
 
 # Orchestrate Epic
 
-Act as team leader. Delegate sub-issues to member agents running in isolated worktrees.
+チームリーダーとして行動し、サブ Issue をメンバーエージェントへ委譲する。メンバーは隔離された worktree で動作する。
 
 > **NOTE**: Do NOT use Agent Teams (`team_name` / `TeamCreate`). Agent Teams + worktree isolation is a known incompatibility (anthropics/claude-code#33045). Instead, launch members as background agents with `isolation: "worktree"` and communicate via SendMessage by agent name.
 
-## Arguments
+## 引数
 
-GitHub Epic issue URL (e.g., `https://github.com/owner/repo/issues/123`)
+GitHub の Epic Issue URL (例: `https://github.com/owner/repo/issues/123`)
 
 $ARGUMENTS
 
-## Roles
+## 役割
 
-### Leader (= this main session)
-- Reads the Epic and identifies sub-issues
-- Prioritizes and orders sub-issues considering dependencies
-- Asks user to choose execution mode (sequential or parallel)
-- Launches member agents in isolated worktrees
-- Reviews each member's report and approves deliveries
-- Relays user instructions to members via SendMessage
-- Does NOT write code
-- Does NOT create branches — stays on the base branch (the branch active at invocation)
+### リーダー (= このメインセッション)
+- Epic を読み、サブ Issue を洗い出す
+- 依存関係を考慮してサブ Issue の優先度と実行順序を決める
+- 実行モード (逐次または並列) をユーザーに選択してもらう
+- メンバーエージェントを隔離された worktree で起動する
+- 各メンバーのレポートをレビューし、成果物を承認する
+- SendMessage でユーザーの指示をメンバーへ中継する
+- コードは書かない
+- ブランチは作成しない — 起動時点でアクティブなベースブランチに留まる
 
-### Member (`member-<issue-number>`)
-- Defined in `@.claude/agents/worktree-worker.md`
-- Runs in background with `isolation: "worktree"`
-- Works exclusively within the worktree
-- Follows understand → implement → report → deliver workflow
-- Communicates progress via SendMessage
+### メンバー (`member-<issue-number>`)
+- `@.claude/agents/worktree-worker.md` で定義される
+- `isolation: "worktree"` でバックグラウンド実行する
+- worktree 内でのみ作業する
+- 理解 → 実装 → レポート → 成果物提出のワークフローに従う
+- SendMessage で進捗を報告する
 
-## Workflow
+## ワークフロー
 
-### Phase 1: Read Epic and Plan
+### フェーズ 1: Epic の読み込みと計画
 
-1. Extract owner, repo, and issue number from the URL
-2. Fetch Epic details:
+1. URL からオーナー、リポジトリ、Issue 番号を抽出する
+2. Epic の詳細を取得する:
    ```bash
    gh issue view <number> --repo <owner>/<repo> --json number,title,body,state,url
    ```
-3. Fetch sub-issues:
+3. サブ Issue を取得する:
    ```bash
    gh api repos/<owner>/<repo>/issues/<number>/sub_issues --paginate --jq '.[] | {number, title, state}'
    ```
-4. If the API fails, fall back to parsing the Epic body for issue references (`#123`, `- [ ] #123`)
-5. For each sub-issue, fetch its details:
+4. API が失敗した場合は、Epic 本文の Issue 参照 (`#123`, `- [ ] #123`) をパースする
+5. 各サブ Issue の詳細を取得する:
    ```bash
    gh issue view <sub-number> --repo <owner>/<repo> --json number,title,body,state,url
    ```
-6. Filter to **open** sub-issues only
-7. Analyze dependencies and determine execution order
-8. Print the ordered sub-issue list and ask the user:
+6. **オープン**なサブ Issue のみにフィルタする
+7. 依存関係を分析し、実行順序を決定する
+8. 順序付きサブ Issue 一覧を表示し、ユーザーに確認する:
 
-> **Execution mode:**
-> - **Sequential** — members launched one by one, each waits for approval before the next starts (for dependent work)
-> - **Parallel** — all members launched simultaneously, work independently (for independent work)
+> **実行モード:**
+> - **Sequential** — メンバーを 1 つずつ起動し、各メンバーが承認されてから次を開始する (依存関係がある作業向け)
+> - **Parallel** — 全メンバーを同時に起動し、それぞれ独立して作業する (独立した作業向け)
 >
-> Which mode? And confirm the sub-issue order?
+> モードを選択し、サブ Issue の順序を確認してください。
 
-### Phase 2: Delegation
+### フェーズ 2: 委譲
 
-**Member launch pattern:**
+**メンバー起動パターン:**
 ```
 Agent({
   name: "member-<issue-number>",
@@ -77,37 +77,37 @@ Agent({
 })
 ```
 
-#### Sequential Mode
+#### Sequential モード
 
-For each sub-issue in order:
-1. **Announce**: Print `Starting member-<issue-number> on #<number>: <title>`
-2. **Launch member** with `run_in_background: true`.
-3. **On report**: Member sends report via SendMessage. Leader reviews.
-   - If fixes needed: relay feedback via `SendMessage(to: "member-<issue-number>")`. Member fixes and reports again.
-   - If approved: tell member to proceed to deliver (commit & PR).
-   - If member fails or stops responding: mark sub-issue as failed and ask user whether to continue.
-4. **On PR created**: Report PR URL. Wait for user approval before launching the next member.
-5. **Shutdown member**: Send `SendMessage(to: "member-<issue-number>", message: {type: "shutdown_request"})`.
+各サブ Issue を順番に処理する:
+1. **アナウンス**: `Starting member-<issue-number> on #<number>: <title>` と表示する
+2. `run_in_background: true` で**メンバーを起動**する
+3. **レポート受信時**: メンバーが SendMessage でレポートを送信する。リーダーがレビューする。
+   - 修正が必要な場合: `SendMessage(to: "member-<issue-number>")` でフィードバックを中継する。メンバーが修正して再レポートする。
+   - 承認する場合: メンバーに成果物の提出 (コミット & PR) へ進むよう伝える。
+   - メンバーが失敗または応答しない場合: そのサブ Issue を失敗としてマークし、続行するかユーザーに確認する。
+4. **PR 作成時**: PR URL を報告する。次のメンバーを起動する前にユーザーの承認を待つ。
+5. **メンバーをシャットダウン**: `SendMessage(to: "member-<issue-number>", message: {type: "shutdown_request"})` を送る。
 
-#### Parallel Mode
+#### Parallel モード
 
-1. **Launch all members** with `run_in_background: true`.
-2. **Monitor**: Members send reports via SendMessage as they complete. Messages are delivered automatically.
-3. **Review each report** as it arrives:
-   - If fixes needed: relay feedback via SendMessage.
-   - If approved: tell member to proceed to deliver.
-4. Continue until all members have delivered or failed.
+1. `run_in_background: true` で**全メンバーを起動**する。
+2. **モニタリング**: メンバーは完了次第 SendMessage でレポートを送信する。メッセージは自動配信される。
+3. **各レポートが届き次第レビューする**:
+   - 修正が必要な場合: SendMessage でフィードバックを中継する。
+   - 承認する場合: メンバーに成果物の提出へ進むよう伝える。
+4. 全メンバーが提出または失敗するまで続ける。
 
-### Interacting with Members
+### メンバーとのやり取り
 
-The user can ask at any time to:
-- **Check status**: Leader uses `SendMessage(to: "member-<N>")` to ask for progress
-- **Give direction**: Leader uses `SendMessage(to: "member-<N>")` to relay instructions
-- **Skip**: Move to the next sub-issue without waiting
+ユーザーはいつでも以下を依頼できる:
+- **状況確認**: リーダーが `SendMessage(to: "member-<N>")` で進捗を問い合わせる
+- **指示伝達**: リーダーが `SendMessage(to: "member-<N>")` で指示を中継する
+- **スキップ**: 待たずに次のサブ Issue へ進む
 
-### Phase 3: Summary and Cleanup
+### フェーズ 3: サマリーとクリーンアップ
 
-After all sub-issues are processed, print:
+全サブ Issue の処理が完了したら、以下を表示する:
 
 ```
 ## Epic Orchestration Summary
@@ -124,4 +124,4 @@ Mode: Sequential | Parallel
 Completed: <n>/<total>
 ```
 
-Then shut down remaining members via `SendMessage` with `message: {type: "shutdown_request"}`.
+その後、残っているメンバーに `SendMessage` で `message: {type: "shutdown_request"}` を送りシャットダウンする。

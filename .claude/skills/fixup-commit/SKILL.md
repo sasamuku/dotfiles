@@ -6,21 +6,21 @@ disable-model-invocation: true
 
 # Fixup Commit
 
-Create a fixup commit for a specified target commit and perform an interactive rebase with autosquash.
+指定した対象コミットに対して fixup コミットを作成し、autosquash 付きの対話的リベースを実行する。
 
-## Arguments
+## 引数
 
-Target commit hash to fixup.
+fixup 対象のコミットハッシュ。
 
 $ARGUMENTS
 
-## Steps
+## 手順
 
-### 1. Validate Arguments
+### 1. 引数の検証
 
-If no argument is provided, ask the user for the target commit hash.
+引数が提供されていない場合、対象コミットハッシュをユーザーに確認する。
 
-### 2. Check Current Changes
+### 2. 現在の変更を確認する
 
 ```bash
 git status
@@ -29,15 +29,15 @@ git diff --cached
 git log --oneline -10
 ```
 
-### 3. Get Target Commit Information
+### 3. 対象コミットの情報を取得する
 
 ```bash
 git log --format="%H %s" -1 <target-commit>
 ```
 
-### 4. Present Confirmation
+### 4. 確認を求める
 
-Display the following information and ask for confirmation:
+次の情報を表示し、ユーザーの承認を得る:
 
 ```
 Fixup Commit Plan:
@@ -58,11 +58,11 @@ This will:
 Proceed? (y/n)
 ```
 
-**IMPORTANT**: Wait for explicit user approval (y) before proceeding.
+**重要**: 明示的な承認 (y) を待ってから進めること。
 
-### 5. Execute Fixup
+### 5. Fixup を実行する
 
-After user approval:
+ユーザー承認後:
 
 ```bash
 git add -A
@@ -75,15 +75,15 @@ GIT_SEQUENCE_EDITOR="cat" git rebase -i --autosquash main --no-edit 2>/dev/null 
 git rebase -i --autosquash main
 ```
 
-### 6. Verify Result
+### 6. 結果を確認する
 
 ```bash
 git log --oneline -10
 ```
 
-## Notes
+## 注意事項
 
-- **Requires clean working tree or staged changes**: Unstaged changes will be staged automatically
-- **Target commit must exist**: The command will fail if the commit hash is invalid
-- **Rebase onto main**: The rebase is performed onto the main branch
-- **Interactive confirmation**: Always confirm with the user before executing
+- **作業ツリーがクリーン、または変更がステージ済みであること**: 未ステージの変更は自動でステージされる
+- **対象コミットが存在すること**: コミットハッシュが無効なら失敗する
+- **main に対してリベースする**: リベース対象は main ブランチ
+- **対話的確認**: 実行前に必ずユーザーへ確認する

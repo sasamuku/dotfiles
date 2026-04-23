@@ -6,11 +6,11 @@ disable-model-invocation: true
 
 # Merge
 
-Merge branch: $ARGUMENTS (default: origin main) into current branch.
+ブランチを現在のブランチにマージする: $ARGUMENTS (既定値: origin main)。
 
-## Task
+## タスク
 
-Merge the specified branch into the current branch. Resolve conflicts if any occur.
+指定したブランチを現在のブランチへマージする。コンフリクトが発生したら解決する。
 
 ```bash
 git merge $ARGUMENTS
@@ -18,4 +18,4 @@ git merge $ARGUMENTS
 git merge origin main
 ```
 
-If conflicts occur, analyze and resolve them, then complete the merge.
+コンフリクトが発生した場合は解消してからマージを完了する。

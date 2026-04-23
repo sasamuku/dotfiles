@@ -7,47 +7,47 @@ allowed-tools: Read, Write, Bash(mkdir *), WebFetch
 
 # Create Skill
 
-Create a new Claude Code skill following official best practices.
+公式のベストプラクティスに従って、Claude Code の新しいスキルを作成する。
 
-## Input
+## 入力
 `$ARGUMENTS`
 
-## Process
+## プロセス
 
-1. **Fetch latest documentation**
-   First, read the official Skills documentation:
+1. **最新ドキュメントを取得する**
+   まず公式の Skills ドキュメントを読む:
    ```
    WebFetch: https://code.claude.com/docs/en/skills
    ```
 
-2. **Understand the user's intent**
-   - Infer skill name and purpose from input
-   - Skill name: lowercase, hyphens only (max 64 chars)
-   - Determine if skill should be user-invocable, model-invocable, or both
+2. **ユーザーの意図を把握する**
+   - 入力からスキル名と目的を推測する
+   - スキル名: 小文字とハイフンのみ (最大 64 文字)
+   - ユーザー起動か、モデル起動か、あるいは両方かを決める
 
-3. **Decide skill type**
-   - **Reference**: Background knowledge (conventions, patterns, domain info)
-   - **Task**: Step-by-step workflow (deploy, commit, code generation)
+3. **スキル種別を決める**
+   - **Reference**: 背景知識 (規約、パターン、ドメイン情報)
+   - **Task**: 手順化されたワークフロー (デプロイ、コミット、コード生成など)
 
-4. **Create skill directory and SKILL.md**
-   - Location: `.claude/skills/<skill-name>/SKILL.md`
-   - Create directory first, then SKILL.md
+4. **スキルディレクトリと SKILL.md を作成する**
+   - 配置場所: `.claude/skills/<skill-name>/SKILL.md`
+   - 先にディレクトリを作成し、次に SKILL.md を作成する
 
-## Key Decisions
+## 重要な判断ポイント
 
-### Invocation Control
-| Setting | Effect |
-|---------|--------|
-| (default) | Both user and Claude can invoke |
-| `disable-model-invocation: true` | Only user can invoke (for side effects) |
-| `user-invocable: false` | Only Claude can invoke (background knowledge) |
+### 起動制御
+| 設定 | 効果 |
+|------|------|
+| (既定) | ユーザーも Claude も起動可能 |
+| `disable-model-invocation: true` | ユーザーのみ起動可能 (副作用ありの処理向け) |
+| `user-invocable: false` | Claude のみ起動可能 (背景知識向け) |
 
-### When to use `context: fork`
-- For isolated execution in subagent
-- For read-only exploration tasks
-- For heavy research that shouldn't pollute main context
+### `context: fork` を使う場面
+- サブエージェントで隔離実行したいとき
+- 読み取り専用の探索タスク
+- メインの文脈を汚したくない重い調査タスク
 
-## SKILL.md Template
+## SKILL.md テンプレート
 
 ```yaml
 ---
@@ -73,10 +73,10 @@ Use `$ARGUMENTS` for user input.
 Use `$0`, `$1` for positional args.
 ```
 
-## Guidelines
+## ガイドライン
 
-- **Keep SKILL.md under 500 lines** - Move details to supporting files
-- **Description is critical** - Claude uses it to decide when to apply
-- **Start minimal** - Add complexity only when needed
-- **Use `$ARGUMENTS`** - For dynamic user input
-- **Supporting files** - Reference from SKILL.md, loaded when needed
+- **SKILL.md は 500 行以内に保つ** - 詳細は補助ファイルへ切り出す
+- **description が最重要** - Claude が発動可否をこれで判断する
+- **最小限から始める** - 必要になってから複雑さを足す
+- **`$ARGUMENTS` を使う** - 動的なユーザー入力のため
+- **補助ファイル** - SKILL.md から参照し、必要時に読み込ませる

@@ -6,33 +6,33 @@ disable-model-invocation: true
 
 # Review Code
 
-Review all uncommitted and committed changes on the current branch compared to main.
+現在のブランチと main の差分 (未コミット・コミット済みの変更すべて) をレビューする。
 
-## Steps
+## 手順
 
-1. Get the diff between main and current HEAD:
+1. main と現在の HEAD の差分を取得する:
    ```bash
    git diff main...HEAD
    ```
 
-2. Get commit history for context:
+2. コンテキスト用のコミット履歴を取得する:
    ```bash
    git log main..HEAD --oneline
    ```
 
-3. If there are uncommitted changes:
+3. 未コミットの変更がある場合:
    ```bash
    git diff
    git diff --cached
    ```
 
-4. Use **code-reviewer** agent to perform the review
+4. **code-reviewer** エージェントでレビューを実施する
 
-## Output
+## 出力
 
-The code-reviewer agent provides structured feedback organized by priority:
-- **Critical**: Security issues, bugs
-- **Warning**: Code quality concerns
-- **Suggestion**: Improvements
+code-reviewer エージェントが優先度別に構造化されたフィードバックを提供する:
+- **Critical**: セキュリティ問題、バグ
+- **Warning**: コード品質の懸念事項
+- **Suggestion**: 改善提案
 
-With specific file locations and fix recommendations.
+ファイルパスと修正の推奨事項を含む。

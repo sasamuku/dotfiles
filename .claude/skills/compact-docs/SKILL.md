@@ -7,53 +7,53 @@ allowed-tools: Read, Edit
 
 # Compact Docs
 
-Compress and optimize documentation files.
+ドキュメントファイルを圧縮・最適化する。
 
-## Arguments
+## 引数
 
-Path to the markdown file to be compressed (e.g., `docs/README.md`, `CONTRIBUTING.md`).
+圧縮対象の Markdown ファイルへのパス (例: `docs/README.md`, `CONTRIBUTING.md`)。
 
 $ARGUMENTS
 
-## Process
+## プロセス
 
-### 1. Read and Analyze Target Document
+### 1. 対象ドキュメントを読み、分析する
 
-- Understand overall structure and content
-- Comprehend relationships between sections
+- 全体構造と内容を把握する
+- セクション間の関係性を理解する
 
-### 2. Apply Compression Techniques
+### 2. 圧縮テクニックを適用する
 
-**A. Reduce Duplicate Information**
-- Identify content repeated across sections
-- Convert duplicates to cross-references
-- Unify different expressions of the same concept
+**A. 重複情報を削減する**
+- 複数セクションで繰り返されている内容を特定する
+- 重複をクロスリファレンスに置き換える
+- 同一概念の異なる表現を統一する
 
-**B. Simplify Verbose Explanations**
-- Convert long text to bullet points
-- Summarize excessive details while retaining important information
-- Prioritize concise expressions over detailed explanations
+**B. 冗長な説明を簡素化する**
+- 長文を箇条書きに変換する
+- 重要情報を保ったまま、過度な詳細は要約する
+- 詳しい説明より簡潔な表現を優先する
 
-**C. Detect Contradictions**
-- Identify inconsistencies between sections
-- Report contradictory statements (do not auto-fix)
+**C. 矛盾を検出する**
+- セクション間の不整合を特定する
+- 矛盾する記述を報告する (自動修正はしない)
 
-**D. Remove Historical Information**
-- Remove change history and update timestamps
-- Delete historical descriptions like "Added ~" or "Changed to ~"
-- Git tracks history, so documentation doesn't need to
+**D. 履歴情報を削除する**
+- 変更履歴や更新日時を削除する
+- 「〜を追加」「〜に変更」といった履歴的記述を削除する
+- 履歴は Git が管理するため、ドキュメントに書かない
 
-### 3. Generate Compression Report
+### 3. 圧縮レポートを生成する
 
-Include:
-- Applied compression techniques and examples
-- Line count before/after and reduction rate
-- Detected contradictions (if any)
-- Recommended next actions
+次を含める:
+- 適用した圧縮テクニックと例
+- 圧縮前後の行数と削減率
+- 検出した矛盾 (ある場合)
+- 推奨される次のアクション
 
-## Guidelines
+## ガイドライン
 
-- **Preserve Meaning** - Don't sacrifice information quality for brevity
-- **Maintain Structure** - Keep the original document organization
-- **Be Explicit** - Show what was changed and why
-- **Don't Auto-fix Contradictions** - Report them for manual review
+- **意味を保つ** - 簡潔さのために情報の質を犠牲にしない
+- **構造を維持する** - 元のドキュメントの構成を維持する
+- **明示的に書く** - 何をなぜ変えたかを示す
+- **矛盾は自動修正しない** - 手動レビューのため報告に留める

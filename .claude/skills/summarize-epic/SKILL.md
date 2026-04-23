@@ -6,38 +6,38 @@ disable-model-invocation: true
 
 # Summarize Epic
 
-Aggregate and summarize a GitHub Epic issue with its sub-issues and related PRs.
+GitHub の Epic Issue とそのサブ Issue、関連 PR を集約してサマリーを生成する。
 
-## Arguments
+## 引数
 
-`<epic-issue-url>`: GitHub Epic issue URL (e.g., https://github.com/owner/repo/issues/123)
+`<epic-issue-url>`: GitHub Epic Issue の URL (例: https://github.com/owner/repo/issues/123)
 
 $ARGUMENTS
 
-## Steps
+## 手順
 
-### 1. Fetch Epic Issue
+### 1. Epic Issue を取得する
 
-- Extract repository name and issue number from URL
-- Get Epic details (title, body, state, comments)
+- URL からリポジトリ名と Issue 番号を抽出する
+- Epic の詳細 (タイトル、本文、状態、コメント) を取得する
 
-### 2. Fetch Sub-issues
+### 2. サブ Issue を取得する
 
 ```bash
 gh api repos/<owner>/<repo>/issues/<epic-number>/sub_issues --paginate --jq '.[].number'
 ```
 
-- On failure: Report error as-is
-- On success: Aggregate sub-issue states (completed/in-progress)
+- 失敗時: エラーをそのまま報告する
+- 成功時: サブ Issue の状態 (完了/進行中) を集計する
 
-### 3. Fetch Related PRs
+### 3. 関連 PR を取得する
 
-- Use GraphQL API to get PRs from issue timeline
-- Search PR bodies for issue references
-- Extract PR numbers from Epic body
-- Get PR details (title, state, mergedAt, additions, deletions, files)
+- GraphQL API を使って Issue のタイムラインから PR を取得する
+- PR 本文で Issue への参照を検索する
+- Epic 本文から PR 番号を抽出する
+- PR の詳細 (タイトル、状態、mergedAt、追加/削除行数、ファイル数) を取得する
 
-### 4. Output Format
+### 4. 出力フォーマット
 
 ```markdown
 # Epic Summary
@@ -77,7 +77,7 @@ gh api repos/<owner>/<repo>/issues/<epic-number>/sub_issues --paginate --jq '.[]
 <Upcoming milestones>
 ```
 
-## Commands
+## コマンド
 
 ```bash
 # Epic issue

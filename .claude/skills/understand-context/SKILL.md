@@ -6,15 +6,15 @@ disable-model-invocation: true
 
 # Understand Context
 
-Analyze the current work status and project context.
+現在の作業状況とプロジェクトのコンテキストを把握する。
 
-## Task
+## タスク
 
-Run `git status` and analyze:
+`git status` を実行し、次を分析する:
 
-- Current branch
-- Modified files
-- Untracked files
-- Staged changes
+- 現在のブランチ
+- 変更済みファイル
+- 追跡外ファイル
+- ステージ済みの変更
 
-Provide a summary of the current work in progress.
+進行中の作業状況をまとめて提示する。

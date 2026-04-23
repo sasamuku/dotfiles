@@ -5,44 +5,44 @@ disable-model-invocation: true
 argument-hint: [issue-number]
 ---
 
-# Implement from Issue
+# Issue からの実装
 
-Automate the full lifecycle: GitHub issue -> plan -> implement -> review.
+GitHub Issue からレビュー済みコードまでのライフサイクルを自動化する (GitHub Issue → 計画 → 実装 → レビュー)。
 
-## Arguments
+## 引数
 
-Issue number (e.g., `123` or `#123`) or GitHub issue URL.
+Issue 番号 (例: `123` または `#123`) または GitHub Issue の URL。
 
 $ARGUMENTS
 
-## Workflow
+## ワークフロー
 
-### Phase 1: Plan from Issue
+### フェーズ 1: Issue から計画を作成する
 
-Follow `@.claude/skills/plan-from-issue/SKILL.md` with the issue number from arguments.
+引数の Issue 番号を使って `@.claude/skills/plan-from-issue/SKILL.md` に従う。
 
-### Phase 2: Implement Plan
+### フェーズ 2: 計画を実装する
 
-Follow `@.claude/skills/implement-from-plan/SKILL.md` to implement all items from PLANS.md.
+`@.claude/skills/implement-from-plan/SKILL.md` に従い、PLANS.md の全項目を実装する。
 
-### Phase 3: Commit Changes
+### フェーズ 3: 変更をコミットする
 
-Follow `@.claude/skills/commit/SKILL.md` with the `-y` option to auto-approve commits.
+`-y` オプションを付けて `@.claude/skills/commit/SKILL.md` に従い、コミットを自動承認する。
 
-### Phase 4: Review and Fix Loop
+### フェーズ 4: レビューと修正のループ
 
-Repeat the following cycle up to 3 times:
+以下のサイクルを最大 3 回繰り返す:
 
-1. Follow `@.claude/skills/review-code/SKILL.md` to review all changes
-2. If **Critical** or **Warning** issues are found:
-   - Fix the issues
-   - Follow `@.claude/skills/commit/SKILL.md` with `-y` to commit fixes
-   - Continue to next iteration
-3. If no Critical/Warning issues remain, exit loop
+1. `@.claude/skills/review-code/SKILL.md` に従い、すべての変更をレビューする
+2. **Critical** または **Warning** の問題が見つかった場合:
+   - 問題を修正する
+   - `-y` オプションを付けて `@.claude/skills/commit/SKILL.md` に従い、修正をコミットする
+   - 次のイテレーションへ進む
+3. Critical/Warning の問題がなくなればループを抜ける
 
-### Completion
+### 完了
 
-Print summary:
+サマリーを出力する:
 ```
 Done: Issue #<number> implemented and reviewed.
 Review cycles: <count>

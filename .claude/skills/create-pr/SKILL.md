@@ -6,55 +6,55 @@ disable-model-invocation: true
 
 # Create PR
 
-Create a GitHub pull request using GitHub CLI.
+GitHub CLI を使ってプルリクエストを作成する。
 
-## Creating a New Pull Request
+## 新規プルリクエストの作成
 
-1. First, prepare your PR description following the template in `.github/pull_request_template.md`
+1. まず `.github/pull_request_template.md` のテンプレートに沿って PR 説明を用意する
 
-2. Use the `gh pr create --draft` command:
+2. `gh pr create --draft` コマンドを使う:
 
 ```bash
 gh pr create --draft --title "feat(scope): your descriptive title" --body "Your PR description" --base main
 ```
 
-For more complex PR descriptions with proper formatting, use `--body-file`:
+フォーマットを整えた複雑な説明文を使う場合は `--body-file` を利用する:
 
 ```bash
 gh pr create --draft --title "feat(scope): your descriptive title" --body-file .github/pull_request_template.md --base main
 ```
 
-## Best Practices
+## ベストプラクティス
 
-1. **Language**: Always use English for PR titles and descriptions
+1. **言語**: PR のタイトル・説明は常に英語で書く
 
-2. **PR Title Format**: Use Conventional Commits format (no emojis)
-   - Follow the same format as commit messages: `type(scope): description`
-   - Examples:
+2. **PR タイトル形式**: Conventional Commits 形式を使う (絵文字なし)
+   - コミットメッセージと同じ形式: `type(scope): description`
+   - 例:
      - `feat(supabase): add staging remote configuration`
      - `fix(auth): fix login redirect issue`
      - `docs(readme): update installation instructions`
 
-3. **Description Template**: Always use PR template structure from `.github/pull_request_template.md`
+3. **説明テンプレート**: `.github/pull_request_template.md` の PR テンプレート構成を必ず使う
 
-4. **Template Accuracy**: Ensure your PR description precisely follows the template structure:
-   - Don't modify or rename the PR-Agent sections (`pr_agent:summary` and `pr_agent:walkthrough`)
-   - Keep all section headers exactly as they appear in the template
-   - Don't add custom sections that aren't in the template
+4. **テンプレート準拠**: PR 説明はテンプレートの構成に忠実に従うこと:
+   - PR-Agent セクション (`pr_agent:summary`, `pr_agent:walkthrough`) は変更・改名しない
+   - セクション見出しはテンプレートと完全一致させる
+   - テンプレートにないカスタムセクションは追加しない
 
-5. **Draft PRs**: Start as draft when the work is in progress
-   - Use `--draft` flag in the command
-   - Convert to ready for review when complete using `gh pr ready`
+5. **ドラフト PR**: 作業途中はドラフトで開始する
+   - コマンドに `--draft` フラグを付ける
+   - 完成したら `gh pr ready` でレビュー準備完了に切り替える
 
-### Common Mistakes to Avoid
+### ありがちなミス
 
-- **Using Non-English Text**: All PR content must be in English
-- **Incorrect Section Headers**: Always use the exact section headers from the template
-- **Adding Custom Sections**: Stick to the sections defined in the template
-- **Using Outdated Templates**: Always refer to the current `.github/pull_request_template.md` file
-- **Missing Sections**: Always include all template sections, even if some are marked as "N/A" or "None"
+- **英語以外のテキスト**: PR の内容はすべて英語で書く
+- **誤ったセクション見出し**: テンプレートと完全に同じ見出しを使う
+- **カスタムセクションの追加**: テンプレートに定義されたセクションに留める
+- **古いテンプレートの利用**: 常に最新の `.github/pull_request_template.md` を参照する
+- **セクションの欠落**: "N/A" や "None" であっても、テンプレートのセクションはすべて含める
 
-## Additional GitHub CLI PR Commands
+## よく使う gh CLI コマンド
 
 ```bash
 gh pr list --author "@me"                        # List your open PRs

@@ -1,18 +1,18 @@
-# Workflow Rules
+# ワークフロールール
 
-## Branch Safety
+## ブランチ安全性
 
-**If the current branch is `main` or `master`, always ask the user for clarification before making any code changes.**
+**現在のブランチが `main` または `master` の場合は、コード変更を加える前に必ずユーザーに確認してください。**
 
-- Confirm the intent and gather details about the requested changes
-- Suggest using the `/delegate-worker` skill to work in an isolated worktree
-- Never modify code directly on the `main` branch
+- 意図を確認し、変更依頼の詳細をヒアリングする
+- `/delegate-worker` スキルを使って隔離された worktree で作業することを提案する
+- `main` ブランチでコードを直接変更してはならない
 
 ---
 
-# Core Principles: **Less is More**
+# 基本原則: **Less is More**
 
-- **Keep implementations small** - *Write the smallest, most obvious solution*
-- **Let code speak** - *If you need multi-paragraph comments, refactor until intent is obvious*
-- **Simple > Clever** - *Clear code beats clever code every time*
-- **Delete ruthlessly** - *Remove anything that doesn't add clear value*
+- **実装を小さく保つ** - *最小かつ最も素直な解法を書く*
+- **コードに語らせる** - *段落レベルのコメントが必要なら、意図が自明になるまでリファクタリングする*
+- **Simple > Clever** - *明快なコードは、いつでも賢いコードに勝る*
+- **容赦なく削る** - *明確な価値をもたらさないものは削除する*

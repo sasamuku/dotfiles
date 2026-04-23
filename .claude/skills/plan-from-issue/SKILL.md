@@ -6,31 +6,31 @@ disable-model-invocation: true
 
 # Plan from Issue
 
-Read a GitHub issue, create PLANS.md, and sync it back to the issue — all in one step.
+GitHub Issue を読み込み、PLANS.md を作成し、Issue に同期する — これらを 1 ステップで実行する。
 
-## Arguments
+## 引数
 
-Issue number (e.g., `123` or `#123`) or GitHub issue URL.
+Issue 番号 (例: `123` または `#123`) または GitHub Issue の URL。
 
 $ARGUMENTS
 
-## Workflow
+## ワークフロー
 
-Execute the following three skills in sequence:
+以下の 3 つのスキルを順番に実行する:
 
-### Phase 1: Read Issue
+### フェーズ 1: Issue の読み込み
 
-Follow `@.claude/skills/read-issue/SKILL.md` with the issue number from arguments.
+引数の Issue 番号を使い、`@.claude/skills/read-issue/SKILL.md` に従う。
 
-### Phase 2: Create PLANS.md
+### フェーズ 2: PLANS.md の作成
 
-Follow `@.claude/skills/create-plan/SKILL.md` using the issue information gathered in Phase 1.
+フェーズ 1 で収集した Issue 情報を使い、`@.claude/skills/create-plan/SKILL.md` に従う。
 
-### Phase 3: Sync to Issue
+### フェーズ 3: Issue への同期
 
-Follow `@.claude/skills/sync-plan/SKILL.md` to post PLANS.md back to the issue.
+`@.claude/skills/sync-plan/SKILL.md` に従い、PLANS.md を Issue に投稿する。
 
-Print confirmation when done:
+完了したら以下を表示する:
 ```
 Done: Issue #<number> read, PLANS.md created, synced to issue.
 ```

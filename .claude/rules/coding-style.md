@@ -1,10 +1,10 @@
-# Coding Style
+# コーディングスタイル
 
-> Adapted from [everything-claude-code](https://github.com/affaan-m/everything-claude-code) (MIT License)
+> [everything-claude-code](https://github.com/affaan-m/everything-claude-code) より翻案 (MIT License)
 
-## Immutability (CRITICAL)
+## イミュータビリティ (CRITICAL)
 
-ALWAYS create new objects, NEVER mutate:
+常に新しいオブジェクトを生成し、**決してミューテーションしない**:
 
 ```javascript
 // WRONG: Mutation
@@ -22,17 +22,17 @@ function updateUser(user, name) {
 }
 ```
 
-## File Organization
+## ファイル編成
 
-MANY SMALL FILES > FEW LARGE FILES:
-- High cohesion, low coupling
-- 200-400 lines typical, 800 max
-- Extract utilities from large components
-- Organize by feature/domain, not by type
+**小さなファイルを多数** > **大きなファイルを少数**:
+- 高凝集・低結合
+- 通常は 200〜400 行、最大 800 行
+- 大きなコンポーネントからユーティリティを抽出する
+- 型ではなく、機能・ドメインで整理する
 
-## Error Handling
+## エラーハンドリング
 
-ALWAYS handle errors comprehensively:
+エラーは常に漏れなく処理する:
 
 ```typescript
 try {
@@ -44,9 +44,9 @@ try {
 }
 ```
 
-## Input Validation
+## 入力バリデーション
 
-ALWAYS validate user input:
+常にユーザー入力をバリデーションする:
 
 ```typescript
 import { z } from 'zod'
@@ -59,14 +59,14 @@ const schema = z.object({
 const validated = schema.parse(input)
 ```
 
-## Code Quality Checklist
+## コード品質チェックリスト
 
-Before marking work complete:
-- [ ] Code is readable and well-named
-- [ ] Functions are small (<50 lines)
-- [ ] Files are focused (<800 lines)
-- [ ] No deep nesting (>4 levels)
-- [ ] Proper error handling
-- [ ] No console.log statements
-- [ ] No hardcoded values
-- [ ] No mutation (immutable patterns used)
+作業を完了とマークする前に:
+- [ ] 読みやすく、適切に命名されているか
+- [ ] 関数は小さい (50 行未満) か
+- [ ] ファイルは焦点が絞られている (800 行未満) か
+- [ ] 深いネスト (4 レベル超) がないか
+- [ ] 適切なエラーハンドリングがあるか
+- [ ] `console.log` 文が残っていないか
+- [ ] ハードコードされた値がないか
+- [ ] ミューテーションがない (イミュータブルパターンを使用) か

@@ -6,72 +6,72 @@ disable-model-invocation: true
 
 # Review PR
 
-Perform a thorough code review of a GitHub Pull Request.
+GitHub Pull Request の徹底的なコードレビューを実施する。
 
-## Arguments
+## 引数
 
 $ARGUMENTS
 
-- **First argument** (required): PR number or PR URL (e.g., `123` or `https://github.com/owner/repo/pull/123`)
+- **第 1 引数** (必須): PR 番号または PR URL (例: `123` または `https://github.com/owner/repo/pull/123`)
 
-## Steps
+## 手順
 
-1. Fetch PR info and diff:
+1. PR の情報と差分を取得する:
    ```bash
    gh pr view <number>
    gh pr diff <number>
    ```
 
-2. Fetch existing review comments for context:
+2. コンテキスト用の既存レビューコメントを取得する:
    ```bash
    gh api repos/{owner}/{repo}/pulls/{number}/comments
    gh api repos/{owner}/{repo}/pulls/{number}/reviews
    ```
 
-3. Use **code-reviewer** agent to perform the review with the PR title, description, diff, and existing comments.
+3. **code-reviewer** エージェントを使い、PR タイトル・説明・差分・既存コメントを渡してレビューを実施する。
 
-4. Write the **Overview** section. The goal is for the reviewer to understand the PR in 5 seconds:
-   - Summary: one plain-language sentence — include the business/product **background** so even someone on day 1 of the project understands why this PR exists
-   - Type, Scope, Impact, Size — fill in the table so the reviewer can gauge effort and risk at a glance
+4. **Overview** セクションを書く。目標は、レビュアーが 5 秒で PR を理解できるようにすること:
+   - Summary: 平易な言葉で 1 文にまとめる — プロジェクト初日のメンバーでもなぜこの PR が存在するのかわかるように、ビジネス/プロダクトの**背景**を含める
+   - Type, Scope, Impact, Size — レビュアーが労力とリスクを一目で把握できるよう表を埋める
 
-5. Write the **Key Changes** section — a narrative walkthrough that tells the story of the PR's changes file by file. The reviewer should understand the full picture before opening the diff:
+5. **Key Changes** セクションを書く — PR の変更をファイルごとに物語として説明するナラティブ。レビュアーが差分を開く前に全体像を理解できるようにする:
 
-   - Analyze the diff and determine the optimal reading order. Typically: data structures / domain models first, then core logic, then integration / orchestration, then UI / presentation, then tests / stories last.
-   - For each file, write a **`#### N.` heading block** (e.g. `#### 1.`, `#### 2.`). Do NOT use markdown numbered lists (`1.` at line start) — use `####` headings to avoid nested-numbering conflicts:
-     - The heading line: `#### N.` followed by the file path in bold backticks, tagged with `(new)`, `(modified)`, `(deleted)`, or `(renamed)` as appropriate
-     - Lines 2+: Write as if explaining to someone who just joined the project. Cover:
-       - What this file is responsible for in the codebase (architectural context)
-       - What specifically was changed or added in this PR and why
-       - How it connects to the previous and next files in the reading order
-       - Any non-obvious design decisions or trade-offs worth noting
-     - Quote key code snippets with inline comments to make the explanation concrete. Show the most important type, function signature, or logic block so the reviewer knows what to look for in the diff. Wrap code blocks in a `>` blockquote so they render cleanly in Claude Code output.
-   - If project-specific terms, abbreviations, or domain jargon appear, add a short inline explanation on first use.
-   - The reader should be able to review the diff confidently after reading this section alone, without needing to ask the author for context.
+   - 差分を分析し、最適な読み順を決定する。一般的な順序: データ構造/ドメインモデル → コアロジック → 統合/オーケストレーション → UI/プレゼンテーション → テスト/ストーリー。
+   - 各ファイルに **`#### N.` 見出しブロック** (例: `#### 1.`, `#### 2.`) を書く。Markdown のナンバードリスト (`1.` を行頭に置く形式) は使わない — ネストした番号付けの競合を避けるため `####` 見出しを使う:
+     - 見出し行: `#### N.` の後にファイルパスを太字バッククォートで記述し、`(new)`, `(modified)`, `(deleted)`, `(renamed)` のいずれかをタグとして付ける
+     - 2 行目以降: プロジェクトに参加したばかりの人に説明するように書く。以下を網羅する:
+       - このファイルがコードベースで担う役割 (アーキテクチャ上のコンテキスト)
+       - この PR で具体的に何が変更・追加されたか、そしてその理由
+       - 読み順における前後のファイルとの繋がり
+       - 特筆すべき非自明な設計上の決定やトレードオフ
+     - 説明を具体的にするため、重要なコードスニペットをインラインコメント付きで引用する。レビュアーが差分の中で何を見ればよいかわかるよう、最も重要な型・関数シグネチャ・ロジックブロックを示す。Claude Code の出力で正しくレンダリングされるよう、コードブロックは `>` ブロッククォートで囲む。
+   - プロジェクト固有の用語・略語・ドメインジャーゴンが登場する場合は、初出時に短い説明をインラインで補足する。
+   - このセクションを読めば、作者にコンテキストを確認しなくても差分を自信を持ってレビューできる状態にする。
 
-6. Write the **Findings** section. Before writing any finding, apply the following filters **in order**. A finding that fails any filter MUST be discarded:
+6. **Findings** セクションを書く。指摘を書く前に、以下のフィルタを**順番に**適用する。いずれかのフィルタを通過しない指摘は必ず除外する:
 
-   **Filter 1 — Author intent**: Ask "why might the author have written it this way?" Read the surrounding code, call sites, and related files to look for a deliberate reason. If a plausible intentional design exists, do not flag it.
+   **フィルタ 1 — 作者の意図**: 「なぜ作者はこのように書いたのか?」を問う。周辺のコード、コールサイト、関連ファイルを読み、意図的な設計が存在するか確認する。合理的な意図的設計が見つかれば、フラグを立てない。
 
-   **Filter 2 — Full path verification**: Trace the execution path end-to-end. For concurrency concerns, trace all transaction boundaries and lock acquisitions. For state management, trace all producers and consumers. Do not flag based on a single code location in isolation.
+   **フィルタ 2 — 実行パスの完全検証**: 実行パスをエンドツーエンドで追う。並行性に関する懸念は、すべてのトランザクション境界とロック取得をたどって確認する。状態管理については、すべてのプロデューサーとコンシューマーを追跡する。単一のコード箇所だけを根拠にフラグを立てない。
 
-   **Filter 3 — Concrete impact**: Articulate the specific, observable bug or failure that would occur. "Could theoretically..." or "for consistency..." is not sufficient. If you cannot describe a realistic scenario where the code breaks, do not flag it.
+   **フィルタ 3 — 具体的な影響**: 発生しうる具体的で観測可能なバグや障害を明確に述べる。「理論的にありえる...」「一貫性のため...」では不十分。コードが実際に壊れる現実的なシナリオを説明できない場合はフラグを立てない。
 
-   **Filter 4 — No quota**: Zero findings is a valid and good outcome. Do not fabricate or lower the bar to produce output. A clean PR deserves a clean review.
+   **フィルタ 4 — 指摘数の下限なし**: 指摘ゼロは有効かつ良い結果である。出力を生み出すために指摘を作り上げたり基準を下げたりしない。クリーンな PR はクリーンなレビューに値する。
 
-   When there are no findings, write `No findings.` as the section body. Do not render an empty table, and do not omit the section.
+   指摘がない場合は、セクション本文に `No findings.` と書く。空のテーブルを描画せず、セクション自体も省略しない。
 
-   Present findings as a table matching the Output Format below. Do not use bullet lists.
+   指摘は後述の出力フォーマットのテーブル形式で示す。箇条書きは使わない。
 
-   For each finding that passes all filters:
-   - Classify by priority:
-     - 🔴 **Critical** - Security vulnerabilities, bugs, data loss risks
-     - 🟡 **Warning** - Code quality concerns, potential issues
-     - 🟢 **Suggestion** - Improvements, style, readability
-   - Specify the file and line number (e.g., `src/auth.ts:42`). If the absolute line number cannot be determined from the diff (e.g., only hunk headers are available), fall back to `file (function_name)` or `file (symbol_name)` form.
-   - Describe the issue concisely
-   - Provide a concrete recommendation for how to fix it
+   全フィルタを通過した各指摘について:
+   - 優先度を分類する:
+     - 🔴 **Critical** - セキュリティ脆弱性、バグ、データロスのリスク
+     - 🟡 **Warning** - コード品質の懸念事項、潜在的な問題
+     - 🟢 **Suggestion** - 改善提案、スタイル、可読性
+   - ファイルと行番号を指定する (例: `src/auth.ts:42`)。差分から絶対行番号が特定できない場合 (ハンクヘッダーのみの場合など) は、`file (function_name)` または `file (symbol_name)` 形式にフォールバックする
+   - 問題を簡潔に説明する
+   - 修正方法の具体的な推奨事項を示す
 
-## Output Format
+## 出力フォーマット
 
 ````
 ## PR Review Summary

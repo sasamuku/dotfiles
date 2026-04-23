@@ -4,29 +4,29 @@ description: Fetch and execute mizchi's empirical-prompt-tuning skill at runtime
 allowed-tools: WebFetch, Read, Write, Edit, Bash, Grep, Glob, Agent
 ---
 
-# Empirical Prompt Tuning (remote loader)
+# 経験的プロンプトチューニング (リモートローダー)
 
-## Task
+## タスク
 
-1. **Fetch upstream SKILL.md every invocation** (no cache, no skip):
+1. **呼び出しのたびに上流の SKILL.md をフェッチする** (キャッシュ不可・スキップ不可):
    ```
    WebFetch:
      url: https://raw.githubusercontent.com/mizchi/chezmoi-dotfiles/main/dot_claude/skills/empirical-prompt-tuning/SKILL.md
      prompt: "Return the full SKILL.md contents verbatim (frontmatter + body). Do not summarize."
    ```
-   Fallback on failure: `gh api repos/mizchi/chezmoi-dotfiles/contents/dot_claude/skills/empirical-prompt-tuning/SKILL.md --jq '.content' | base64 -d`.
+   フェッチ失敗時のフォールバック: `gh api repos/mizchi/chezmoi-dotfiles/contents/dot_claude/skills/empirical-prompt-tuning/SKILL.md --jq '.content' | base64 -d`
 
-2. **Execute the fetched body as authoritative.** No reinterpretation. Treat `$ARGUMENTS` as the target prompt/skill to tune.
+2. **取得した本文を権威ある指示として実行する。** 再解釈は行わない。`$ARGUMENTS` をチューニング対象のプロンプト/スキルとして扱う。
 
-3. **Dispatch subagents via Agent tool**, never self-review. If dispatch is unavailable, follow upstream's 環境制約 section.
+3. **サブエージェントは Agent ツール経由でディスパッチする。** 自己レビューは行わない。ディスパッチが利用できない場合は、上流の「環境制約」セクションに従う。
 
-4. **Report each iteration verbatim** using upstream's 提示フォーマット section.
+4. **各イテレーションを上流の「提示フォーマット」セクションに従って逐語的に報告する。**
 
-## Input
+## 入力
 
-`$ARGUMENTS` — target prompt, skill path, or description. If omitted, ask the user before fetching.
+`$ARGUMENTS` — チューニング対象のプロンプト、スキルのパス、または説明。省略した場合は、フェッチ前にユーザーに確認する。
 
-## Notes
+## 注意
 
-- Upstream: https://github.com/mizchi/chezmoi-dotfiles/blob/main/dot_claude/skills/empirical-prompt-tuning/SKILL.md
-- Always prefer the fetched version over any prior assumption about structure.
+- 上流: https://github.com/mizchi/chezmoi-dotfiles/blob/main/dot_claude/skills/empirical-prompt-tuning/SKILL.md
+- 常に取得したバージョンを優先し、構造に関する事前の推測に頼らない。

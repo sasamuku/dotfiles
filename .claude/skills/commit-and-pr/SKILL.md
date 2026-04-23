@@ -6,14 +6,14 @@ disable-model-invocation: true
 
 # Commit and PR
 
-Commit changes, push to remote, and create a draft pull request.
+変更をコミットし、リモートへプッシュして、ドラフトプルリクエストを作成する。
 
-## Task
+## タスク
 
-Execute the following workflow:
+以下のワークフローを実行する:
 
-1. **Create commits** following `/commit` skill workflow
-2. **Push to remote** following `/push` skill workflow
-3. **Create draft PR** following `/create-pr` skill workflow
+1. **コミットを作成** - `/commit` スキルのワークフローに従う
+2. **リモートへプッシュ** - `/push` スキルのワークフローに従う
+3. **ドラフト PR を作成** - `/create-pr` スキルのワークフローに従う
 
-See the individual skills for detailed steps.
+詳細な手順は個別スキルを参照すること。

@@ -6,31 +6,31 @@ disable-model-invocation: true
 
 # Read Issue
 
-Fetch and display a GitHub issue with sub-issues.
+GitHub の Issue を取得し、サブ Issue と併せて表示する。
 
-## Arguments
+## 引数
 
-Issue number (e.g., `123` or `#123`)
+Issue 番号 (例: `123` または `#123`)
 
 $ARGUMENTS
 
-## Steps
+## 手順
 
-1. Extract the issue number from arguments
-2. Fetch issue details:
+1. 引数から Issue 番号を抽出する
+2. Issue の詳細を取得する:
    ```bash
    gh issue view <issue-number> --json number,title,body,state,url,comments
    ```
-3. Parse the issue body to find ALL sub-issues:
-   - Task list patterns: `- [ ] #123`, `- [x] #456`
-   - Direct issue references: `#123`
-   - Markdown links: `[text](#123)`
-4. For EACH sub-issue found, fetch its details:
+3. Issue 本文をパースし、**すべて** のサブ Issue を抽出する:
+   - タスクリスト記法: `- [ ] #123`, `- [x] #456`
+   - 直接の Issue 参照: `#123`
+   - Markdown リンク: `[text](#123)`
+4. 見つかった **各** サブ Issue の詳細を取得する:
    ```bash
    gh issue view <sub-issue-number> --json number,title,body,state,url
    ```
-5. Search the codebase for relevant files
-6. Present the issue information:
-   - Parent issue summary
-   - Sub-issues list with status (open/closed)
-   - Relevant code context
+5. 関連ファイルをコードベースから検索する
+6. Issue 情報を提示する:
+   - 親 Issue のサマリ
+   - サブ Issue 一覧 (オープン / クローズ状態付き)
+   - 関連するコードのコンテキスト

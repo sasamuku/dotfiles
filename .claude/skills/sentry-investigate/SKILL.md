@@ -7,60 +7,60 @@ allowed-tools: mcp__sentry__get_issue_details, mcp__sentry__analyze_issue_with_s
 
 # Sentry Issue Investigation
 
-Investigate a Sentry issue and identify the root cause in the codebase.
+Sentry の Issue を調査し、コードベース内の根本原因を特定する。
 
-## Input
+## 入力
 
-Sentry issue URL: `$ARGUMENTS`
+Sentry Issue URL: `$ARGUMENTS`
 
-## Process
+## プロセス
 
-### Step 1: Get Issue Details
+### ステップ 1: Issue の詳細を取得する
 
-Use `mcp__sentry__get_issue_details` with the provided URL:
+提供された URL を使い `mcp__sentry__get_issue_details` を呼び出す:
 
 ```
 mcp__sentry__get_issue_details(issueUrl='$ARGUMENTS')
 ```
 
-Extract key information:
-- Error message and type
-- Stack trace (file paths, line numbers, function names)
-- First/last seen timestamps
-- Event count and user impact
+以下の情報を抽出する:
+- エラーメッセージとエラー種別
+- スタックトレース (ファイルパス、行番号、関数名)
+- 初回/最終発生日時
+- イベント数とユーザーへの影響
 
-### Step 2: AI Root Cause Analysis (Optional)
+### ステップ 2: AI による根本原因分析 (オプション)
 
-If the issue needs deeper analysis, use Seer:
+より深い分析が必要な場合は Seer を使う:
 
 ```
 mcp__sentry__analyze_issue_with_seer(issueUrl='$ARGUMENTS')
 ```
 
-This provides:
-- AI-powered root cause analysis
-- Specific code fix suggestions
-- Implementation guidance
+これにより以下が得られる:
+- AI による根本原因分析
+- 具体的なコード修正の提案
+- 実装のガイダンス
 
-### Step 3: Find Relevant Code
+### ステップ 3: 関連コードを見つける
 
-Based on the stack trace, search the codebase:
+スタックトレースを基にコードベースを検索する:
 
-1. **Locate error source files** - Use Glob to find files mentioned in stack trace
-2. **Read the problematic code** - Read the specific lines/functions
-3. **Trace the call chain** - Follow the stack trace through the codebase
-4. **Check related code** - Look for similar patterns or shared utilities
+1. **エラー発生元のファイルを特定する** — Glob を使いスタックトレースに記載されたファイルを見つける
+2. **問題のコードを読む** — 特定の行・関数を読む
+3. **コールチェーンを追う** — スタックトレースに沿ってコードベースをたどる
+4. **関連コードを確認する** — 類似のパターンや共通ユーティリティを調べる
 
-### Step 4: Report Findings
+### ステップ 4: 調査結果を報告する
 
-Summarize:
-1. **Issue overview** - Error type, frequency, user impact
-2. **Root cause** - What's causing the error
-3. **Affected code** - File paths and line numbers in this codebase
-4. **Suggested fix** - Specific code changes to resolve the issue
+以下をまとめる:
+1. **Issue の概要** — エラー種別、発生頻度、ユーザーへの影響
+2. **根本原因** — エラーの原因
+3. **影響を受けるコード** — このコードベース内のファイルパスと行番号
+4. **修正案** — Issue を解消するための具体的なコード変更
 
-## Notes
+## 注意事項
 
-- If the URL is invalid or access denied, ask for correct URL or organization
-- Focus on actionable findings, not just restating error messages
-- Link findings to specific code locations in the codebase
+- URL が無効な場合、またはアクセスが拒否された場合は、URL や組織名が正しいか確認する
+- エラーメッセージの単純な言い換えではなく、実行可能な指摘に集中する
+- 調査結果はコードベース内の具体的な箇所 (ファイルパス・行番号) に紐づける

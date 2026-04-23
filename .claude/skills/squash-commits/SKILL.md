@@ -6,11 +6,11 @@ disable-model-invocation: true
 
 # Squash Commits
 
-Organize all changes into well-structured commits.
+すべての変更を、適切な粒度のコミットへ整理し直す。
 
-## Steps
+## 手順
 
-### 1. Review the current state
+### 1. 現状を確認する
 
 ```bash
 git status
@@ -20,20 +20,20 @@ git log origin/main..HEAD --oneline
 git log origin/main..HEAD
 ```
 
-### 2. Analyze and determine optimal commit structure
+### 2. 分析し、最適なコミット構造を決める
 
-- Group related changes across commits and working directory
-- Identify logical units that should be separate commits
-- Consider proper commit granularity (one logical change per commit)
-- Determine which changes should be combined or split
-- Decide on clear, descriptive commit messages for each logical unit
+- コミットと作業ディレクトリにまたがる関連変更をまとめる
+- 分離すべき論理単位を特定する
+- 適切なコミット粒度 (論理変更ごとに 1 コミット) を意識する
+- まとめる/分割する対象を決める
+- 各論理単位に対し、分かりやすいコミットメッセージを決める
 
-### 3. Execute the reorganization
+### 3. 再編成を実行する
 
-- If there are working changes, create temporary commits or stash them
-- Use interactive rebase to reorganize existing commits
-- Apply working changes to appropriate commits using `git commit --amend` or as new commits
-- Ensure the final commit history is clean and logical
-- Show the final result after completion
+- 作業ツリーに変更があれば、一時コミットや stash で退避する
+- 対話的リベースで既存コミットを並べ替える
+- 作業変更を `git commit --amend` または新規コミットとして適切なコミットへ反映する
+- 最終的なコミット履歴がクリーンで論理的であることを確認する
+- 完了後に結果を表示する
 
-This command automatically restructures commits based on optimal commit granularity without requiring user approval.
+ユーザーの承認なしに、最適な粒度でコミットを自動的に再編成する。

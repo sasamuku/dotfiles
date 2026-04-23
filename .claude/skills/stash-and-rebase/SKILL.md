@@ -6,28 +6,28 @@ disable-model-invocation: true
 
 # Stash and Rebase
 
-Stash current changes, rebase onto latest main, and reapply stash.
+変更を stash し、最新の main へリベースしてから stash を適用し直す。
 
-## Steps
+## 手順
 
-1. Stash all current changes including untracked files:
+1. 追跡外ファイルも含め、現在の変更をすべて stash する:
    ```bash
    git stash push -u -m "Auto-stash before rebase"
    ```
 
-2. Fetch the latest changes from remote:
+2. リモートから最新の変更を fetch する:
    ```bash
    git fetch origin
    ```
 
-3. Rebase the current branch onto the latest main:
+3. 現在のブランチを最新の main へリベースする:
    ```bash
    git rebase origin/main
    ```
 
-4. Reapply the stashed changes:
+4. stash した変更を再適用する:
    ```bash
    git stash pop
    ```
 
-If the rebase encounters conflicts, pause and inform the user so they can resolve them before attempting to pop the stash.
+リベース中にコンフリクトが発生した場合は、処理を一時停止し、ユーザーに通知してコンフリクトの解決を促し、解決後に stash pop を実行する。

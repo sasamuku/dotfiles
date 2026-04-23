@@ -6,13 +6,13 @@ disable-model-invocation: true
 
 # Commit and Push
 
-Commit changes and push to remote repository.
+変更をコミットし、リモートリポジトリへプッシュする。
 
-## Task
+## タスク
 
-Execute the following workflow:
+以下のワークフローを実行する:
 
-1. **Create commits** following `/commit` skill workflow
-2. **Push to remote** following `/push` skill workflow
+1. **コミットを作成** - `/commit` スキルのワークフローに従う
+2. **リモートへプッシュ** - `/push` スキルのワークフローに従う
 
-See the individual skills for detailed steps.
+詳細な手順は個別スキルを参照すること。

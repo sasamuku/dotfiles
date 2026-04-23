@@ -7,42 +7,42 @@ allowed-tools: Bash(gh *)
 
 # PR Review Comments Manager
 
-Two-phase workflow for managing PR review comments from AI reviewers (CodeRabbit, Copilot, etc.) and human reviewers.
+AI レビュアー (CodeRabbit、Copilot など) および人間レビュアーからの PR レビューコメントを管理する、2 フェーズのワークフロー。
 
-## Arguments
+## 引数
 
-PR number or URL (optional - uses current branch PR if omitted)
+PR 番号または URL (省略時は現在のブランチの PR を使用)
 
 $ARGUMENTS
 
 ---
 
-## Phase 1: Analyze & Categorize
+## フェーズ 1: 分析とカテゴリ分け
 
-### Step 1: Get PR information
+### ステップ 1: PR 情報を取得する
 
 ```bash
 gh pr view --json number,headRepository -q '{number: .number, owner: .headRepository.owner.login, repo: .headRepository.name}'
 ```
 
-### Step 2: Fetch all review comments
+### ステップ 2: 全レビューコメントを取得する
 
 ```bash
 gh api repos/{owner}/{repo}/pulls/{pr_number}/comments
 ```
 
-### Step 3: Categorize and present
+### ステップ 3: カテゴリ分けして提示する
 
-For each comment, assign:
-- **ID**: Sequential number (e.g., #1, #2, #3)
-- **Priority**:
-  - 🔴 **Must** - Bugs, security issues, breaking changes - requires fix
-  - 🟡 **Investigate** - Needs consideration, may or may not require changes
-  - 🟢 **Info** - Informational, style suggestions, minor nitpicks
+各コメントに以下を付与する:
+- **ID**: 連番 (例: #1, #2, #3)
+- **優先度**:
+  - 🔴 **Must** - バグ、セキュリティ問題、破壊的変更 — 修正必須
+  - 🟡 **Investigate** - 検討が必要、変更が必要かどうか要判断
+  - 🟢 **Info** - 情報提供、スタイル提案、軽微な指摘
 
-### Output Format
+### 出力フォーマット
 
-Present to user as a table:
+ユーザーへの提示はテーブル形式で行う:
 
 ```
 ## PR Review Comments Summary
@@ -67,21 +67,21 @@ Intent: Code style suggestion for better readability
 ...
 ```
 
-After presenting, wait for user to address the issues.
+提示後、ユーザーが問題に対応するのを待つ。
 
 ---
 
-## Phase 2: Reply to Addressed Comments
+## フェーズ 2: 対応済みコメントへの返信
 
-When user says "reply to comments" or similar:
+ユーザーが「コメントに返信して」などと指示した場合:
 
-### Step 1: Identify addressed comments
+### ステップ 1: 対応済みコメントを特定する
 
-Ask user which comment IDs were addressed, or detect from recent commits/changes in context.
+どのコメント ID が対応済みかユーザーに確認するか、コンテキスト内の最近のコミット/変更から検出する。
 
-### Step 2: Reply only to addressed comments
+### ステップ 2: 対応済みコメントにのみ返信する
 
-For each addressed comment, post a threaded reply:
+対応済みの各コメントにスレッド返信を投稿する:
 
 ```bash
 gh api repos/{owner}/{repo}/pulls/{pr_number}/comments -X POST \
@@ -89,16 +89,16 @@ gh api repos/{owner}/{repo}/pulls/{pr_number}/comments -X POST \
   -F in_reply_to={comment_id}
 ```
 
-### Reply Guidelines
+### 返信ガイドライン
 
-- **Only reply to comments that were actually addressed**
-- Reference commit hash when a fix was made (e.g., "Fixed in abc123")
-  - **Before replying with a commit hash, ensure the commit is pushed to the remote** (`git push` if needed) so the link resolves on GitHub
-- For "won't fix" decisions, explain reasoning
-- Skip comments still pending investigation
-- Keep replies concise
+- **実際に対応したコメントにのみ返信する**
+- 修正を行った場合はコミットハッシュを参照する (例: "Fixed in abc123")
+  - **コミットハッシュを含む返信を投稿する前に、GitHub 上でリンクが解決されるよう、コミットがリモートにプッシュ済みであることを確認する** (`git push` が必要な場合は実行する)
+- 「対応しない」と判断した場合は理由を説明する
+- 調査中のコメントはスキップする
+- 返信は簡潔に保つ
 
-### Example Replies
+### 返信例
 
 | Situation | Reply |
 |-----------|-------|

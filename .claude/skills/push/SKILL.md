@@ -6,17 +6,17 @@ disable-model-invocation: true
 
 # Push
 
-Push commits to remote repository.
+コミットをリモートリポジトリにプッシュする。
 
-## Task
+## タスク
 
-Push the current branch commits to the remote repository.
+現在のブランチのコミットをリモートリポジトリへプッシュする。
 
 ```bash
 git push
 ```
 
-If upstream is not set:
+upstream が未設定の場合:
 
 ```bash
 git push -u origin $(git branch --show-current)

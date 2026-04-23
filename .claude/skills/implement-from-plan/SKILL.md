@@ -6,16 +6,16 @@ context: fork
 agent: plan-driven-coder
 ---
 
-# Implement Plan
+# 計画の実装
 
-## Arguments
+## 引数
 
 $ARGUMENTS
 
-If no arguments provided, implement the next uncompleted item.
+引数が指定されない場合は、次の未完了項目を実装する。
 
-## Constraints
+## 制約
 
-- Do NOT commit changes. Leave all changes unstaged.
-- After implementation, follow `@.claude/skills/review-code/SKILL.md` to review all changes.
-- Report review findings to the user before they decide to commit.
+- 変更をコミットしない。すべての変更はアンステージのまま残す。
+- 実装後、`@.claude/skills/review-code/SKILL.md` に従ってすべての変更をレビューする。
+- ユーザーがコミットを判断する前に、レビュー結果を報告する。

@@ -4,76 +4,76 @@ description: Autonomously triage PR review comments, apply necessary fixes, comm
 allowed-tools: Bash(git *), Bash(gh *), Read, Edit, Write
 ---
 
-# Babysit PR
+# PR の自動管理 (Babysit)
 
-Autonomous PR maintenance loop. Triages review comments, applies fixes where needed, and replies to addressed comments. No user interaction — fully autonomous.
+PR の自律的なメンテナンスループ。レビューコメントをトリアージし、必要に応じて修正を適用し、対応済みコメントへの返信を行う。ユーザー操作は不要で、完全自律で動作する。
 
-## Workflow
+## ワークフロー
 
-### Step 1: Detect current PR
+### Step 1: 現在の PR を検出する
 
 ```bash
 gh pr view --json number,headRepository,state -q '{number: .number, owner: .headRepository.owner.login, repo: .headRepository.name, state: .state}'
 ```
 
-- If no open PR on the current branch, exit silently.
-- If state is `MERGED` or `CLOSED`, print `✅ PR is merged/closed. Stopping.` and exit.
+- 現在のブランチにオープンな PR がなければ、静かに終了する。
+- state が `MERGED` または `CLOSED` であれば、`✅ PR is merged/closed. Stopping.` と出力して終了する。
 
-### Step 2: Fetch unresolved review comments
+### Step 2: 未解決のレビューコメントを取得する
 
 ```bash
 gh api repos/{owner}/{repo}/pulls/{pr_number}/comments
 ```
 
-Filter to only unresolved comments (no existing reply in the thread).
+スレッド内に既存の返信がない、未解決のコメントのみに絞り込む。
 
-### Step 3: Categorize each comment
+### Step 3: 各コメントを分類する
 
-For each comment, assign a priority:
+各コメントに優先度を割り当てる:
 
-- 🔴 **Must** — bugs, security issues, breaking changes
-- 🟡 **Investigate** — may or may not require changes
-- 🟢 **Info** — style suggestions, nitpicks
+- 🔴 **Must** — バグ、セキュリティ問題、破壊的変更
+- 🟡 **Investigate** — 変更が必要かどうか判断が必要なもの
+- 🟢 **Info** — スタイル提案、細かい指摘
 
-### Step 4: Autonomous decision-making
+### Step 4: 自律的な意思決定
 
-For each comment, decide and act without user input:
+各コメントに対して、ユーザー入力なしで判断して対応する:
 
 | Priority | Action |
 |----------|--------|
-| 🔴 Must | Fix it. Read the file, apply the change. |
-| 🟡 Investigate | Fix if clearly correct and low-risk. Skip if ambiguous or risky. |
-| 🟢 Info | Skip unless trivially safe (e.g., removing an unused import). |
+| 🔴 Must | 修正する。ファイルを読み込み、変更を適用する。 |
+| 🟡 Investigate | 明らかに正しく低リスクなら修正する。曖昧またはリスクがあればスキップする。 |
+| 🟢 Info | 些細で安全な場合 (例: 未使用 import の削除) を除いてスキップする。 |
 
-**Do not fix** if:
-- The change requires product or design decisions
-- The fix could break other behavior
-- Intent of the comment is unclear
+**修正しない**条件:
+- プロダクトやデザインに関する意思決定が必要な変更
+- 他の挙動を壊す可能性がある修正
+- コメントの意図が不明瞭な場合
 
-### Step 5: Commit and push (only if fixes were applied)
+### Step 5: コミットとプッシュ (修正を適用した場合のみ)
 
-Run @.claude/skills/commit/SKILL.md with `-y` option, then @.claude/skills/push/SKILL.md.
+`-y` オプションを付けて @.claude/skills/commit/SKILL.md を実行し、その後 @.claude/skills/push/SKILL.md を実行する。
 
-### Step 6: Verify push before replying
+### Step 6: 返信前にプッシュを確認する
 
-Before posting any reply that references a commit hash, confirm the commit is pushed:
+コミットハッシュを参照する返信を投稿する前に、コミットがプッシュ済みであることを確認する:
 
 ```bash
 git log origin/$(git branch --show-current)..HEAD --oneline
 ```
 
-If the commit is not yet pushed, run @.claude/skills/push/SKILL.md first.
+コミットがまだプッシュされていなければ、先に @.claude/skills/push/SKILL.md を実行する。
 
-### Step 7: Reply to each comment
+### Step 7: 各コメントに返信する
 
-For every comment processed, post a reply autonomously:
+処理したすべてのコメントに対して、自律的に返信を投稿する:
 
 ```bash
 gh api repos/{owner}/{repo}/pulls/{pr_number}/comments/{comment_id}/replies \
   -X POST -f body="{reply}"
 ```
 
-Reply templates:
+返信テンプレート:
 
 | Situation | Reply |
 |-----------|-------|
@@ -83,7 +83,7 @@ Reply templates:
 | Investigated, no change needed | `Investigated — current implementation handles this correctly.` |
 | Info, skipped | `Noted.` |
 
-### Step 8: Report
+### Step 8: レポート
 
 ```
 ✅ Fixed #1, #3 — committed and pushed (abc1234)
@@ -91,4 +91,4 @@ Reply templates:
 💬 Replied to #1, #2, #3, #4
 ```
 
-If nothing to do: `✅ No actionable comments found.`
+対応すべきコメントがない場合: `✅ No actionable comments found.`

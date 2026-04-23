@@ -6,15 +6,15 @@ disable-model-invocation: true
 
 # Commit
 
-Create logical, well-structured commits following Conventional Commits specification.
+Conventional Commits 仕様に従い、論理的で構造化された git コミットを作成する。
 
-## Options
+## オプション
 
-- `-y`: Skip user approval and proceed directly with commit creation
+- `-y`: ユーザー承認をスキップして、そのままコミット作成に進む
 
-## Steps
+## 手順
 
-### 1. Check Current Changes
+### 1. 現在の変更を確認する
 
 ```bash
 git branch --show-current
@@ -24,16 +24,16 @@ git diff --cached
 git log --oneline -5
 ```
 
-### 2. Analyze Changes
+### 2. 変更を分析する
 
-- Group files by feature, module, or change type
-- Identify the nature of each group (feat, fix, docs, chore, refactor, style, test, perf, build, ci)
-- Determine appropriate commit order considering dependencies
-- Ensure each commit is atomic and self-contained
+- 機能・モジュール・変更種別でファイルをグルーピングする
+- 各グループの種別 (feat, fix, docs, chore, refactor, style, test, perf, build, ci) を判別する
+- 依存関係を踏まえた適切なコミット順序を決定する
+- 各コミットがアトミックで自己完結していることを確認する
 
-### 3. Propose Commit Plan and Get User Approval
+### 3. コミット計画を提示し、承認を得る
 
-Present a commit plan following Conventional Commits format (no emojis):
+Conventional Commits 形式 (絵文字なし) でコミット計画を提示する:
 
 ```
 Commit Plan:
@@ -56,24 +56,24 @@ Do you approve this commit plan? (y/n)
 If changes are needed, please specify what adjustments are required.
 ```
 
-**IMPORTANT**: Wait for explicit user approval before proceeding to commit creation.
+**重要**: コミット作成に進む前に、明示的なユーザー承認を待つこと。
 
-**Exception**: If the `-y` option is provided, skip the approval step and proceed directly to commit creation.
+**例外**: `-y` オプションが指定されている場合は承認ステップを飛ばし、直接コミット作成へ進む。
 
-### 4. Type Check and Lint (Before Each Commit)
+### 4. 各コミット前に型チェック・リント
 
-Before creating each commit, run type checking and linting:
+各コミットを作成する前に、型チェックとリントを実行する:
 
 ```bash
 npm run type-check || pnpm type-check || tsc --noEmit
 npm run lint || pnpm lint
 ```
 
-If errors are found, fix them before committing. If the project doesn't have these scripts, skip this step.
+エラーが見つかればコミット前に修正する。スクリプトが存在しない場合は省略する。
 
-### 5. Create Commits in Logical Units
+### 5. 論理単位でコミットを作成する
 
-After approval, create each commit:
+承認後、各コミットを作成する:
 
 ```bash
 git add [related-files]
@@ -87,28 +87,28 @@ EOF
 )"
 ```
 
-### 6. Commit Creation Principles
+### 6. コミット作成の原則
 
-- **One commit, one purpose**: Follow single responsibility principle
-- **Consider dependencies**: Commit in order that respects dependencies
-- **Don't break builds**: Each commit should leave the codebase in a working state
-- **Atomic commits**: Each commit should be self-contained and reversible
-- **Clear messages**: Write descriptive commit messages that explain why, not just what
+- **1 コミット 1 目的**: 単一責任原則に従う
+- **依存を意識**: 依存関係を尊重する順序でコミットする
+- **ビルドを壊さない**: 各コミットがビルド可能な状態を保つ
+- **アトミックなコミット**: 各コミットが自己完結し、取り消し可能であること
+- **明確なメッセージ**: 「何」だけでなく「なぜ」を説明する分かりやすいメッセージにする
 
-## Commit Types
+## コミットタイプ
 
-- **feat(module)**: New feature
-- **fix(module)**: Bug fix
-- **docs(module)**: Documentation changes
-- **chore(module)**: Maintenance tasks (dependencies, config, etc.)
-- **refactor(module)**: Code refactoring without functionality changes
-- **style(module)**: Code style changes (formatting, whitespace)
-- **test(module)**: Adding or updating tests
-- **perf(module)**: Performance improvements
-- **build(module)**: Build system changes
-- **ci(module)**: CI/CD configuration changes
+- **feat(module)**: 新機能
+- **fix(module)**: バグ修正
+- **docs(module)**: ドキュメント変更
+- **chore(module)**: 雑務 (依存更新、設定変更など)
+- **refactor(module)**: 機能変更を伴わないリファクタリング
+- **style(module)**: コードスタイル変更 (フォーマット、空白など)
+- **test(module)**: テストの追加・更新
+- **perf(module)**: パフォーマンス改善
+- **build(module)**: ビルドシステム変更
+- **ci(module)**: CI/CD 設定変更
 
-## Commit Message Format
+## コミットメッセージフォーマット
 
 ```
 type(scope): subject
@@ -118,22 +118,22 @@ body (optional)
 footer (optional)
 ```
 
-- **type**: Required (feat, fix, docs, etc.)
-- **scope**: Optional but recommended (module or component name)
-- **subject**: Required, concise description in imperative mood
-- **body**: Optional, detailed explanation with bullet points
-- **footer**: Optional, breaking changes or issue references
+- **type**: 必須 (feat, fix, docs, etc.)
+- **scope**: 任意だが推奨 (モジュール・コンポーネント名)
+- **subject**: 必須。命令形で簡潔に
+- **body**: 任意。箇条書きで詳細を記述
+- **footer**: 任意。破壊的変更や Issue 参照など
 
-**NO EMOJIS**: Use plain text only.
+**絵文字禁止**: プレーンテキストのみで書く。
 
-## Notes
+## 注意事項
 
-- **No branch creation**: Do not create new branches during this command
-- **Type check/lint only**: Do not run tests (user handles this separately)
-- **Interactive**: Always confirm the plan with the user before executing (unless `-y` option is provided)
-- **Strict format**: Follow Conventional Commits without emojis
-- **One at a time**: Create commits sequentially, not in batch
+- **ブランチは作成しない**: このコマンド内で新規ブランチを作らない
+- **型チェック/リントのみ**: テストは実行しない (テストはユーザーが別途対応)
+- **対話的**: `-y` が指定されない限り、実行前に必ず計画をユーザーに確認する
+- **厳密なフォーマット**: Conventional Commits に従い、絵文字は使わない
+- **逐次実行**: バッチではなく、1 コミットずつ順に作成する
 
-## Arguments
+## 引数
 
 $ARGUMENTS

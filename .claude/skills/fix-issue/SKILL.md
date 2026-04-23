@@ -6,24 +6,24 @@ disable-model-invocation: true
 
 # Fix Issue
 
-Fetch a GitHub issue, implement the fix, and verify it.
+GitHub の Issue を取得し、修正を実装し、検証する。
 
-## Arguments
+## 引数
 
-Issue number (e.g., `123` or `#123`)
+Issue 番号 (例: `123` または `#123`)
 
 $ARGUMENTS
 
-## Steps
+## 手順
 
-1. Extract the issue number from the arguments
-2. Fetch issue details:
+1. 引数から Issue 番号を抽出する
+2. Issue の詳細を取得する:
    ```bash
    gh issue view <issue-number>
    ```
-3. Understand the problem described in the issue
-4. Search the codebase for relevant files
-5. Implement the necessary changes
-6. Write and run tests to verify the fix
-7. Run linting and type checking (if available in project)
-8. Create a descriptive commit message following Conventional Commits
+3. Issue で説明されている問題を把握する
+4. 関連ファイルをコードベースから検索する
+5. 必要な変更を実装する
+6. テストを書き、実行して修正を検証する
+7. プロジェクトに存在する場合は、リンタ・型チェックを実行する
+8. Conventional Commits に沿った分かりやすいコミットメッセージを作成する

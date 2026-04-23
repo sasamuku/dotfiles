@@ -6,11 +6,11 @@ disable-model-invocation: true
 
 # Rebase
 
-Fetch and rebase current branch onto: $ARGUMENTS (default: origin/main).
+$ARGUMENTS で指定したブランチを fetch し、現在のブランチをリベースする (既定値: origin/main)。
 
-## Task
+## タスク
 
-Rebase the current branch onto the target branch. Resolve conflicts if any occur.
+現在のブランチを指定ブランチへリベースする。コンフリクトが発生したら解決する。
 
 ```bash
 git fetch origin
@@ -19,4 +19,4 @@ git rebase $ARGUMENTS
 git rebase origin/main
 ```
 
-If conflicts occur, analyze and resolve them, then continue the rebase.
+コンフリクトが発生した場合は解消してからリベースを継続する。

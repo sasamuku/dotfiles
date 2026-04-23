@@ -6,11 +6,11 @@ disable-model-invocation: true
 
 # Pull
 
-Pull the latest changes from branch: $ARGUMENTS (default: origin main).
+$ARGUMENTS で指定したブランチから最新の変更を取り込む (既定値: origin main)。
 
-## Task
+## タスク
 
-Fetch and merge the latest changes. Resolve conflicts if any occur.
+最新の変更を取得し、マージする。コンフリクトが発生したら解決する。
 
 ```bash
 git pull $ARGUMENTS
@@ -18,4 +18,4 @@ git pull $ARGUMENTS
 git pull origin main
 ```
 
-If conflicts occur, analyze and resolve them, then complete the merge.
+コンフリクトが起きた場合は分析・解決してからマージを完了する。
