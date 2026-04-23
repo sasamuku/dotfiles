@@ -8,6 +8,14 @@
 - `/delegate-worker` スキルを使って隔離された worktree で作業することを提案する
 - `main` ブランチでコードを直接変更してはならない
 
+## worktree 作成のルール
+
+- **`git worktree add` を直接使わない**。リポジトリ固有の `.wt_hook.sh`（`.env` コピー・`pnpm install` 等）が発火せず、後続の pre-push フック等が壊れるため
+- worktree が必要なときは以下のいずれかを使う:
+  1. **`/delegate-worker` スキル**（推奨）
+  2. **`wt add <branch>`** コマンド（`.wt_hook.sh` を発火させる）
+- 「隔離環境が欲しい」だけの理由で `git worktree add` を使わない
+
 ---
 
 # 基本原則: **Less is More**

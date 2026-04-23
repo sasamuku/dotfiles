@@ -71,6 +71,7 @@
       "Bash(git commit:*)"
     ],
     "deny": [
+      "Bash(git worktree add:*)",
       "Bash(rm -rf /)",
       "Bash(rm -rf ~)",
       "Bash(rm -rf /*)",
