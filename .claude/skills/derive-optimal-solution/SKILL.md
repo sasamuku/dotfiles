@@ -1,6 +1,6 @@
 ---
 name: derive-optimal-solution
-description: 問題の最適解を導出するための汎用思考プロトコル。ユーザーから相談・判断・評価・選択を求められた場面で、目の前の問題空間の中で最適解を探す前に必ず発動する。「どの選択が筋が良いか」「根本原因はどこか」「長く安定して運用できるか」「そもそもこれは必要か」「ほんとうに」「最善は」と問われた時、相手の提案の妥当性を複数視点から検証すべき場面、技術・プロセス・組織・意思決定・キャリアを含むあらゆる問題領域で、問題の再構成 (reframe) → 選択肢生成 → 評価 → 推奨までを一貫して行い、最適解へ導く。
+description: Generic thinking protocol for deriving optimal solutions. Invoke BEFORE searching within the given problem space whenever the user asks for advice, judgment, evaluation, or choice. Reframes the problem, generates options, evaluates trade-offs, and recommends an actionable optimal solution. Applies across any domain — technical, process, organizational, decision-making, career. Triggers when the user uses evaluation or reconsideration language ("which is best", "root cause", "is this really needed", "sustainable long-term", "ほんとうに", "そもそも", "最善は", "根本は", "筋が良い"), when validating the soundness of someone's proposal from multiple perspectives, when the problem spans multiple layers (tech / process / org / regulation / UX / cost), or when clear trade-offs exist.
 ---
 
 # Derive Optimal Solution
