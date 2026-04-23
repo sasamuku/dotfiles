@@ -85,6 +85,10 @@ gh api repos/{owner}/{repo}/pulls/{number}/reviews
 
 両エージェントが同一箇所を指摘したら統合し、出典欄に両方を記載する。
 
+**集計テーブルの記載ルール**:
+- Priority の行は `🔴 Critical` / `🟡 Warning` / `🟢 Suggestion` の 3 行のみ。「計」行は出力しない
+- 統合された指摘は `code-reviewer` 列 と `security-reviewer` 列にそれぞれ 1 件ずつ計上し、`合計` 列も 1 件とする（左 2 列の和ではない）
+
 ### Phase 4: Pending Review 投稿（オプション）
 
 統合サマリー提示後、**ユーザーに投稿対象の指摘番号を尋ねる**。例: 「投稿する指摘の番号を教えてください（例: `1,3,5` / `all` で全件 / `skip` で投稿せず終了）」。
@@ -98,7 +102,9 @@ gh api repos/{owner}/{repo}/pulls/{number}/reviews
 指摘テーブル 1 行 = 1 インラインコメント。以下の通り変換する:
 
 - `path` ← ファイル:行 のファイル部分
-- `line` ← ファイル:行 の行番号
+- `line` ← ファイル:行 の行番号（**元ファイルの絶対行番号**であり、diff ハンク内の相対位置ではない）
+  - `side: "RIGHT"` のとき: PR 適用後のファイル（head）の絶対行番号
+  - `side: "LEFT"` のとき: PR 適用前のファイル（base）の絶対行番号
   - 絶対行番号が取れなかった指摘（`file (function_name)` フォールバック）はインライン投稿不可。選択肢から除外し、Phase 3 の表には残す
 - `side` ← 追加/変更行は `RIGHT`、削除行は `LEFT`
 - `body` ← 以下のテンプレートで組み立てる:
