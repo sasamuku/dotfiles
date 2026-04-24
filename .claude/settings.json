@@ -202,6 +202,5 @@
     "superpowers@claude-plugins-official": false
   },
   "alwaysThinkingEnabled": false,
-  "effortLevel": "high",
-  "skipAutoPermissionPrompt": true
+  "effortLevel": "high"
 }
