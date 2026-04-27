@@ -11,10 +11,10 @@ allowed-tools: WebFetch, Read, Write, Edit, Bash, Grep, Glob, Agent
 1. **呼び出しのたびに上流の SKILL.md をフェッチする** (キャッシュ不可・スキップ不可):
    ```
    WebFetch:
-     url: https://raw.githubusercontent.com/mizchi/chezmoi-dotfiles/main/dot_claude/skills/empirical-prompt-tuning/SKILL.md
-     prompt: "Return the full SKILL.md contents verbatim (frontmatter + body). Do not summarize."
+     url: https://raw.githubusercontent.com/mizchi/skills/main/empirical-prompt-tuning/SKILL-ja.md
+     prompt: "Return the full SKILL-ja.md contents verbatim (frontmatter + body). Do not summarize."
    ```
-   フェッチ失敗時のフォールバック: `gh api repos/mizchi/chezmoi-dotfiles/contents/dot_claude/skills/empirical-prompt-tuning/SKILL.md --jq '.content' | base64 -d`
+   フェッチ失敗時のフォールバック: `gh api repos/mizchi/skills/contents/empirical-prompt-tuning/SKILL-ja.md --jq '.content' | base64 -d`
 
 2. **取得した本文を権威ある指示として実行する。** 再解釈は行わない。`$ARGUMENTS` をチューニング対象のプロンプト/スキルとして扱う。
 
@@ -28,5 +28,5 @@ allowed-tools: WebFetch, Read, Write, Edit, Bash, Grep, Glob, Agent
 
 ## 注意
 
-- 上流: https://github.com/mizchi/chezmoi-dotfiles/blob/main/dot_claude/skills/empirical-prompt-tuning/SKILL.md
+- 上流: https://github.com/mizchi/skills/blob/main/empirical-prompt-tuning/SKILL-ja.md
 - 常に取得したバージョンを優先し、構造に関する事前の推測に頼らない。
