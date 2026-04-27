@@ -13,7 +13,7 @@ description: Generic thinking protocol for deriving optimal solutions through it
 
 ## 適用の深さ
 
-発動条件は frontmatter の description に集約 (本体は発動後にしか読まれないため重複させない)。発動した後は、問題のサイズに応じて深さを調整する:
+問題のサイズに応じて深さを調整する:
 
 - 小さな相談: Step 1〜3 のみ軽く。Sub Agent は使わない (オーバーヘッド負け)
 - 中規模: 全ステップ通すが各 1〜2 案。Sub Agent は任意
