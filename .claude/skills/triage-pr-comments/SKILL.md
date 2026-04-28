@@ -1,6 +1,6 @@
 ---
 name: triage-pr-comments
-description: Triage PR review comments with priority categorization (must/investigate/info). Use when handling AI reviewer feedback (CodeRabbit, Copilot, etc.) or managing PR comments systematically.
+description: Triage and reply to PR review comments. Phase 1 categorizes comments by priority (must/investigate/info); Phase 2 posts threaded replies for resolved comments. Use when handling AI reviewer feedback (CodeRabbit, Copilot, etc.) or managing PR comments systematically.
 disable-model-invocation: true
 allowed-tools: Bash(gh *)
 ---
@@ -44,12 +44,33 @@ gh api repos/{owner}/{repo}/pulls/{pr_number}/comments --paginate
 次に独立エントリ（`in_reply_to_id` が null）に連番を付ける:
 
 - **ID**: 連番 (例: #1, #2, #3)
-- **Reviewer**: AI bot 名 (`CodeRabbit` / `Devin` / `Copilot` / `Claude` など) または `Human: <login>` を判別して明記。`gh api` レスポンスの `user.login` と `user.type == "Bot"` で判定。
-- **優先度**:
-  - 🔴 **Must** - バグ、セキュリティ問題、破壊的変更 — 修正必須
-  - 🟡 **Investigate** - 検討が必要、変更が必要かどうか要判断
-  - 🟢 **Info** - 情報提供、スタイル提案、軽微な指摘
-  - Resolved 済みのコメントも、元の深刻度ラベルはそのまま残す（Must だったバグが Resolved されても Must のまま。ただし Summary 末尾の `✅ Resolved` で対応済みを示す）。
+- **Reviewer**: `gh api` レスポンスの `user.login` と `user.type` から下記マッピング表で判定。
+  - `user.type == "User"` → `Human: <login>` （例: `Human: alice`）
+  - `user.type == "Bot"` → 下記マッピング表で表示名に正規化:
+
+  | login パターン | 表示名 |
+  |---|---|
+  | `coderabbitai[bot]` | CodeRabbit |
+  | `devin-ai-integration[bot]` | Devin |
+  | `copilot-pull-request-reviewer[bot]` / `github-copilot[bot]` | Copilot |
+  | `claude[bot]` | Claude |
+  | 上記以外の `*[bot]` | login から `[bot]` サフィックスを除去し、ハイフン/アンダースコアを空白に変換してタイトルケース化（例: `foo-bar[bot]` → `Foo Bar`） |
+
+- **優先度**: 下記の判定シグナルから決める。複数該当する場合は左の列が優先（明示プレフィックス > 絵文字 > 内容判断）。
+
+  | シグナル | 値の例 | 優先度 |
+  |---|---|---|
+  | 本文先頭の角括弧プレフィックス | `[must]` | 🔴 Must |
+  | 〃 | `[imo]` / `[ask]` / `[fyi]` | 🟡 Investigate |
+  | 〃 | `[nits]` | 🟢 Info |
+  | 本文先頭の絵文字 + キーワード | `🔴` / `Critical:` / `Must:` | 🔴 Must |
+  | 〃 | `🟡` / `Warning:` / `Investigate:` | 🟡 Investigate |
+  | 〃 | `🟢` / `Suggestion:` / `Info:` | 🟢 Info |
+  | プレフィックス無し（内容で判断） | バグ・セキュリティ問題・破壊的変更 | 🔴 Must |
+  | 〃 | 設計の検討余地・要判断項目 | 🟡 Investigate |
+  | 〃 | スタイル・軽微な提案・情報提供 | 🟢 Info |
+
+  Resolved 済みのコメントも、元の深刻度ラベルはそのまま残す（Must だったバグが Resolved されても Must のまま。ただし Summary 末尾の `✅ Resolved` で対応済みを示す）。
 
 ### 出力フォーマット
 
