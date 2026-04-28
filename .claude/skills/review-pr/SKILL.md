@@ -62,6 +62,7 @@ gh api repos/{owner}/{repo}/pulls/{number}/reviews
 - PR タイトル・本文・ベース/ヘッドブランチ名
 - `gh pr diff` の差分全文
 - 既存インラインコメント一覧
+- **出力フォーマット仕様**: `.claude/skills/review-pr/output-format.md` の内容を agent 用 prompt に丸ごと埋め込んで渡す。これは全 reviewer 共通の構造化スキーマ・量のコントロール・本文トーンの単一情報源で、agent 定義側には記載していない
 
 観点は各エージェントの「一次責任」で大部分は分離されるが、ボーダーラインケースで複数エージェントが同箇所を指摘することはある。その場合は Phase 3 でマージする。
 
