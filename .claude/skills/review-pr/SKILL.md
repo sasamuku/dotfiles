@@ -1,16 +1,34 @@
 ---
 name: review-pr
-description: Comprehensive PR review with parallel code + security + TypeScript analysis, optional inline comment posting
+description: Comprehensive PR review with parallel multi-agent analysis, optional inline comment posting
 disable-model-invocation: true
 ---
 
 # Review PR
 
-GitHub PR に対して **code-reviewer** / **security-reviewer** / **typescript-reviewer**（TS/JS 変更がある場合のみ）を並列実行し、統合サマリーを提示する。承認があれば Pending Review としてインラインコメントを投稿する。
+GitHub PR に対して下記「エージェント一覧」のレビュアーを `trigger` に従って並列起動し、統合サマリーを提示する。承認があれば Pending Review としてインラインコメントを投稿する。
 
 ```
-引数解析 → 差分取得 → 言語判定 → エージェント並列 → 統合サマリー → 確認 → Pending Review 投稿
+引数解析 → 差分取得 → トリガー評価 → エージェント並列 → 統合サマリー → 確認 → Pending Review 投稿
 ```
+
+## エージェント一覧
+
+「どのエージェントがどの条件で起動するか」の唯一の所在。観点を追加・廃止するときはこの表に行を足す/消すだけ。skill 本文の他の箇所には**エージェント名・トリガー条件をハードコードしない**。
+
+| エージェント名        | trigger                                       | 一次責任                                                                     |
+| --------------------- | --------------------------------------------- | ---------------------------------------------------------------------------- |
+| `code-reviewer`       | `always`                                      | 品質・設計・可読性・パフォーマンス・テスト                                   |
+| `security-reviewer`   | `always`                                      | セキュリティ脆弱性 (OWASP Top 10 等。XSS / SQL injection 等の一次責任はここ) |
+| `typescript-reviewer` | `extensions=.ts, .tsx, .js, .jsx, .mjs, .cjs` | 型安全性・非同期・JS/TS イディオム (`any` の濫用等の一次責任はここ)          |
+
+`trigger` 列の値:
+
+- `always` — 無条件で起動
+- `paths=<glob...>` (省略可で `; exclude_paths=<glob...>`) — `paths` のいずれかが差分ファイルにマッチし、`exclude_paths` にマッチしないとき起動
+- `extensions=<.ext...>` — 差分ファイルの拡張子のいずれかが該当するとき起動
+
+新しい観点の追加 = 既存エージェント (例: `~/.claude/agents/code-reviewer.md`) を手本に `~/.claude/agents/<観点>-reviewer.md` を作り、**この表に 1 行追加する**。
 
 ## 優先度分類
 
@@ -32,7 +50,7 @@ $ARGUMENTS
 ### Phase 1: 情報収集
 
 ```bash
-gh pr view <number>
+gh pr view <number> --json number,title,body,baseRefName,headRefName,files
 gh pr diff <number>
 gh repo view --json nameWithOwner --jq '.nameWithOwner'
 gh api repos/{owner}/{repo}/pulls/{number}/comments
@@ -41,15 +59,19 @@ gh api repos/{owner}/{repo}/pulls/{number}/reviews
 
 差分が空なら「レビュー対象の差分がありません」と報告して終了する。
 
-差分ファイル一覧に `*.ts` / `*.tsx` / `*.js` / `*.jsx` / `*.mjs` / `*.cjs` が含まれるかで **TS/JS 変更の有無** を判定し、Phase 2 の起動対象を決める。
+`.files[].path` を控える (Phase 2 のトリガー評価で使う)。
 
-### Phase 2: 並列レビュー実行
+### Phase 2: トリガー評価とエージェント並列実行
 
-**同一メッセージ内の独立した Agent ツール呼び出し**として並列起動する。各エージェントには PR タイトル・説明・差分・既存コメントを渡す。
+「エージェント一覧」各行の `trigger` を `.files[].path` に対して評価。起動対象が決まったら、**同一メッセージ内の独立した Agent ツール呼び出し**で並列起動する。各エージェントへの引き渡し:
 
-- **code-reviewer**（常時）: 品質・設計・可読性・パフォーマンス・テスト
-- **security-reviewer**（常時）: OWASP Top 10 を含むセキュリティ
-- **typescript-reviewer**（TS/JS 変更がある場合のみ）: 型安全性、非同期の正しさ、Node/Web セキュリティ、イディオマティックなパターン
+- PR タイトル・本文・ベース/ヘッドブランチ名
+- `gh pr diff` の差分全文
+- 既存インラインコメント一覧
+
+観点は各エージェントの「一次責任」で大部分は分離されるが、ボーダーラインケースで複数エージェントが同箇所を指摘することはある。その場合は Phase 3 でマージする。
+
+いずれかが失敗しても残りで続行し、失敗したエージェント名を統合サマリーに明記する。
 
 ### Phase 3: 統合サマリー
 
@@ -81,16 +103,14 @@ Summary 1 文（ビジネス/プロダクト背景を含む平易な表現）と
 
 各指摘に含める要素:
 - **優先度** (上記「優先度分類」)
-- **出典** (`code-reviewer` / `security-reviewer` / `typescript-reviewer` / 複数併記)
+- **出典** (冒頭テーブルの `エージェント名` をそのまま使う。複数エージェントが同一箇所を指摘したら統合し、出典欄にすべて併記)
 - **ファイル:行** (絶対行番号が取れない場合は `file (function_name)` にフォールバック)
 - **問題の説明**
 - **具体的な修正案**
 
-複数エージェントが同一箇所を指摘したら統合し、出典欄にすべて記載する。
-
 **集計テーブル**:
 - 行は `🔴 Critical` / `🟡 Warning` / `🟢 Suggestion` の 3 行のみ (「計」行なし)
-- 列は **起動したエージェント分のみ** (TS/JS 変更がなければ `typescript-reviewer` 列は出さない)
+- 列は **Phase 2 で起動したエージェント分のみ** (起動しなかったエージェントの列は出さない)
 - 統合された指摘は各出典列に 1 件ずつ計上し、`合計` も 1 件とする (列の単純和ではない)
 
 ### Phase 4: Pending Review 投稿（オプション）
@@ -238,9 +258,11 @@ auth.ts (#2) と middleware.ts (#3) の両方から import される。
 | 2 | 🟡 Warning | typescript-reviewer | src/api.ts:15 | 非同期呼び出しで未処理の Promise rejection | `await` + try-catch でエラーを伝播させる |
 | 3 | 🟢 Suggestion | code-reviewer | src/utils.ts:8 | ロジックの重複 | 共通ヘルパーに抽出する |
 
+出典列には冒頭テーブルの `エージェント名` をそのまま入れる (上記は例示)。
+
 ### 集計
 
-（TS/JS 変更がある PR の例 — 変更がない場合は `typescript-reviewer` 列を省略する）
+起動したエージェント分の列のみ出す (例: TS/JS 変更がない PR では `typescript-reviewer` 列を省略する)。
 
 | 優先度 | code-reviewer | security-reviewer | typescript-reviewer | 合計 |
 |---|---|---|---|---|
