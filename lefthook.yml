@@ -2,5 +2,5 @@ pre-push:
   commands:
     lychee:
       tags: links
-      run: lychee --no-progress --offline --exclude-path '.agents/skills/dogfood/templates' --exclude-path '.claude/skills/dogfood/templates' '**/*.md'
+      run: lychee --no-progress --offline --exclude-path '.agents/skills' --exclude-path '.claude/skills/dogfood' '**/*.md'
 
