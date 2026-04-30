@@ -73,6 +73,14 @@ mkdir -p ~/.config/zed
 ln -sfn ${DOTFILES_DIR}/.config/zed/settings.json ~/.config/zed/settings.json
 ln -sfn ${DOTFILES_DIR}/.config/zed/keymap.json ~/.config/zed/keymap.json
 
+# Lefthook (git hooks)
+if command -v lefthook >/dev/null 2>&1; then
+  echo "🪝 Installing lefthook git hooks..."
+  (cd "${DOTFILES_DIR}" && lefthook install)
+else
+  echo "  ⚠️  lefthook not found; skipping hook install (run 'brew bundle' first)"
+fi
+
 # Claude MCP setup
 echo "🔌 Setting up Claude MCP servers..."
 "$(dirname "${0}")/setup_claude_mcp.sh"

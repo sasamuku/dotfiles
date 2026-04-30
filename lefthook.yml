@@ -1,0 +1,6 @@
+pre-push:
+  commands:
+    lychee:
+      tags: links
+      run: lychee --no-progress '**/*.md'
+
