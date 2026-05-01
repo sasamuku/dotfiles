@@ -21,6 +21,7 @@ GitHub PR に対して下記「エージェント一覧」のレビュアーを 
 | `code-reviewer`       | `always`                                      | 品質・設計・可読性・パフォーマンス・テスト                                   |
 | `security-reviewer`   | `always`                                      | セキュリティ脆弱性 (OWASP Top 10 等。XSS / SQL injection 等の一次責任はここ) |
 | `typescript-reviewer` | `extensions=.ts, .tsx, .js, .jsx, .mjs, .cjs` | 型安全性・非同期・JS/TS イディオム (`any` の濫用等の一次責任はここ)          |
+| `postgres-reviewer`   | `always`                                      | Postgres 設計・クエリ・インデックス・RLS・接続管理 (生 SQL / ORM DML / Markdown DB 仕様。DB に関する記述がなければ即終了) |
 
 `trigger` 列の値:
 
