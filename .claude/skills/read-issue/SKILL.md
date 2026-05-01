@@ -23,6 +23,10 @@ $ARGUMENTS
    ```bash
    gh issue view <issue-number> --json number,title,body,state,url,comments
    ```
+   - **取得失敗時の分岐**:
+     - **404 / 存在しない番号**: 親 Issue サマリに「取得不可: #<番号> は存在しません」と 1 行明示し、サブ Issue 一覧と関連コードは **省略せずに「取得不可のため対象なし」と明記**して中断する。隣接番号の探索や類推による補完は **行わない**（誤情報の出力を防ぐ）
+     - **取得結果が PR**: `gh issue view` は PR でも成功する（Issue/PR は番号空間共通）。PR が返ったら親 Issue サマリの先頭に `[PR として取得]` のヘッダを 1 行付け、本文要点はそのまま提示する。サブ Issue は通常通り取得を試みる
+     - **認証エラー / ネットワーク失敗**: 親 Issue サマリに「取得失敗: <エラー要約>」を 1 行明示して中断
 3. **サブ Issue は次の優先順で抽出する**:
    1. **一次ソース**: GitHub 公式 sub-issue API
       ```bash
@@ -30,19 +34,31 @@ $ARGUMENTS
       ```
    2. **補完**: 本文タスクリスト記法 `- [ ] #NNN` / `- [x] #NNN` （1 と dedup）
    3. **サブ扱いにしない**: 上記に該当しない本文中の `#NNN` / `[text](#NNN)` / 「関連 Epic」「関連 Issue」「関連 Discussion」等の文脈注記はすべて **「関連リンク」として別セクションに分離** する（サブ issue として列挙しない）
-4. サブ Issue の詳細を揃える:
-   - 手順 3.1 の `sub_issues` API レスポンスに `number / title / state / url` が揃っているなら、**追加の `gh issue view` は不要**（無駄呼び出しを避ける）
-   - 3.2 のタスクリストで新規に見つかった番号、または title が欠けるものだけ個別取得:
-     ```bash
-     gh issue view <sub-issue-number> --json number,title,body,state,url
-     ```
-   - Discussion (`gh issue view` で取得不可) は「関連リンク」側に回す
+4. サブ Issue の詳細を揃える（**dedup と追加取得は次の擬似コード通りに行う**。API レスポンスは正としてそのまま使い、再取得しない）:
+
+   ```
+   api_subs       = 手順 3.1 のレスポンス（number/title/state/url が揃っている）
+   tasklist_nums  = 手順 3.2 で本文から抽出した番号集合
+   api_nums       = { s.number for s in api_subs }
+
+   # API にあれば API のデータを正とする → 追加 gh issue view は呼ばない
+   # タスクリスト固有の番号だけを補完取得対象とする
+   missing_nums   = tasklist_nums - api_nums
+   for n in missing_nums:
+     gh issue view <n> --json number,title,body,state,url   # ここでだけ呼ぶ
+
+   final_subs = api_subs ∪ { 上記 for ループで取得したもの }
+   ```
+
+   - 追加 `gh issue view` の呼び出し回数は **必ず `len(missing_nums)` 件**。これを超えたら手順違反
+   - api_subs に既に揃っている Issue を再取得しない。`title` が欠けて見えても再取得しない（`--jq` のフィルタを正としない、生レスポンスを使う）
+   - Discussion（`gh issue view` で取得不可）は「関連リンク」側に回す
 5. 関連ファイルをコードベースから検索する:
    - 親 Issue のタイトル・本文から 2-3 個のキーワード（機能名 / 固有識別子 / ファイル名候補）を抽出
    - 環境非依存な形で `grep -rln`（リポジトリルート）を実行し、結果を pipe でフィルタする:
      ```bash
      grep -rln "<keyword>" . \
-       | grep -Ev '(^|/)(node_modules|\.next|dist|__generated__|\.claude/worktrees)(/|$)' \
+       | grep -Ev '(^|/)(node_modules|\.next|dist|__generated__|\.claude/worktrees|\.playwright-mcp|\.turbo|coverage)(/|$)' \
        | head -n 10
      ```
      （`--exclude-dir` は BSD/GNU / 相対パス階層で挙動が割れるため、`grep -Ev` で後段フィルタする方が確実）
