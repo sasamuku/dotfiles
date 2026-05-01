@@ -96,7 +96,7 @@ CI 失敗の追加方針:
 
 ### Step 6: コミットとプッシュ (修正を適用した場合のみ)
 
-`-y` オプションを付けて @.claude/skills/commit/SKILL.md を実行し、その後 @.claude/skills/push/SKILL.md を実行する。
+`-y` オプションを付けて `/commit` スキルを実行し、その後 `/push` スキルを実行する。
 
 ### Step 7: 返信前にプッシュを確認する
 
@@ -106,7 +106,7 @@ CI 失敗の追加方針:
 git log origin/$(git branch --show-current)..HEAD --oneline
 ```
 
-コミットがまだプッシュされていなければ、先に @.claude/skills/push/SKILL.md を実行する。
+コミットがまだプッシュされていなければ、先に `/push` スキルを実行する。
 
 ### Step 8: 各コメントに返信する
 

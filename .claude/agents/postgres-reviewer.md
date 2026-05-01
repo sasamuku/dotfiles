@@ -13,7 +13,7 @@ model: inherit
 
 - 指摘の根拠として「部分インデックスの正しい書き方」「`SECURITY DEFINER` の `search_path` ピン留め例」など、SQL 例まで添えて修正案を返したいとき
 - 自分の知識で曖昧な領域 (例: pgvector のインデックス選択、PgBouncer transaction mode の prepared statement 制約の最新挙動) に踏み込むとき
-- カテゴリ全体を体系的に当てたいとき (`references/_sections.md` で全ルール一覧を確認)
+- カテゴリ全体を体系的に当てたいとき (`@.agents/skills/supabase-postgres-best-practices/references/_sections.md` で全ルール一覧を確認)
 
 毎回ロードする必要はない。**観点が明確で修正案も自信を持って書けるなら skill ロードは省略する** (コンテキスト節約のため)。
 
@@ -110,6 +110,6 @@ ORM や Markdown 仕様の指摘も、原則として **元ファイルの絶対
 
 ## 出力フォーマット・量のコントロール・トーン
 
-呼び出し元 (review-pr スキル) が起動時に渡す **出力フォーマット仕様** に従う (構造化ブロック、優先度、量のコントロール、本文トーン)。本 agent 定義側にスキーマは記載しない — 同仕様が真実の単一情報源。指示が来ない文脈で起動された場合は、`.claude/skills/review-pr/output-format.md` を参照する。
+呼び出し元 (review-pr スキル) が起動時に渡す **出力フォーマット仕様** に従う (構造化ブロック、優先度、量のコントロール、本文トーン)。本 agent 定義側にスキーマは記載しない — 同仕様が真実の単一情報源。指示が来ない文脈で起動された場合は、`@.claude/skills/review-pr/output-format.md` を参照する。
 
 Postgres 観点では、本文に **想定スケールでのコスト感 (`このクエリは N=10万行で seq scan になり ~XXms` 等) や具体的な代替 SQL** を書けると説得力が増す。修正案は可能な限り Suggested Changes として置換可能な形 (CREATE INDEX 文、パラメータ化済み ORM 呼び出し、改善後のスキーマ定義行) で返す。

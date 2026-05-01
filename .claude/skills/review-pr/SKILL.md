@@ -29,7 +29,7 @@ GitHub PR に対して下記「エージェント一覧」のレビュアーを 
 - `paths=<glob...>` (省略可で `; exclude_paths=<glob...>`) — `paths` のいずれかが差分ファイルにマッチし、`exclude_paths` にマッチしないとき起動
 - `extensions=<.ext...>` — 差分ファイルの拡張子のいずれかが該当するとき起動
 
-新しい観点の追加 = 既存エージェント (例: `~/.claude/agents/code-reviewer.md`) を手本に `~/.claude/agents/<観点>-reviewer.md` を作り、**この表に 1 行追加する**。
+新しい観点の追加 = 既存エージェント (例: `@.claude/agents/code-reviewer.md`) を手本に `.claude/agents/<観点>-reviewer.md` を作り、**この表に 1 行追加する**。
 
 ## 引数
 
@@ -81,7 +81,7 @@ skill が agent prompt に diff 全文を渡す際は、上記の数え方が再
 <gh api ... /comments の出力>
 
 ## 出力フォーマット
-<.claude/skills/review-pr/output-format.md の本文を丸ごと貼る>
+<@.claude/skills/review-pr/output-format.md の本文を丸ごと貼る>
 ```
 
 `## 出力フォーマット` 節は全 reviewer 共通の構造化スキーマ・量のコントロール・本文トーンの単一情報源で、agent 定義側には記載していない。毎回貼ること。

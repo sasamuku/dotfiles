@@ -19,24 +19,24 @@ $ARGUMENTS
 
 ### フェーズ 1: Issue から計画を作成する
 
-引数の Issue 番号を使って `@.claude/skills/plan-from-issue/SKILL.md` に従う。
+引数の Issue 番号を使って `/plan-from-issue` スキルのワークフローに従う。
 
 ### フェーズ 2: 計画を実装する
 
-`@.claude/skills/implement-from-plan/SKILL.md` に従い、PLANS.md の全項目を実装する。
+`/implement-from-plan` スキルのワークフローに従い、PLANS.md の全項目を実装する。
 
 ### フェーズ 3: 変更をコミットする
 
-`-y` オプションを付けて `@.claude/skills/commit/SKILL.md` に従い、コミットを自動承認する。
+`-y` オプションを付けて `/commit` スキルのワークフローに従い、コミットを自動承認する。
 
 ### フェーズ 4: レビューと修正のループ
 
 以下のサイクルを最大 3 回繰り返す:
 
-1. `@.claude/skills/review-code/SKILL.md` に従い、すべての変更をレビューする
+1. `/review-code` スキルのワークフローに従い、すべての変更をレビューする
 2. **Critical** または **Warning** の問題が見つかった場合:
    - 問題を修正する
-   - `-y` オプションを付けて `@.claude/skills/commit/SKILL.md` に従い、修正をコミットする
+   - `-y` オプションを付けて `/commit` スキルのワークフローに従い、修正をコミットする
    - 次のイテレーションへ進む
 3. Critical/Warning の問題がなくなればループを抜ける
 

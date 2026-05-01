@@ -20,15 +20,15 @@ $ARGUMENTS
 
 ### フェーズ 1: Issue の読み込み
 
-引数の Issue 番号を使い、`@.claude/skills/read-issue/SKILL.md` に従う。
+引数の Issue 番号を使い、`/read-issue` スキルのワークフローに従う。
 
 ### フェーズ 2: PLANS.md の作成
 
-フェーズ 1 で収集した Issue 情報を使い、`@.claude/skills/create-plan/SKILL.md` に従う。
+フェーズ 1 で収集した Issue 情報を使い、`/create-plan` スキルのワークフローに従う。
 
 ### フェーズ 3: Issue への同期
 
-`@.claude/skills/sync-plan/SKILL.md` に従い、PLANS.md を Issue に投稿する。
+`/sync-plan` スキルのワークフローに従い、PLANS.md を Issue に投稿する。
 
 完了したら以下を表示する:
 ```
