@@ -29,6 +29,13 @@ else
     "$CLAUDE_PATH" mcp add --scope user --transport http deepwiki https://mcp.deepwiki.com/mcp
 fi
 
+echo "➕ Adding aws-mcp MCP server..."
+if echo "$MCP_LIST" | grep -q "aws-mcp"; then
+    echo "   ⏭️  aws-mcp already exists, skipping..."
+else
+    "$CLAUDE_PATH" mcp add aws-mcp --scope user -- uvx mcp-proxy-for-aws@latest https://aws-mcp.us-east-1.api.aws/mcp --metadata AWS_REGION=ap-northeast-1
+fi
+
 echo "🎉 Claude MCP setup completed!"
 echo ""
 echo "📋 Current MCP servers:"
