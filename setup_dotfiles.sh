@@ -40,6 +40,11 @@ echo "📁 Creating Neovim config symlink..."
 mkdir -p ~/.config/nvim
 ln -sfn ${DOTFILES_DIR}/.config/nvim/init.lua ~/.config/nvim/init.lua
 
+# Ghostty config
+echo "📁 Creating Ghostty config symlink..."
+mkdir -p ~/.config/ghostty
+ln -sfn ${DOTFILES_DIR}/.config/ghostty/config ~/.config/ghostty/config
+
 # WezTerm config
 echo "📁 Creating WezTerm config symlink..."
 mkdir -p ~/.config/wezterm

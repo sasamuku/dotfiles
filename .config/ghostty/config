@@ -1,0 +1,7 @@
+font-family = PlemolJP Console NF
+font-size = 14
+
+theme = dark:Catppuccin Mocha,light:Catppuccin Latte
+
+window-decoration = false
+macos-option-as-alt = true
