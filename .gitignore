@@ -17,6 +17,7 @@
 # Editors and IDEs
 .vscode/
 .cursor/
+.zed/
 
 # Language Specific
 ## Ruby
