@@ -17,6 +17,15 @@
   2. **`wt add <branch>`** コマンド（`.wt_hook.sh` を発火させる）
 - 「隔離環境が欲しい」だけの理由で `git worktree add` を使わない
 
+## ソース参照は常にクリック可能にする
+
+ソース (PR・Issue・コミット・ファイル・外部リソース等) は **1 クリックで遷移できる形式**で記載する。生の番号・パス・URL を裸で書かない。
+
+- PR / Issue: `[#12345](https://github.com/<owner>/<repo>/pull/12345)`
+- コミット: `[abc1234](https://github.com/<owner>/<repo>/commit/abc1234)`
+- ファイル / コード行: `path/to/file.ts:42` 形式
+- 外部 URL: `[タイトル](url)` 形式
+
 ---
 
 # 基本原則: **Less is More**
