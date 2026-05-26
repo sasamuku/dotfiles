@@ -209,7 +209,16 @@
     "ralph-loop@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
     "feature-dev@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": false
+    "superpowers@claude-plugins-official": false,
+    "codex@openai-codex": true
+  },
+  "extraKnownMarketplaces": {
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
+      }
+    }
   },
   "alwaysThinkingEnabled": false,
   "effortLevel": "high",
