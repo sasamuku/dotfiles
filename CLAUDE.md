@@ -36,7 +36,7 @@ setup.sh
 - `.config/mise/config.toml` — mise (Node.js 25.2.1, Go 1.23.2, Ruby 3.2.2)
 - `.gitconfig` — Git エイリアス。個人設定は `.gitconfig.local.sample` → `~/.gitconfig.local`
 - `.zsh_secrets.example` → `~/.zsh_secrets` (秘密環境変数)
-- `.config/nvim/`, `.config/wezterm/` — Neovim (Lua), WezTerm
+- `.config/nvim/`, `.config/wezterm/`, `.config/ghostty/`, `.config/cmux/` — Neovim (Lua), WezTerm, Ghostty, cmux (JSONC)
 - `.claude/`, `.serena/` — Claude Code / Serena MCP 設定
 
 ## シェル環境

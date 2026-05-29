@@ -50,6 +50,11 @@ echo "📁 Creating WezTerm config symlink..."
 mkdir -p ~/.config/wezterm
 ln -sfn ${DOTFILES_DIR}/.config/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
 
+# cmux config
+echo "📁 Creating cmux config symlink..."
+mkdir -p ~/.config/cmux
+ln -sfn ${DOTFILES_DIR}/.config/cmux/cmux.json ~/.config/cmux/cmux.json
+
 # Starship config
 echo "📁 Creating Starship config symlink..."
 mkdir -p ~/.config
