@@ -1,4 +1,5 @@
 tap "laishulu/homebrew"
+tap "manaflow-ai/cmux"
 tap "oven-sh/bun"
 
 brew "agent-browser"
@@ -37,6 +38,7 @@ cask "raycast"
 cask "slack"
 cask "shottr"
 cask "claude-code"
+cask "cmux"
 cask "cursor"
 cask "ghostty"
 cask "wezterm"
