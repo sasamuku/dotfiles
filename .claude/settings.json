@@ -213,5 +213,6 @@
   },
   "alwaysThinkingEnabled": false,
   "effortLevel": "high",
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "model": "opus"
 }
