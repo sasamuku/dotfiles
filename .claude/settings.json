@@ -221,6 +221,7 @@
     }
   },
   "alwaysThinkingEnabled": false,
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
+  "skipWorkflowUsageWarning": true,
   "skipAutoPermissionPrompt": true
 }
