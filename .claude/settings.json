@@ -187,7 +187,7 @@
           },
           {
             "type": "command",
-            "command": "input=$(cat); cwd=$(echo \"$input\" | jq -r '.cwd // empty'); dir=$(basename \"${cwd:-$PWD}\"); say Done; osascript -e \"display notification \\\"$dir\\\" with title \\\"Claude Done\\\"\""
+            "command": "say Done"
           }
         ]
       }
@@ -209,10 +209,20 @@
     "ralph-loop@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
     "feature-dev@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": false
+    "superpowers@claude-plugins-official": false,
+    "codex@openai-codex": true
+  },
+  "extraKnownMarketplaces": {
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
+      }
+    }
   },
   "alwaysThinkingEnabled": false,
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
+  "skipWorkflowUsageWarning": true,
   "skipAutoPermissionPrompt": true,
   "model": "opus"
 }

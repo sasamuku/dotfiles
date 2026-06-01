@@ -108,5 +108,6 @@
     "extensions.experimental.affinity": {
       "asvetliakov.vscode-neovim": 1
     },
-    "claudeCode.preferredLocation": "panel"
+    "claudeCode.preferredLocation": "panel",
+    "window.autoDetectColorScheme": false
 }

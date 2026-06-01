@@ -1,7 +1,8 @@
 theme = TokyoNight
 maximize = true
 font-family = PlemolJP35 Console NF
-background-opacity = 0.8
+font-size = 11
+background-opacity = 0.9
 macos-titlebar-style = tabs
 background-blur = true
 adjust-cell-height = 2

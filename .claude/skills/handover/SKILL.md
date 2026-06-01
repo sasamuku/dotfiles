@@ -32,10 +32,10 @@ git log --oneline -10
 
 ### 3. 保存先を決定する
 
-プロジェクトルートに `scratch/` ディレクトリがあるか確認する:
+ハンドオーバーファイルはプロジェクトルートの `scratch/` 配下に保存する:
 
-- **`scratch/` が存在する場合**: `scratch/<descriptive-name>.md` (例: `scratch/auth-refactor-handover.md`) として保存する。セッションの作業内容を反映した名前を選ぶ。
-- **`scratch/` が存在しない場合**: プロジェクトルートに `HANDOVER.md` として保存する。
+- `scratch/` が存在しない場合は `mkdir -p scratch` で作成する
+- ファイル名は `scratch/YYYYMMDD-HHMM-<descriptive-name>.md` 形式 (例: `scratch/20260511-1430-auth-refactor.md`)。タイムスタンプは `date +%Y%m%d-%H%M` で取得し、`<descriptive-name>` はセッションの作業内容を反映したケバブケースの短い名前にする
 
 ### 4. ハンドオーバーファイルを生成する
 
