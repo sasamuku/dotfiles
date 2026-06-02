@@ -8,29 +8,10 @@
   // cmux creates this template on launch when ~/.config/cmux/cmux.json is missing.
   // Legacy settings.json files are read only as fallback for keys not present here.
 
-  //   "app" : {
-  //     "openMarkdownInCmuxViewer" : false,
-  //     "warnBeforeClosingTabXButton" : false,
-  //     "hideTabCloseButton" : false,
-  //     "commandPaletteSearchesAllSurfaces" : false,
-  //     "confirmQuit" : "always",
-  //     "language" : "system",
-  //     "focusPaneOnFirstClick" : false,
-  //     "appearance" : "system",
-  //     "reorderOnNotification" : true,
-  //     "menuBarOnly" : false,
-  //     "iMessageMode" : false,
-  //     "sendAnonymousTelemetry" : true,
-  //     "renameSelectsExistingName" : true,
-  //     "warnBeforeClosingTab" : true,
-  //     "newWorkspacePlacement" : "afterCurrent",
-  //     "appIcon" : "automatic",
-  //     "minimalMode" : false,
-  //     "workspaceInheritWorkingDirectory" : true,
-  //     "preferredEditor" : "",
-  //     "keepWorkspaceOpenWhenClosingLastSurface" : false,
-  //     "openSupportedFilesInCmux" : true
-  //   },
+  // Markdown は cmux 内蔵ビューアで開く
+  "app" : {
+    "openMarkdownInCmuxViewer" : true
+  },
 
   //   "terminal" : {
   //     "autoResumeAgentSessions" : true,
@@ -119,31 +100,11 @@
   //     "socketPassword" : ""
   //   },
 
-  //   "browser" : {
-  //     "hostsToOpenInEmbeddedBrowser" : [
-  // 
-  //     ],
-  //     "insecureHttpHostsAllowedInEmbeddedBrowser" : [
-  //       "localhost",
-  //       "*.localhost",
-  //       "127.0.0.1",
-  //       "::1",
-  //       "0.0.0.0",
-  //       "*.localtest.me"
-  //     ],
-  //     "showImportHintOnBlankTabs" : true,
-  //     "openTerminalLinksInCmuxBrowser" : true,
-  //     "reactGrabVersion" : "0.1.29",
-  //     "urlsToAlwaysOpenExternally" : [
-  // 
-  //     ],
-  //     "showSearchSuggestions" : true,
-  //     "theme" : "system",
-  //     "discardHiddenWebViews" : true,
-  //     "defaultSearchEngine" : "google",
-  //     "hiddenWebViewDiscardDelaySeconds" : 300,
-  //     "interceptTerminalOpenCommandInCmuxBrowser" : true
-  //   },
+  // Web ページはデフォルトブラウザで開く (cmux 内蔵ブラウザを使わない)
+  "browser" : {
+    "openTerminalLinksInCmuxBrowser" : false,
+    "interceptTerminalOpenCommandInCmuxBrowser" : false
+  },
 
   //   "shortcuts" : {
   //     "bindings" : {
