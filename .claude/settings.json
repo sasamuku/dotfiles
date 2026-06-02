@@ -154,6 +154,7 @@
     "ask": [],
     "defaultMode": "acceptEdits"
   },
+  "model": "opus",
   "hooks": {
     "PreToolUse": [
       {
@@ -221,8 +222,7 @@
     }
   },
   "alwaysThinkingEnabled": false,
-  "effortLevel": "xhigh",
+  "effortLevel": "high",
   "skipWorkflowUsageWarning": true,
-  "skipAutoPermissionPrompt": true,
-  "model": "opus"
+  "skipAutoPermissionPrompt": true
 }
