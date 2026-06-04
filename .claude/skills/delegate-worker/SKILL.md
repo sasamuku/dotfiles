@@ -37,9 +37,11 @@ Agent({
 
 `Send your report to: main` — ここでの `main` は git ブランチではなく、**親セッション名** (トップレベルの Claude Code セッションのデフォルト名) を指す。ワーカーは SendMessage を呼ぶ際にこれを `to` フィールドとして使用する。
 
+ワーカーはバックグラウンドで実行され、レポートや完了は自動的に通知される。**ポーリングや手動待機は不要** — 通知が届くまで他の作業を続けるか、待機する。
+
 ### 3. ワーカーの worktree に追随する
 
-ワーカーが worktree のパスを報告したら、ユーザーがリアルタイムで変更を確認できるよう、親セッションをそこへ移動する:
+ワーカーが worktree のパスを報告したら、ユーザーがリアルタイムで変更を確認できるよう、親セッションをそこへ移動する (調査 only タスクでユーザーがコードを見る必要がなければ、このステップは省略してよい):
 
 ```
 EnterWorktree({ path: "<worker's worktree absolute path>" })
@@ -47,12 +49,13 @@ EnterWorktree({ path: "<worker's worktree absolute path>" })
 
 注意事項:
 - `name` ではなく `path` を渡すこと。これにより既存の worktree に入る (新規作成ではない)。
-- ワーカーのブランチがそこにチェックアウトされているため、ユーザーはすぐに変更後のコードを確認できる。
+- この環境では worktree は `.claude/worktrees/` 配下ではなく、リポジトリ隣接ディレクトリ (例: `<project>-<branch>`) に作られる。`EnterWorktree` の `path` モードは `git worktree list` に登録されていれば入れるため、隣接パスでも問題なく追随できる。
+- ワーカーのブランチがそこにチェックアウトされているため、ユーザーはすぐに変更後のコードを確認できる。ブランチ名は worktree-worker が自動採番する (`agent-<id>` 形式) ため、親セッションから事前に指定する必要はない。
 - 後で元のディレクトリに戻るには: `ExitWorktree({ action: "keep" })`。worktree はワーカーが所有しているため `"keep"` を使うこと (`"remove"` は不可)。
 
 ### 4. コミュニケーション
 
 - ワーカーは SendMessage で進捗を報告する。各レポートが届いたら確認する。
 - 修正が必要であれば `SendMessage(to: "worker")` でフィードバックを伝える。
-- 承認したら、ワーカーに成果物の提出 (コミット & プッシュ、または Issue が割り当てられていれば PR) に進むよう指示する。
+- 承認したら、ワーカーに成果物の提出 (コミット & プッシュ、ユーザーが PR を求めている場合や Issue が割り当てられている場合は PR) に進むよう指示する。
 - ワーカーが完了を報告したら (最終レポート — 例: 「PR opened at ...」「commit pushed」、または調査タスクであれば「report ready」)、`SendMessage(to: "worker", message: {type: "shutdown_request"})` を送り、`ExitWorktree({ action: "keep" })` でセッションを元のディレクトリに戻す。PR のマージなど下流のイベントを待たず、ワーカーの成果物が出た時点でシャットダウンする。
