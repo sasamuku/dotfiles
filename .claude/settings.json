@@ -13,6 +13,9 @@
   "permissions": {
     "allow": [
       "Read(~/.claude/**)",
+      "Read(//**/.claude/skills/**)",
+      "Read(//**/.claude/agents/**)",
+      "Read(//**/.claude/commands/**)",
       "Bash(cat:*)",
       "Bash(mkdir:*)",
       "Bash(gh issue view:*)",
