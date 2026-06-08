@@ -38,6 +38,10 @@ fi
 # Neovim config (init.lua + lua/ ツリー全体)
 echo "📁 Creating Neovim config symlink..."
 mkdir -p ~/.config
+# 既存が実ディレクトリだと ln -sfn が中にリンクを作ってしまうため退避する
+if [ -d ~/.config/nvim ] && [ ! -L ~/.config/nvim ]; then
+  mv ~/.config/nvim ~/.config/nvim.bak.$(date +%Y%m%d-%H%M%S)
+fi
 ln -sfn ${DOTFILES_DIR}/.config/nvim ~/.config/nvim
 
 # Ghostty config
