@@ -35,10 +35,10 @@ if [ ! -f ~/.serena/serena_config.yml ]; then
   echo "  Copy .serena/serena_config.yml.sample to .serena/serena_config.yml in the dotfiles repo"
 fi
 
-# Neovim config
+# Neovim config (init.lua + lua/ ツリー全体)
 echo "📁 Creating Neovim config symlink..."
-mkdir -p ~/.config/nvim
-ln -sfn ${DOTFILES_DIR}/.config/nvim/init.lua ~/.config/nvim/init.lua
+mkdir -p ~/.config
+ln -sfn ${DOTFILES_DIR}/.config/nvim ~/.config/nvim
 
 # Ghostty config
 echo "📁 Creating Ghostty config symlink..."
