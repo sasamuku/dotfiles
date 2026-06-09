@@ -137,6 +137,17 @@ return {
           -- Enable completion triggered by <c-x><c-o>
           vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
+          -- 初回のセマンティックトークンが取りこぼされて色が乗らないことがあるため、
+          -- attach 後に一度だけ強制リフレッシュする
+          local client = vim.lsp.get_client_by_id(ev.data.client_id)
+          if client and client.server_capabilities.semanticTokensProvider then
+            vim.defer_fn(function()
+              if vim.api.nvim_buf_is_valid(ev.buf) then
+                pcall(vim.lsp.semantic_tokens.force_refresh, ev.buf)
+              end
+            end, 500)
+          end
+
           -- Buffer local mappings.
           local opts = { buffer = ev.buf }
           vim.keymap.set('n', '<F12>', vim.lsp.buf.definition, opts)
