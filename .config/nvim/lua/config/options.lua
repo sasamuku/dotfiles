@@ -7,6 +7,13 @@ vim.opt.number = true              -- 行番号を表示
 vim.opt.termguicolors = true       -- 24bit カラーを有効化（tokyonight の発色に必須）
 vim.opt.signcolumn = "yes"         -- 常にサインカラムを表示（gitsigns の列ガタつき防止）
 
+-- statusline / tabline を出さない
+-- mode は modes.nvim、ファイル名・diagnostics は incline.nvim に分散させている
+vim.opt.laststatus = 0             -- statusline を非表示
+vim.opt.showtabline = 0            -- tabline を非表示
+vim.opt.statusline = "─"           -- 分割境界に残る statusline 行を横線で埋める
+vim.opt.fillchars:append({ stl = "─", stlnc = "─" })
+
 -- クリップボード
 vim.opt.clipboard = "unnamedplus"  -- システムクリップボードを使用
 
