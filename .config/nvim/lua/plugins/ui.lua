@@ -78,6 +78,100 @@ return {
     end,
   },
 
+  -- Floating statusline for each window
+  -- render は izumin5210/dotfiles を参考に diagnostics / readonly / active 区別を実装
+  {
+    "b0o/incline.nvim",
+    event = "VeryLazy",
+    config = function()
+      local devicons = require("nvim-web-devicons")
+      local c = require("tokyonight.colors").setup({ style = "night" })
+      local get_display_filename_and_dirname =
+        require("plugins.incline.get_display_filename_and_dirname")
+
+      local fg_active = c.magenta
+      local fg_inactive = c.dark3
+      local icons = { error = "󰅚 ", warn = "󰀪 ", hint = "󰌶 ", info = " " }
+
+      -- diagnostics 件数をアイコン付きで返す（focused のときだけ色を付ける）
+      ---@param props { buf: number, win: number, focused: boolean }
+      local function get_diagnostic_label(props)
+        local label = {}
+        for severity, icon in pairs(icons) do
+          local n = #vim.diagnostic.get(props.buf, {
+            severity = vim.diagnostic.severity[string.upper(severity)],
+          })
+          if n > 0 then
+            table.insert(label, {
+              icon .. n .. " ",
+              group = props.focused and ("DiagnosticSign" .. severity) or "NonText",
+            })
+          end
+        end
+        if #label > 0 then
+          table.insert(label, { "┊ ", guifg = fg_inactive })
+        end
+        return label
+      end
+
+      ---@param props { buf: number, win: number, focused: boolean }
+      local function render(props)
+        local filename, dirname = get_display_filename_and_dirname(props.buf)
+        local ft_icon, ft_color = devicons.get_icon_color(filename)
+
+        local has_error = #vim.diagnostic.get(props.buf, {
+          severity = vim.diagnostic.severity["ERROR"],
+        }) > 0
+        local is_readonly = vim.bo[props.buf].readonly
+
+        local fg_filename_active = has_error and c.red
+          or (is_readonly and c.dark3 or fg_active)
+        local fg_filename = props.focused and fg_filename_active or fg_inactive
+
+        return {
+          { get_diagnostic_label(props) },
+          {
+            (ft_icon and ft_icon .. " " or ""),
+            guifg = props.focused and ft_color or fg_inactive,
+          },
+          {
+            (is_readonly and " " or ""),
+            guifg = fg_filename,
+          },
+          {
+            dirname and dirname .. "/" or "",
+            guifg = fg_inactive,
+          },
+          {
+            filename,
+            guifg = fg_filename,
+            gui = props.focused and "bold" or "",
+          },
+          {
+            vim.bo[props.buf].modified and " ●" or "",
+            guifg = props.focused and c.orange or fg_inactive,
+          },
+        }
+      end
+
+      require("incline").setup({
+        highlight = {
+          groups = {
+            InclineNormal = { guibg = c.bg_dark, guifg = fg_active },
+            InclineNormalNC = { guibg = "none", guifg = fg_inactive },
+          },
+        },
+        window = {
+          options = { winblend = 0 },
+          placement = { horizontal = "right", vertical = "top" },
+          margin = { horizontal = 0, vertical = 0 },
+          padding = 2,
+        },
+        render = render,
+      })
+    end,
+  },
+
   -- Keymap guide
   {
     "folke/which-key.nvim",
