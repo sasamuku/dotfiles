@@ -105,24 +105,24 @@ return {
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
 
-      -- <C-e>: 開いていれば閉じる、閉じていれば開いて現在ファイルを探す
+      -- <C-e>: ファイラーにフォーカスがあれば非表示、それ以外は開いてフォーカスを移す
       local function smart_toggle()
         local api = require("nvim-tree.api")
-        if api.tree.is_visible() then
+        if vim.bo.filetype == "NvimTree" then
           api.tree.close()
         else
           api.tree.find_file({ open = true, focus = true })
         end
       end
 
-      -- nvim-tree にフォーカスがあるときも <C-e> でトグルできるようにする
+      -- ファイラーにフォーカスがあるときも <C-e> で非表示にできるようにする
       local function on_attach(bufnr)
         local api = require("nvim-tree.api")
         -- デフォルトのキーマップを引き継ぐ
         api.config.mappings.default_on_attach(bufnr)
         vim.keymap.set("n", "<C-e>", smart_toggle, {
           buffer = bufnr,
-          desc = "nvim-tree: Smart toggle (close/open)",
+          desc = "nvim-tree: Focus / hide explorer",
           noremap = true,
           silent = true,
           nowait = true,
