@@ -105,7 +105,32 @@ return {
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
 
+      -- <C-e>: 開いていれば閉じる、閉じていれば開いて現在ファイルを探す
+      local function smart_toggle()
+        local api = require("nvim-tree.api")
+        if api.tree.is_visible() then
+          api.tree.close()
+        else
+          api.tree.find_file({ open = true, focus = true })
+        end
+      end
+
+      -- nvim-tree にフォーカスがあるときも <C-e> でトグルできるようにする
+      local function on_attach(bufnr)
+        local api = require("nvim-tree.api")
+        -- デフォルトのキーマップを引き継ぐ
+        api.config.mappings.default_on_attach(bufnr)
+        vim.keymap.set("n", "<C-e>", smart_toggle, {
+          buffer = bufnr,
+          desc = "nvim-tree: Smart toggle (close/open)",
+          noremap = true,
+          silent = true,
+          nowait = true,
+        })
+      end
+
       require("nvim-tree").setup({
+        on_attach = on_attach,
         sync_root_with_cwd = true,
         respect_buf_cwd = true,
         update_focused_file = {
@@ -160,8 +185,7 @@ return {
       -- キーマップ
       vim.keymap.set("n", "<leader>ee", ":NvimTreeToggle<CR>", { desc = "Toggle file explorer" })
       vim.keymap.set("n", "<leader>ef", ":NvimTreeFindFile<CR>", { desc = "Find current file in explorer" })
-      vim.keymap.set("n", "<C-e>", ":NvimTreeFindFile<CR>", { desc = "Find current file in explorer (VSCode style)" })
-      vim.keymap.set("n", "<C-b>", ":NvimTreeToggle<CR>", { desc = "Toggle sidebar (VSCode style)" })
+      vim.keymap.set("n", "<C-e>", smart_toggle, { desc = "Toggle explorer / find current file (VSCode style)" })
     end,
   },
 
