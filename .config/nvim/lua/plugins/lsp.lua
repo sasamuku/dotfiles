@@ -152,9 +152,30 @@ return {
           local opts = { buffer = ev.buf }
           vim.keymap.set('n', '<F12>', vim.lsp.buf.definition, opts)
           vim.keymap.set('n', '<F24>', vim.lsp.buf.references, opts)  -- Shift+F12
-          vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+          vim.keymap.set('n', 'K', function()
+            -- 1回目: border 付きでホバー表示（カーソルはコードに残る）
+            -- 2回目: フロートにフォーカス → スクロールして読める
+            -- Esc / <C-w>p でコードに戻る
+            vim.lsp.buf.hover({ border = 'rounded' })
+          end, opts)
           vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
           vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+        end,
+      })
+
+      -- ホバー等の LSP フロートにフォーカスが移ったら、Esc / q 一発で閉じてコードに戻れるようにする
+      vim.api.nvim_create_autocmd('FileType', {
+        group = vim.api.nvim_create_augroup('UserLspFloatClose', {}),
+        pattern = { 'markdown', 'lsp-hover', 'lsp_markdown' },
+        callback = function(ev)
+          if vim.api.nvim_win_get_config(0).relative == '' then
+            return -- フロートでなければ何もしない
+          end
+          local close = function()
+            vim.api.nvim_win_close(0, true)
+          end
+          vim.keymap.set('n', '<Esc>', close, { buffer = ev.buf, nowait = true })
+          vim.keymap.set('n', 'q', close, { buffer = ev.buf, nowait = true })
         end,
       })
     end,

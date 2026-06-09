@@ -20,6 +20,7 @@ brew "macism"
 brew "micro"
 brew "mise"
 brew "neovim"
+brew "tree-sitter-cli"  # nvim-treesitter main ブランチのパーサビルドに必須
 brew "uv"
 cask "ngrok"
 brew "node"

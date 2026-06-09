@@ -189,27 +189,33 @@ return {
     end,
   },
 
-  -- Treesitter
+  -- Treesitter (main ブランチ: Neovim 0.12 対応。master は 0.11 用 legacy で query API 非互換)
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    lazy = false,
     build = ":TSUpdate",
     config = function()
-      require("nvim-treesitter.configs").setup({
-        ensure_installed = {
-          "lua", "vim", "vimdoc", "query",
-          "typescript", "javascript", "tsx",
-          "rust",
-          "go", "gomod", "gosum",
-          "html", "css", "json", "yaml", "markdown",
-        },
-        auto_install = true,
-        highlight = {
-          enable = true,
-          additional_vim_regex_highlighting = false,
-        },
-        indent = {
-          enable = true,
-        },
+      local parsers = {
+        "lua", "vim", "vimdoc", "query",
+        "typescript", "javascript", "tsx",
+        "rust",
+        "go", "gomod", "gosum",
+        "html", "css", "json", "yaml", "markdown", "markdown_inline",
+      }
+
+      require("nvim-treesitter").install(parsers)
+
+      -- main ブランチは highlight を自前で有効化する必要がある
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("UserTreesitterHighlight", {}),
+        callback = function(ev)
+          -- パーサが利用可能なバッファだけ起動する
+          local ok = pcall(vim.treesitter.start, ev.buf)
+          if ok then
+            vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end
+        end,
       })
     end,
   },
