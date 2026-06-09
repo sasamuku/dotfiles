@@ -140,7 +140,10 @@ return {
         view = {
           width = {
             min = 30,
-            max = -1,  -- -1 = 無制限。最長のファイル名に合わせて自動拡張
+            -- 最長のファイル名に合わせて自動拡張するが、画面幅の 40% を上限にする
+            max = function()
+              return math.floor(vim.o.columns * 0.4)
+            end,
           },
           side = "left",
         },
