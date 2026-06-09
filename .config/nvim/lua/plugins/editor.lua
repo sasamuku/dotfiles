@@ -113,7 +113,10 @@ return {
           update_cwd = false,
         },
         view = {
-          width = 30,
+          width = {
+            min = 30,
+            max = -1,  -- -1 = 無制限。最長のファイル名に合わせて自動拡張
+          },
           side = "left",
         },
         renderer = {
