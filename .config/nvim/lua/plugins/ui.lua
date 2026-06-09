@@ -215,4 +215,30 @@ return {
       })
     end,
   },
+
+  -- モードに応じて cursorline / 行番号を色付け
+  {
+    "mvllow/modes.nvim",
+    tag = "v0.2.1",
+    event = "VeryLazy",
+    config = function()
+      local c = require("tokyonight.colors").setup({ style = "night" })
+      require("modes").setup({
+        colors = {
+          copy = c.yellow,
+          delete = c.red,
+          change = c.red,
+          format = c.orange,
+          insert = c.green,
+          replace = c.blue,
+          select = c.magenta,
+          visual = c.magenta,
+        },
+        line_opacity = 0.15,
+        -- カーソルの見た目は smear-cursor.nvim に任せる（両者が guicursor を奪い合うのを防ぐ）
+        set_cursor = false,
+        ignore = { "NvimTree", "TelescopePrompt", "which-key", "lazy", "fugitive", "help" },
+      })
+    end,
+  },
 }
