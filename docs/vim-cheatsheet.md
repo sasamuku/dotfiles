@@ -249,6 +249,8 @@ vimtutor
 | `<Space>cc` (Visual) | ファイルパスと選択コードをフォーマット付きでコピー |
 | `<Space>cr` | GitHub リモートURLをコピー |
 | `<Space>cr` (Visual) | GitHub リモートURLを行番号付きでコピー |
+| `<Space>go` | GitHub でファイルを開く（現在の commit） |
+| `<Space>go` (Visual) | GitHub でファイルを行番号付きで開く |
 | `<Space>fo` | Finder でファイルを表示 |
 
 ### LSP（Language Server Protocol）
@@ -256,9 +258,11 @@ vimtutor
 |------|------|
 | `F12` | 定義にジャンプ |
 | `Shift+F12` | 参照を表示 |
-| `K` | ホバーヘルプ |
+| `K` | ホバーヘルプ（border付き）。もう一度 `K` でフロートにフォーカスしスクロール、`Esc`/`q` で閉じて戻る |
 | `gi` | 実装にジャンプ |
 | `Ctrl+k` | シグネチャヘルプ |
+| `Ctrl+o` | ジャンプ元（定義・実装ジャンプ前の位置）に戻る ※Vim標準 |
+| `Ctrl+i` | `Ctrl+o` で戻ったあとジャンプ先へ進む ※Vim標準 |
 
 ### その他
 | キー | 説明 |
