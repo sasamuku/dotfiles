@@ -187,6 +187,17 @@ return {
     end,
   },
 
+  -- Markdown のバッファ内レンダリング（カーソル行のみ生テキストに戻る）
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = "markdown",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+    opts = {
+      -- 見出しは番号アイコンに置き換えず # をそのまま表示する
+      heading = { icons = {} },
+    },
+  },
+
   -- Commenting
   {
     "numToStr/Comment.nvim",
