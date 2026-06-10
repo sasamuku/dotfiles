@@ -63,6 +63,30 @@ daily_cost() {
   cat "$cache" 2>/dev/null
 }
 
+# USD→JPY レート (frankfurter.dev = ECB 公表値, 日次キャッシュ・バックグラウンド更新)
+usd_jpy_rate() {
+  local cache="/tmp/claude_statusline_usdjpy_$(id -u)"
+  local now mtime
+  now=$(date +%s)
+  mtime=$(stat -f %m "$cache" 2>/dev/null || echo 0)
+  if [ $((now - mtime)) -gt 86400 ]; then
+    touch "$cache"
+    (curl -s --max-time 3 "https://api.frankfurter.dev/v1/latest?base=USD&symbols=JPY" \
+      | jq -r '.rates.JPY // empty' > "$cache.tmp" && [ -s "$cache.tmp" ] && mv "$cache.tmp" "$cache") &
+  fi
+  cat "$cache" 2>/dev/null
+}
+JPY_RATE=$(usd_jpy_rate)
+
+# レート取得済みなら円 (整数・カンマ区切り)、なければドル
+fmt_cost() {
+  if [ -n "$JPY_RATE" ]; then
+    LC_ALL=en_US.UTF-8 printf "¥%'.0f" "$(awk -v u="$1" -v r="$JPY_RATE" 'BEGIN{print u*r}')"
+  else
+    printf '$%.2f' "$1"
+  fi
+}
+
 # Line 1: 📁 dir (project 配下のサブディレクトリなら project/相対パス) | ⎇ branch
 if [ -n "$project" ] && [ "$cwd" != "$project" ] && [[ "$cwd" == "$project"/* ]]; then
   rel_path="$(basename "$project")/${cwd#"$project"/}"
@@ -81,12 +105,12 @@ line2="${I_MODEL} ${model}"
 [ -n "$effort" ] && line2+="${SEP}${I_EFFORT} ${effort}"
 [ -n "$ctx" ] && line2+="${SEP}$(ctx_icon "$ctx") $(pct_color "$((100 - ${ctx%%.*}))")${ctx}%%${RST}"
 if [ -n "$fh_pct" ]; then
-  line2+="${SEP}${I_5H} 5h $(pct_color "$fh_pct")$(printf '%.0f' "$fh_pct")%%${RST} ${DIM}↻$(date -r "$fh_reset" '+%H:%M')${RST}"
+  line2+="${SEP}${I_5H} 5h $(pct_color "$fh_pct")$(awk -v p="$fh_pct" 'BEGIN{printf "%.0f", 100-p}')%%${RST} ${DIM}↻$(date -r "$fh_reset" '+%H:%M')${RST}"
 fi
 if [ -n "$sd_pct" ]; then
-  line2+="${SEP}${I_7D} 7d $(pct_color "$sd_pct")$(printf '%.0f' "$sd_pct")%%${RST} ${DIM}↻$(date -r "$sd_reset" '+%-m/%-d %H:%M')${RST}"
+  line2+="${SEP}${I_7D} 7d $(pct_color "$sd_pct")$(awk -v p="$sd_pct" 'BEGIN{printf "%.0f", 100-p}')%%${RST} ${DIM}↻$(date -r "$sd_reset" '+%-m/%-d %H:%M')${RST}"
 fi
-[ -n "$cost" ] && line2+="${SEP}${I_COST} $(printf '$%.2f' "$cost") ${DIM}(session)${RST}"
+[ -n "$cost" ] && line2+="${SEP}${I_COST} $(fmt_cost "$cost") ${DIM}(session)${RST}"
 daily=$(daily_cost)
-[ -n "$daily" ] && line2+="${SEP}${I_COST} $(printf '$%.2f' "$daily") ${DIM}(daily)${RST}"
+[ -n "$daily" ] && line2+="${SEP}${I_COST} $(fmt_cost "$daily") ${DIM}(daily)${RST}"
 printf "$line2\n"
