@@ -5,11 +5,12 @@
 input=$(cat)
 
 # 区切りは \x1f (タブは IFS 空白扱いで空フィールドが潰れるため)
-IFS=$'\x1f' read -r model effort cwd project ctx cost fh_pct fh_reset sd_pct sd_reset < <(echo "$input" | jq -r '[
+IFS=$'\x1f' read -r model effort cwd project wt ctx cost fh_pct fh_reset sd_pct sd_reset < <(echo "$input" | jq -r '[
   (.model.display_name // "Claude"),
   (.effort.level // ""),
   (.workspace.current_dir // .cwd),
   (.workspace.project_dir // ""),
+  (.workspace.git_worktree // ""),
   (.context_window.remaining_percentage // "" | tostring),
   (.cost.total_cost_usd // "" | tostring),
   (.rate_limits.five_hour.used_percentage // "" | tostring),
@@ -19,7 +20,7 @@ IFS=$'\x1f' read -r model effort cwd project ctx cost fh_pct fh_reset sd_pct sd_
 ] | join("\u001f")')
 
 DIM=$'\033[2m'; RST=$'\033[0m'
-CYAN=$'\033[36m'; YELLOW=$'\033[33m'
+CYAN=$'\033[36m'; YELLOW=$'\033[33m'; RED=$'\033[31m'
 SEP="${DIM} | ${RST}"
 
 # Nerd Font グリフ (UTF-8 バイトで定義。エディタ事故での欠落防止)
@@ -30,6 +31,7 @@ I_5H=$'\xef\x80\x97'         # nf-fa-clock_o     U+F017
 I_7D=$'\xef\x81\xb3'         # nf-fa-calendar    U+F073
 I_COST=$'\xef\x83\x96'       # nf-fa-money       U+F0D6
 I_EFFORT=$'\xef\x83\xa4'     # nf-fa-tachometer  U+F0E4
+I_WT=$'\xf3\xb0\x99\x85'     # nf-md-file_tree   U+F0645
 
 # コンテキスト残量に応じた電池アイコン (nf-fa-battery_* U+F240-F244)
 ctx_icon() {
@@ -97,7 +99,13 @@ line1="${I_DIR} ${CYAN}${rel_path}${RST}"
 if git -C "$cwd" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   branch=$(git -C "$cwd" branch --show-current 2>/dev/null)
   line1+="${SEP}${YELLOW}${I_BRANCH} ${branch:-detached}${RST}"
+  dirty=$(git -C "$cwd" status --porcelain 2>/dev/null | wc -l | tr -d ' ')
+  [ "$dirty" -gt 0 ] && line1+=" ${RED}*${dirty}${RST}"
+  read -r behind ahead < <(git -C "$cwd" rev-list --left-right --count '@{upstream}...HEAD' 2>/dev/null)
+  [ "${ahead:-0}" -gt 0 ] && line1+=" ${CYAN}⇡${ahead}${RST}"
+  [ "${behind:-0}" -gt 0 ] && line1+=" ${CYAN}⇣${behind}${RST}"
 fi
+[ -n "$wt" ] && line1+="${SEP}${I_WT} ${wt}"
 printf '%s\n' "$line1"
 
 # Line 2: model | style | ctx% | 5h | 7d | session cost | daily cost
