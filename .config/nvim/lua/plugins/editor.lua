@@ -55,44 +55,8 @@ return {
       vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Live grep" })
       vim.keymap.set("n", "<C-f>", builtin.live_grep, { desc = "Live grep (VSCode style)" })
       vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find buffers" })
-    end,
-  },
-
-  -- Buffer Manager (VSCode-style Ctrl+Tab buffer switcher)
-  {
-    "j-morano/buffer_manager.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      require("buffer_manager").setup({
-        select_menu_item_commands = {
-          edit = {
-            key = "<CR>",
-            command = "edit"
-          },
-          v = {
-            key = "<C-v>",
-            command = "vsplit"
-          },
-          h = {
-            key = "<C-h>",
-            command = "split"
-          }
-        },
-        focus_alternate_buffer = false,
-        short_file_names = true,
-        short_term_names = true,
-        loop_nav = true,
-        order_buffers = "lastused",  -- 最近使用した順に表示
-        show_indicators = "after",
-      })
-
-      local bmui = require("buffer_manager.ui")
-
-      -- Ctrl+Tabでバッファメニューを開く
-      vim.keymap.set("n", "<C-Tab>", bmui.toggle_quick_menu, { desc = "Open buffer menu" })
-
-      -- 次/前のバッファへ移動（メニューを開かずに）
-      vim.keymap.set("n", "<C-S-Tab>", bmui.nav_prev, { desc = "Previous buffer (MRU)" })
+      -- Ctrl+b でもバッファ検索（Ctrl+Tab は cmux の surface 切替に取られるため使えない）
+      vim.keymap.set("n", "<C-b>", builtin.buffers, { desc = "Find buffers (VSCode style)" })
     end,
   },
 

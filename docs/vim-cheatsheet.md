@@ -199,12 +199,7 @@ vimtutor
 | `<Space>fg` | テキスト検索（Live grep） |
 | `Ctrl+f` | テキスト検索（VSCode風） |
 | `<Space>fb` | バッファ検索 |
-
-### バッファ管理（buffer_manager）
-| キー | 説明 |
-|------|------|
-| `Ctrl+Tab` | バッファメニューを開く |
-| `Ctrl+Shift+Tab` | 前のバッファへ（MRU順） |
+| `Ctrl+b` | バッファ検索（VSCode風。`Ctrl+Tab` は cmux に取られるため） |
 
 ### ファイルエクスプローラー（nvim-tree）
 | キー | 説明 |
