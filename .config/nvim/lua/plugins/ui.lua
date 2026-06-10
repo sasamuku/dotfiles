@@ -7,6 +7,12 @@ return {
     config = function()
       require("tokyonight").setup({
         style = "night",
+        -- 背景を描画せずターミナル (ghostty/cmux) の背景色・透過度をそのまま使う
+        transparent = true,
+        styles = {
+          sidebars = "transparent",
+          floats = "transparent",
+        },
         on_highlights = function(hl, c)
           -- 補完メニューの背景と前景
           hl.Pmenu = { bg = c.bg_popup, fg = c.fg }
