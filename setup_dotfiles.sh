@@ -22,6 +22,7 @@ mkdir -p ~/.claude
 ln -sfn ${DOTFILES_DIR}/.claude/commands ~/.claude/commands
 ln -sfn ${DOTFILES_DIR}/.claude/CLAUDE.md ~/.claude/CLAUDE.md
 ln -sfn ${DOTFILES_DIR}/.claude/settings.json ~/.claude/settings.json
+ln -sfn ${DOTFILES_DIR}/.claude/statusline.sh ~/.claude/statusline.sh
 ln -sfn ${DOTFILES_DIR}/.claude/hooks ~/.claude/hooks
 ln -sfn ${DOTFILES_DIR}/.claude/agents ~/.claude/agents
 ln -sfn ${DOTFILES_DIR}/.claude/skills ~/.claude/skills
