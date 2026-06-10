@@ -12,6 +12,7 @@ brew "fzf"
 brew "gh"
 brew "ghq"
 brew "git"
+brew "git-delta"  # lazygit / git diff のシンタックスハイライト
 brew "jq"
 brew "lazygit"
 brew "lefthook"

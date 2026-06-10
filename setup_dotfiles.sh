@@ -59,6 +59,11 @@ echo "📁 Creating cmux config symlink..."
 mkdir -p ~/.config/cmux
 ln -sfn ${DOTFILES_DIR}/.config/cmux/cmux.json ~/.config/cmux/cmux.json
 
+# lazygit config (macOS は XDG ではなく Application Support を読む)
+echo "📁 Creating lazygit config symlink..."
+mkdir -p ~/Library/Application\ Support/lazygit
+ln -sfn ${DOTFILES_DIR}/.config/lazygit/config.yml ~/Library/Application\ Support/lazygit/config.yml
+
 # Starship config
 echo "📁 Creating Starship config symlink..."
 mkdir -p ~/.config
