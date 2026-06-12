@@ -13,7 +13,7 @@
 
 - **`git worktree add` を直接使わない**。リポジトリ固有の `.wt_hook.sh`（`.env` コピー・`pnpm install` 等）が発火せず、後続の pre-push フック等が壊れるため
 - worktree が必要なときは以下のいずれかを使う:
-  1. **`/delegate-worker`** — バックグラウンドのサブエージェントに委譲する（推奨）
+  1. **`/delegate-worker`** — バックグラウンドのサブエージェントに委譲する
   2. **`/work-in-worktree`** — メインセッション自身が worktree で作業する
   3. **`wt add <branch>`** — シェルから手動作成（`.wt_hook.sh` を発火させる）
 - 「隔離環境が欲しい」だけの理由で `git worktree add` を使わない
