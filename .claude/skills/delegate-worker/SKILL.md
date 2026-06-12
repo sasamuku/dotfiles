@@ -52,6 +52,7 @@ EnterWorktree({ path: "<worker's worktree absolute path>" })
 - この環境では worktree は `.claude/worktrees/` 配下ではなく、リポジトリ隣接ディレクトリ (例: `<project>-<branch>`) に作られる。`EnterWorktree` の `path` モードは `git worktree list` に登録されていれば入れるため、隣接パスでも問題なく追随できる。
 - ワーカーのブランチがそこにチェックアウトされているため、ユーザーはすぐに変更後のコードを確認できる。ブランチ名は worktree-worker が自動採番する (`agent-<id>` 形式) ため、親セッションから事前に指定する必要はない。
 - 後で元のディレクトリに戻るには: `ExitWorktree({ action: "keep" })`。worktree はワーカーが所有しているため `"keep"` を使うこと (`"remove"` は不可)。
+- ユーザーが後から手動で出入りしたい場合は `/enter-worktree <branch>` / `/exit-worktree` スキルが使える。
 
 ### 4. コミュニケーション
 
