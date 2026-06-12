@@ -33,6 +33,7 @@ EnterWorktree({ path: "<resolved absolute path>" })
 
 - `name` ではなく必ず `path` を渡す。`name` は新規作成になってしまう
 - `path` は `git worktree list` に登録済みであれば、リポジトリ隣接ディレクトリ (例: `<project>-<branch>`) でも入れる
+- ただし**すでに worktree セッション内にいる場合**、隣接パスへの切り替えはできない (`path` 切り替えは `.claude/worktrees/` 配下のみ)。先に `/exit-worktree` で戻ってから入り直す
 
 ### 3. 移動後
 
