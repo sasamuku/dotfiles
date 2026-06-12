@@ -5,7 +5,7 @@
 **現在のブランチが `main` または `master` の場合は、コード変更を加える前に必ずユーザーに確認してください。**
 
 - 意図を確認し、変更依頼の詳細をヒアリングする
-- `/delegate-worker` スキルを使って隔離された worktree で作業することを提案する
+- 隔離された worktree での作業を提案する (手段は下記「worktree 作成のルール」)
 - `main` ブランチでコードを直接変更してはならない
 - `main`/`master` 以外のブランチ（worktree 内で feature ブランチを切った状態を含む）でセッションを開始した場合は、すでに作業環境が確定しているため確認不要でそのまま着手してよい
 
@@ -13,8 +13,9 @@
 
 - **`git worktree add` を直接使わない**。リポジトリ固有の `.wt_hook.sh`（`.env` コピー・`pnpm install` 等）が発火せず、後続の pre-push フック等が壊れるため
 - worktree が必要なときは以下のいずれかを使う:
-  1. **`/delegate-worker` スキル**（推奨）
-  2. **`wt add <branch>`** コマンド（`.wt_hook.sh` を発火させる）
+  1. **`/delegate-worker`** — バックグラウンドのサブエージェントに委譲する（推奨）
+  2. **`/work-in-worktree`** — メインセッション自身が worktree で作業する
+  3. **`wt add <branch>`** — シェルから手動作成（`.wt_hook.sh` を発火させる）
 - 「隔離環境が欲しい」だけの理由で `git worktree add` を使わない
 
 ## ソース参照は常にクリック可能にする
