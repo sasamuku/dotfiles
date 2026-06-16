@@ -217,7 +217,18 @@ return {
           select = c.magenta,
           visual = c.magenta,
         },
-        line_opacity = 0.15,
+        -- 透過背景だと一律 0.15 は薄すぎて選択範囲が見えないため、
+        -- visual だけ濃くする (cursorline はうるさくならないよう控えめに保つ)
+        line_opacity = {
+          visual = 0.4,
+          select = 0.4,
+          copy = 0.15,
+          delete = 0.15,
+          change = 0.15,
+          format = 0.15,
+          insert = 0.15,
+          replace = 0.15,
+        },
         -- カーソルの見た目は smear-cursor.nvim に任せる（両者が guicursor を奪い合うのを防ぐ）
         set_cursor = false,
         ignore = { "NvimTree", "TelescopePrompt", "which-key", "lazy", "fugitive", "help" },
