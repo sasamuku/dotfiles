@@ -156,7 +156,6 @@
     "ask": [],
     "defaultMode": "acceptEdits"
   },
-  "model": "claude-fable-5[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -187,10 +186,6 @@
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/hook_stop_words.sh"
-          },
-          {
-            "type": "command",
-            "command": "say Done"
           }
         ]
       }
@@ -226,5 +221,6 @@
   "alwaysThinkingEnabled": false,
   "effortLevel": "high",
   "skipWorkflowUsageWarning": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "model": "opus[1m]"
 }
