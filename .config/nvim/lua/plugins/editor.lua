@@ -62,97 +62,100 @@ return {
 
   -- File explorer
   {
-    "nvim-tree/nvim-tree.lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons",
+      "MunifTanjim/nui.nvim",
+    },
     config = function()
-      -- netrwを無効化
+      -- netrwを無効化（neo-treeと競合するため）
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
 
-      -- <C-e>: ファイラーにフォーカスがあれば非表示、それ以外は開いてフォーカスを移す
-      local function smart_toggle()
-        local api = require("nvim-tree.api")
-        if vim.bo.filetype == "NvimTree" then
-          api.tree.close()
+      -- <C-e>: フロートが開いていれば閉じ、閉じていれば現在ファイルを表示して開く
+      local function float_toggle()
+        local mgr = require("neo-tree.sources.manager")
+        local renderer = require("neo-tree.ui.renderer")
+        local state = mgr.get_state("filesystem")
+        if state and renderer.window_exists(state) then
+          require("neo-tree.command").execute({ action = "close" })
         else
-          api.tree.find_file({ open = true, focus = true })
+          require("neo-tree.command").execute({
+            action = "focus",
+            source = "filesystem",
+            position = "float",
+            reveal = true,
+          })
         end
       end
 
-      -- ファイラーにフォーカスがあるときも <C-e> で非表示にできるようにする
-      local function on_attach(bufnr)
-        local api = require("nvim-tree.api")
-        -- デフォルトのキーマップを引き継ぐ
-        api.config.mappings.default_on_attach(bufnr)
-        vim.keymap.set("n", "<C-e>", smart_toggle, {
-          buffer = bufnr,
-          desc = "nvim-tree: Focus / hide explorer",
-          noremap = true,
-          silent = true,
-          nowait = true,
-        })
-      end
-
-      require("nvim-tree").setup({
-        on_attach = on_attach,
-        sync_root_with_cwd = true,
-        respect_buf_cwd = true,
-        update_focused_file = {
-          enable = true,
-          update_cwd = false,
-        },
-        view = {
-          width = {
-            min = 30,
-            -- 最長のファイル名に合わせて自動拡張するが、画面幅の 40% を上限にする
-            max = function()
-              return math.floor(vim.o.columns * 0.4)
-            end,
+      require("neo-tree").setup({
+        close_if_last_window = true,
+        popup_border_style = "rounded",
+        enable_git_status = true,
+        enable_diagnostics = true,
+        default_component_configs = {
+          indent = {
+            padding = 0,
+            with_expanders = true,
           },
-          side = "left",
-        },
-        renderer = {
-          icons = {
-            glyphs = {
-              folder = {
-                default = "",
-                open = "",
-                empty = "",
-              },
-              git = {
-                unstaged = "✗",
-                staged = "✓",
-                unmerged = "",
-                renamed = "➜",
-                untracked = "★",
-                deleted = "✖",
-                ignored = "◌",
-              },
+          icon = {
+            folder_closed = "",
+            folder_open = "",
+            folder_empty = "",
+          },
+          git_status = {
+            symbols = {
+              added = "+",
+              modified = "~",
+              deleted = "✖",
+              renamed = "➜",
+              untracked = "★",
+              ignored = "◌",
+              unstaged = "✗",
+              staged = "✓",
+              conflict = "",
             },
           },
         },
-        filters = {
-          dotfiles = false,
-          custom = { ".DS_Store" },
+        window = {
+          -- メインのファイラーをサイドバーではなくフロートで表示する
+          position = "float",
+          mappings = {
+            ["<space>"] = "none",
+            ["o"] = "open",
+            -- フロート内でも <C-e> で閉じられるようにする
+            ["<C-e>"] = "close_window",
+          },
         },
-        git = {
-          enable = true,
-          ignore = false,
+        filesystem = {
+          follow_current_file = {
+            enabled = true,
+            leave_dirs_open = false,
+          },
+          filtered_items = {
+            hide_dotfiles = false,
+            hide_gitignored = false,
+            hide_by_name = {
+              ".DS_Store",
+            },
+          },
+          -- フォーカス不要でファイル/git 変更を自動検知（過去の戻し理由への対策）
+          use_libuv_file_watcher = true,
         },
-        filesystem_watchers = {
-          enable = true,  -- ファイル変更を自動検知
-        },
-        actions = {
-          open_file = {
-            quit_on_open = false,
+        buffers = {
+          follow_current_file = {
+            enabled = true,
           },
         },
       })
 
       -- キーマップ
-      vim.keymap.set("n", "<leader>ee", ":NvimTreeToggle<CR>", { desc = "Toggle file explorer" })
-      vim.keymap.set("n", "<leader>ef", ":NvimTreeFindFile<CR>", { desc = "Find current file in explorer" })
-      vim.keymap.set("n", "<C-e>", smart_toggle, { desc = "Toggle explorer / find current file (VSCode style)" })
+      vim.keymap.set("n", "<leader>ee", float_toggle, { desc = "Toggle file explorer (float)" })
+      vim.keymap.set("n", "<leader>ef", ":Neotree reveal position=float<CR>", { desc = "Find current file in explorer" })
+      vim.keymap.set("n", "<C-e>", float_toggle, { desc = "Toggle float explorer (VSCode style)" })
     end,
   },
 
