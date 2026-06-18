@@ -50,9 +50,9 @@ $ARGUMENTS
    ```
 3. サブ Issue を取得する:
    ```bash
-   gh api repos/<owner>/<repo>/issues/<number>/sub_issues --paginate --jq '.[] | {number, title, state}'
+   gh issue view <number> --repo <owner>/<repo> --json subIssues --jq '.subIssues.nodes[] | {number, title, state}'
    ```
-4. API が失敗した場合は、Epic 本文の Issue 参照 (`#123`, `- [ ] #123`) をパースする
+4. 取得に失敗した場合は、Epic 本文の Issue 参照 (`#123`, `- [ ] #123`) をパースする
 5. 各サブ Issue の詳細を取得する:
    ```bash
    gh issue view <sub-number> --repo <owner>/<repo> --json number,title,body,state,url

@@ -24,7 +24,7 @@ $ARGUMENTS
    - 認証エラー / ネットワーク失敗: 「取得失敗: <要約>」と 1 行明示して中断
 
 3. **サブ Issue を抽出 → 詳細を揃える**
-   - 一次ソース: `gh api repos/<owner>/<repo>/issues/<n>/sub_issues --jq '.[] | {number, title, state, url}'`
+   - 一次ソース: `gh issue view <n> --repo <owner>/<repo> --json subIssues --jq '.subIssues.nodes[] | {number, title, state, url}'`
    - 補完: 本文タスクリスト記法 `- [ ] #NNN` / `- [x] #NNN` を抽出（API と dedup）
    - 本文中 `#NNN` 参照の振り分け（3 分岐、上から順に判定）:
      1. **サブ Issue として既に取得済み**（API or タスクリスト記法 hit） → サブ Issue 一覧へ
@@ -39,28 +39,20 @@ $ARGUMENTS
    - 追加 `gh issue view` の呼び出しは **必ず `len(missing_nums)` 件**。`--jq` フィルタは正としない（生レスポンスを使う）。Discussion は「関連リンク」へ
 
 4. **親 Epic を上向きに 1 階層辿る**（全体像把握の中核）
-   - 一次ソースは GitHub の Issue 紐づけ機能（GraphQL `Issue.parent`）。本文の `Part of #N` / `Parent: #N` / `Epic: #N` 等のテキスト規約は使わない（UI 上の公式紐づけが正）
+   - 一次ソースは GitHub の Issue 紐づけ機能（`gh issue view --json parent`）。本文の `Part of #N` / `Parent: #N` / `Epic: #N` 等のテキスト規約は使わない（UI 上の公式紐づけが正）
    - 取得:
      ```bash
-     gh api graphql -f query='
-       query($owner:String!, $repo:String!, $num:Int!) {
-         repository(owner:$owner, name:$repo) {
-           issue(number:$num) {
-             parent { number title state url body
-               repository { nameWithOwner }
-             }
-           }
-         }
-       }' -F owner=<owner> -F repo=<repo> -F num=<n>
+     gh issue view <n> --repo <owner>/<repo> --json parent \
+       --jq 'if .parent == null then null else (.parent | {number, title, state, url, repo: (.url | capture("github\\.com/(?<r>[^/]+/[^/]+)/issues/").r)}) end'
      ```
-   - 上記クエリは `number / title / state / url / body / repository.nameWithOwner` を取得する。提示フォーマットで使うフィールドを増やすときはクエリも同時に更新すること
+   - 上記は `number / title / state / url` を返す。`repo`（`owner/repo`）は `parent` に `repository` サブフィールドが無いため `url` から抽出する。`body` も `parent` には含まれないので、本文が必要なら親番号確定後に `gh issue view <parent_num> --json body` で別途取得する
    - `parent` が `null`: 「親 Epic なし」と 1 行記録し手順 5 / 6 をスキップ
-   - `parent.repository.nameWithOwner` が `<owner>/<repo>` と異なる（クロスリポ親）: 「親 Epic: クロスリポ参照 — <owner>/<repo>#N」と 1 行記録し「関連リンク」へ回して手順 5 / 6 をスキップ
+   - 抽出した `repo` が `<owner>/<repo>` と異なる（クロスリポ親）: 「親 Epic: クロスリポ参照 — <owner>/<repo>#N」と 1 行記録し「関連リンク」へ回して手順 5 / 6 をスキップ
    - `parent.state` などが取得できないなど例外時: 「親参照あり — 取得不可: <理由>」と 1 行記録し手順 5 / 6 をスキップ
 
 5. **親 Epic 配下の兄弟 Issue 一覧と本文**: まず一覧を取得:
    ```bash
-   gh api repos/<owner>/<repo>/issues/<parent_num>/sub_issues --jq '.[] | {number, title, state, url}'
+   gh issue view <parent_num> --repo <owner>/<repo> --json subIssues --jq '.subIssues.nodes[] | {number, title, state, url}'
    ```
    - 0 件は「Epic 配下の sub_issues は空」と 1 行明示（タスクリストへフォールバックしない — 公式 API のみを信頼）。0 件なら手順 6 もスキップ
    - 提示時、対象 Issue 行を太字 / マーカーで強調

@@ -21,8 +21,8 @@ $ARGUMENTS
 ### 2. 親 Issue からサブ Issue を取得する
 
 ```bash
-gh api repos/{owner}/{repo}/issues/{issue}/sub_issues \
-  --jq '.[] | {number, title, state}'
+gh issue view {issue} --repo {owner}/{repo} --json subIssues \
+  --jq '.subIssues.nodes[] | {number, title, state}'
 ```
 
 ### 3. サブ Issue と PLANS.md の内容を分析する

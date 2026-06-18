@@ -24,7 +24,7 @@ $ARGUMENTS
 ### 2. サブ Issue を取得する
 
 ```bash
-gh api repos/<owner>/<repo>/issues/<epic-number>/sub_issues --paginate --jq '.[].number'
+gh issue view <epic-number> --repo <owner>/<repo> --json subIssues --jq '.subIssues.nodes[].number'
 ```
 
 - 失敗時: エラーをそのまま報告する
@@ -84,7 +84,7 @@ gh api repos/<owner>/<repo>/issues/<epic-number>/sub_issues --paginate --jq '.[]
 gh issue view <number> --repo <owner>/<repo> --json title,body,state,comments
 
 # Sub-issues
-gh api repos/<owner>/<repo>/issues/<epic-number>/sub_issues --paginate --jq '.[].number'
+gh issue view <epic-number> --repo <owner>/<repo> --json subIssues --jq '.subIssues.nodes[].number'
 
 # Related PRs (GraphQL)
 gh api graphql -f query='
