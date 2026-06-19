@@ -45,6 +45,10 @@ return {
             hidden = true,
             -- no_ignoreを削除: .gitignoreを尊重する
           },
+          buffers = {
+            -- 検索せず j/k で選びたいのでノーマルモードで開く
+            initial_mode = "normal",
+          },
         },
       })
 
