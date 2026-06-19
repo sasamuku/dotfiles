@@ -60,7 +60,9 @@ setup.sh
 
 ## MCP サーバー
 
-`setup_claude_mcp.sh` で設定: **playwright**, **context7**, **serena**
+`setup_claude_mcp.sh` で設定 (`claude mcp add`): **chrome-devtools**, **deepwiki**, **aws-mcp**
+
+**playwright**, **context7**, **serena** などは Claude Code のプラグイン (`@claude-plugins-official` 等) 経由で導入するため `setup_claude_mcp.sh` の管轄外。`/plugin install <name>@<marketplace>` で有効化する。
 
 ## セットアップ後の手順
 
