@@ -1,3 +1,18 @@
+---
+paths:
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "**/*.js"
+  - "**/*.jsx"
+  - "**/*.mjs"
+  - "**/*.cjs"
+  - "**/*.py"
+  - "**/*.rb"
+  - "**/*.go"
+  - "**/*.php"
+  - "**/*.sql"
+---
+
 # セキュリティガイドライン
 
 > [everything-claude-code](https://github.com/affaan-m/everything-claude-code) より翻案 (MIT License)
