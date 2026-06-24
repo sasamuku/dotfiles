@@ -1,5 +1,9 @@
 gui:
   nerdFontsVersion: "3"
+# トップ階層で Esc を押すと lazygit を終了する (深い階層では一段戻る)。
+# Esc 終了は終了コード 1 になり lazygit.nvim の on_exit が閉じないため、
+# nvim 側の TermClose autocmd で確実にウィンドウを閉じる。
+quitOnTopLevelReturn: true
 git:
   pagers:
     - colorArg: always

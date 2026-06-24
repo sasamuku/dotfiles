@@ -9,6 +9,10 @@ adjust-cell-height = 2
 font-thicken = true
 keybind = ctrl+h=goto_split:left
 keybind = ctrl+l=goto_split:right
+# Ctrl-[ を素の ESC (0x1b) として送る。Ghostty は Kitty キーボードプロトコルで
+# Ctrl-[ を CSI 91;5u として送るため、デフォルトでは ESC と区別され
+# lazygit の Esc 操作 (戻る / トップで終了) が効かない。
+keybind = ctrl+left_bracket=text:\x1b
 window-inherit-working-directory = true
 shell-integration = detect
 

@@ -17,13 +17,17 @@ return {
     config = function()
       vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { desc = "Open LazyGit" })
       vim.keymap.set("n", "<C-g>", ":LazyGit<CR>", { desc = "Open LazyGit (VSCode style)" })
-
-      -- lazygitのターミナルバッファでEsc/Ctrl-[を押すとlazygitを閉じる
-      vim.api.nvim_create_autocmd("TermOpen", {
+      -- Esc は lazygit にそのまま渡す (階層を戻る)。終了は lazygit 標準の q。
+      -- プラグインの on_exit は終了コード 0 のときしかウィンドウを閉じない。
+      -- 終了コードに関わらず lazygit ターミナルが死んだら確実に閉じる保険。
+      vim.api.nvim_create_autocmd("TermClose", {
         pattern = "*lazygit*",
-        callback = function()
-          vim.keymap.set("t", "<Esc>", "<cmd>close<CR>", { buffer = true, desc = "Close LazyGit" })
-          vim.keymap.set("t", "<C-[>", "<cmd>close<CR>", { buffer = true, desc = "Close LazyGit (Ctrl-[)" })
+        callback = function(args)
+          vim.schedule(function()
+            if vim.api.nvim_buf_is_valid(args.buf) then
+              vim.api.nvim_buf_delete(args.buf, { force = true })
+            end
+          end)
         end,
       })
     end,
