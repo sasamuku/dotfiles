@@ -212,5 +212,13 @@
   "alwaysThinkingEnabled": false,
   "effortLevel": "high",
   "skipWorkflowUsageWarning": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "footerLinksRegexes": [
+    {
+      "type": "regex",
+      "pattern": "(?<owner>[\\w.-]+)/(?<repo>[\\w.-]+)#(?<num>\\d+)",
+      "url": "https://github.com/{owner}/{repo}/issues/{num}",
+      "label": "{owner}/{repo}#{num}"
+    }
+  ]
 }
