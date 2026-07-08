@@ -156,7 +156,6 @@
     "ask": [],
     "defaultMode": "acceptEdits"
   },
-  "model": "opus[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -185,6 +184,14 @@
     "type": "command",
     "command": "$HOME/.claude/statusline.sh"
   },
+  "footerLinksRegexes": [
+    {
+      "type": "regex",
+      "pattern": "(?<owner>[\\w.-]+)/(?<repo>[\\w.-]+)#(?<num>\\d+)",
+      "url": "https://github.com/{owner}/{repo}/issues/{num}",
+      "label": "{owner}/{repo}#{num}"
+    }
+  ],
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
     "document-skills@anthropic-agent-skills": true,
@@ -210,15 +217,8 @@
     }
   },
   "alwaysThinkingEnabled": false,
-  "effortLevel": "high",
+  "effortLevel": "medium",
+  "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
-  "skipAutoPermissionPrompt": true,
-  "footerLinksRegexes": [
-    {
-      "type": "regex",
-      "pattern": "(?<owner>[\\w.-]+)/(?<repo>[\\w.-]+)#(?<num>\\d+)",
-      "url": "https://github.com/{owner}/{repo}/issues/{num}",
-      "label": "{owner}/{repo}#{num}"
-    }
-  ]
+  "skipAutoPermissionPrompt": true
 }
