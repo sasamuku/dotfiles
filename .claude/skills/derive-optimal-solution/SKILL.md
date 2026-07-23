@@ -1,5 +1,6 @@
 ---
 name: derive-optimal-solution
+disable-model-invocation: true
 description: Generic thinking protocol for deriving optimal solutions through iterative self-checking. Invoke BEFORE searching within the given problem space whenever the user asks for advice, judgment, evaluation, or choice. Reframes the problem, generates options, evaluates trade-offs, runs a self-answer check (does this answer the user's actual question at the right granularity, reach upstream, match expectations, offer non-obvious value?), and loops back to upstream tracing or same-level reframing if the check fails — until convergence. Applies across any domain — technical, process, organizational, decision-making, career. Triggers when the user uses evaluation or reconsideration language ("which is best", "root cause", "is this really needed", "sustainable long-term", "ほんとうに", "そもそも", "最善は", "根本は", "筋が良い"), when validating the soundness of someone's proposal from multiple perspectives, when the problem spans multiple layers (tech / process / org / regulation / UX / cost), or when clear trade-offs exist.
 ---
 
