@@ -106,6 +106,9 @@ fi
 echo "🔌 Setting up Claude MCP servers..."
 "$(dirname "${0}")/setup_claude_mcp.sh"
 
+# Codex setup
+"$(dirname "${0}")/setup_codex.sh"
+
 echo "✅ Dotfiles setup completed!"
 echo ""
 echo "📝 Next steps:"

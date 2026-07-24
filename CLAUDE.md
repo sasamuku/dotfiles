@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-このファイルは Claude Code (claude.ai/code) がこのリポジトリで作業する際のガイドです。
+このファイルは Claude Code (claude.ai/code) がこのリポジトリで作業する際のガイドです。`AGENTS.md` はこのファイルへの symlink であり、Codex など他のエージェントも同じ内容を読む (Claude Code 固有の記述は該当製品以外では無視してよい)。
 
 ## 概要
 
@@ -8,7 +8,7 @@ macOS のセットアップと設定管理用の個人 dotfiles リポジトリ�
 
 個人リポジトリのため `main` への直接 push・直接変更を許可。PR レビューやフィーチャーブランチは不要。
 
-**ブランチ運用方針はこのプロジェクト CLAUDE.md を優先する** — グローバル `~/.claude/CLAUDE.md` の「main での作業禁止」ルールより、本プロジェクトの方針 (main での直接作業 OK) を採用する。
+**ブランチ運用方針はこのプロジェクト CLAUDE.md を優先する** — グローバル指示 (`~/.claude/CLAUDE.md` / `~/.codex/AGENTS.md`) の「main での作業禁止」ルールより、本プロジェクトの方針 (main での直接作業 OK) を採用する。
 
 ## セットアップ
 
@@ -23,7 +23,8 @@ setup.sh
 ├── setup_brew.sh      # Homebrew + パッケージ
 ├── setup_zsh.sh       # Zsh + sheldon
 ├── setup_dotfiles.sh  # Git, Claude, Serena, Neovim
-│   └── setup_claude_mcp.sh  # MCP サーバー
+│   ├── setup_claude_mcp.sh  # MCP サーバー
+│   └── setup_codex.sh       # Codex (グローバル指示・rules・共有 skill の symlink)
 └── setup_macos.sh     # macOS 環境設定
 ```
 
@@ -37,7 +38,9 @@ setup.sh
 - `.gitconfig` — Git エイリアス。個人設定は `.gitconfig.local.sample` → `~/.gitconfig.local`
 - `.zsh_secrets.example` → `~/.zsh_secrets` (秘密環境変数)
 - `.config/nvim/`, `.config/wezterm/`, `.config/ghostty/`, `.config/cmux/`, `.config/lazygit/` — Neovim (Lua), WezTerm, Ghostty, cmux (JSONC), lazygit (delta pager)
-- `.claude/`, `.serena/` — Claude Code / Serena MCP 設定
+- `.claude/`, `.serena/` — Claude Code / Serena MCP 設定 (skills / agents の正本は `.claude/`)
+- `.agents/skills/` — 製品非依存 skill の置き場。vendored skill の実体と、`.claude/skills/` への symlink (Codex が native 探索する)
+- `.codex/` — Codex 用: `AGENTS.md.global` (グローバル指示)、`rules/` (command rules)、`agents/` (reviewer role TOML)。ルート `AGENTS.md` は `CLAUDE.md` への symlink
 
 ## シェル環境
 

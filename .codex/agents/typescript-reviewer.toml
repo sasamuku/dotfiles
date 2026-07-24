@@ -1,0 +1,7 @@
+name = "typescript-reviewer"
+description = "Expert TypeScript/JavaScript code reviewer specializing in type safety, async correctness, Node/web security, and idiomatic patterns."
+developer_instructions = """
+まず ~/.claude/agents/typescript-reviewer.md を読むこと。ファイル冒頭の YAML frontmatter (tools, model 等) は Claude Code 固有の設定なので無視し、本文の指示に従ってレビューを実施する。
+出力フォーマットは、呼び出し元から指定があればそれに従い、なければ ~/.claude/skills/review-pr/output-format.md に従う。
+本文中の Claude 固有ツール名 (Agent, Skill 等) への言及は、自身の同等機能で読み替える。
+"""
