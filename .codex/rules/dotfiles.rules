@@ -1,6 +1,10 @@
 # Codex command rules (Starlark)
 # 正本: dotfiles/.codex/rules/dotfiles.rules — ~/.codex/rules/dotfiles.rules へ symlink される。
 # Claude Code 側の等価物: .claude/hooks/hook_pre_commands.sh と .claude/settings.json の permissions.deny
+#
+# 既知の制限 (prefix_rule は argv 先頭からのトークン一致):
+# - `git -C <dir> worktree add` / `gh --repo <r> pr create` のような先頭オプション挟み込みは検知できない
+# - 絶対パス実行 (/usr/bin/curl 等) は basename ルールへの解決 (resolve-host-executables) でカバーされる
 
 prefix_rule(
     pattern = [["curl", "wget"]],
@@ -18,12 +22,13 @@ prefix_rule(
     not_match = [["git", "worktree", "list"]],
 )
 
+# force 系 (--force / -f / --force-with-lease、末尾オプション含む) をすり抜けなく捕捉するため push 全体を prompt にする
 prefix_rule(
-    pattern = ["git", "push", ["--force", "-f"]],
+    pattern = ["git", "push"],
     decision = "prompt",
-    justification = "force push は履歴を破壊しうるため確認する",
-    match = [["git", "push", "--force", "origin", "main"], ["git", "push", "-f"]],
-    not_match = [["git", "push", "origin", "main"]],
+    justification = "リモートへの反映のため実行前に確認する (force 系はとくに注意)",
+    match = [["git", "push", "--force", "origin", "main"], ["git", "push", "origin", "main", "--force"], ["git", "push", "--force-with-lease"], ["git", "push"]],
+    not_match = [["git", "pull"], ["git", "commit", "-m", "x"]],
 )
 
 prefix_rule(
