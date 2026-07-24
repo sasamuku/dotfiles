@@ -22,9 +22,9 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/sasamuku/dotfiles/master/s
 setup.sh
 ├── setup_brew.sh      # Homebrew + パッケージ
 ├── setup_zsh.sh       # Zsh + sheldon
-├── setup_dotfiles.sh  # Git, Claude, Serena, Neovim
+├── setup_dotfiles.sh  # Git, Claude, Codex, Serena, Neovim
 │   ├── setup_claude_mcp.sh  # MCP サーバー
-│   └── setup_codex.sh       # Codex (グローバル指示・rules・共有 skill の symlink)
+│   └── setup_codex.sh       # Codex (グローバル指示・rules・agent role・共有 skill の symlink)
 └── setup_macos.sh     # macOS 環境設定
 ```
 
