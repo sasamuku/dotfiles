@@ -8,10 +8,11 @@ set -eu
 
 echo "🔧 Setting up Codex CLI configuration..."
 
-DOTFILES_DIR=$(realpath $(dirname ${0}))
+DOTFILES_DIR=$(realpath "$(dirname "$0")")
 
 if [ ! -e ~/.claude/agents ] || [ ! -e ~/.claude/skills ]; then
-  echo "  ⚠️  ~/.claude/agents or ~/.claude/skills not found. Run setup_dotfiles.sh first (reviewer roles depend on them)"
+  echo "  ❌ ~/.claude/agents or ~/.claude/skills not found. Run setup_dotfiles.sh first (reviewer roles depend on them)" >&2
+  exit 1
 fi
 
 # dotfiles 管理のリンクを冪等に張る。管理外の symlink はスキップ、手書きファイル/ディレクトリはバックアップして置換
