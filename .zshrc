@@ -77,6 +77,9 @@ alias clf='CLAUDE_CODE_SUBAGENT_MODEL=claude-sonnet-5 claude --model claude-fabl
 alias ccr='npx @sasazame/ccresume@latest'
 alias lg='lazygit'
 
+# 引数なしならカレントディレクトリを開く
+v() { nvim "${@:-.}" }
+
 # Android SDK
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
