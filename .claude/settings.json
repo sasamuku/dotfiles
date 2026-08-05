@@ -189,7 +189,8 @@
     "superpowers@claude-plugins-official": false,
     "codex@openai-codex": true,
     "frontend-design@claude-code-plugins": true,
-    "ponytail@ponytail": true
+    "ponytail@ponytail": true,
+    "slack@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
