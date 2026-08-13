@@ -1,6 +1,6 @@
 ---
 name: create-pr
-description: Create a GitHub pull request using gh CLI, following the repository's own PR template and language conventions
+description: Create a GitHub pull request using gh CLI, following the repository's own PR template and language conventions. After creation, autonomously fixes CI failures until green, then presents review-comment triage for user decision (HITL)
 disable-model-invocation: true
 ---
 
@@ -76,6 +76,25 @@ PR 作成の前に以下を確認する。
    ```bash
    gh pr view <N> --json title,body,isDraft,url
    ```
+
+## Post-PR: CI の自動グリーン化とコメントトリアージ
+
+PR 作成後に続けて実行する。**CI は自律で直すが、レビューコメントへの対応はユーザー判断 (HITL)**。ユーザーが「draft のままにする」「PR を作るだけでいい」と指定した場合はこの節全体をスキップする。
+
+1. **Ready 化**: レビュー bot と CI を走らせるため `gh pr ready <N>` する (draft のままだと AI レビュアーがレビューしないことがある)。
+
+2. **CI 完了を待つ**:
+   ```bash
+   gh pr checks <N> --watch
+   ```
+   コマンドがタイムアウトで切れたら再実行して待ち直す。
+
+3. **失敗があれば自律修正する**: @.claude/skills/babysit/SKILL.md の Step 3 (ログ取得)・Step 4 の CI 分類 (flaky 判定含む)・Step 6 の CI 修正方針に従って修正し、`/commit -y` → `/push` する。push 後は手順 2 に戻り、全チェックが green になるまで繰り返す。
+   - ⚫ Skip 分類 (インフラ・シークレット等、PR の変更で直せない失敗) は理由を報告して対象から外す
+   - 修正 3 巡しても green にならない場合は、状況と残る失敗を報告して停止する
+
+4. **コメントのトリアージ (HITL)**: CI が green になったら `/babysit` (対話モード) を実行し、推奨度・修正案つきのテーブルを提示してユーザーの指示を待つ。**コメントへの修正・返信をこの時点で勝手に行わない**。
+   - AI レビュアーの初回コメントは PR 作成から数分遅れることがある。トリアージ結果が空なら「レビュー未着の可能性あり。数分後に `/babysit` を再実行してください」と添える
 
 ## タイトル規約
 
