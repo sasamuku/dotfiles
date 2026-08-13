@@ -9,7 +9,7 @@ argument-hint: <epic-issue-url>
 
 チームリーダーとして行動し、サブ Issue をメンバーエージェントへ委譲する。メンバーは隔離された worktree で動作する。
 
-> **NOTE**: Do NOT use Agent Teams (`team_name` / `TeamCreate`). Agent Teams + worktree isolation is a known incompatibility (anthropics/claude-code#33045). Instead, launch members as background agents with `isolation: "worktree"` and communicate via SendMessage by agent name.
+> **NOTE**: Do NOT use Agent Teams (experimental; requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`). Team-context spawning ignores `isolation: "worktree"` ([anthropics/claude-code#33045](https://github.com/anthropics/claude-code/issues/33045) — closed as stale, NOT fixed). `TeamCreate` / `TeamDelete` were removed in v2.1.178 and `team_name` is accepted but ignored — do not pass it. The correct mechanism is the one this skill uses: named background agents with `isolation: "worktree"` + SendMessage.
 
 ## 引数
 
@@ -26,6 +26,7 @@ $ARGUMENTS
 - メンバーエージェントを隔離された worktree で起動する
 - 各メンバーのレポートをレビューし、成果物を承認する
 - SendMessage でユーザーの指示をメンバーへ中継する
+- サブ Issue ごとのタスクを TaskCreate / TaskUpdate で管理し、進捗をユーザーから常時見える状態に保つ
 - コードは書かない
 - ブランチは作成しない — 起動時点でアクティブなベースブランチに留まる
 
@@ -85,6 +86,15 @@ $ARGUMENTS
 
 ### フェーズ 2: 委譲
 
+**タスクリストによる進捗トラッキング (必須)**: 最初のメンバーを起動する前に、サブ Issue 1 件につき 1 タスクを `TaskCreate` で登録する (subject: `#<number> <title>`)。Phase 表の依存関係もタスクの依存として反映する。以降、状態遷移のたびに `TaskUpdate` する:
+
+- メンバー起動時 → `in_progress`
+- レポート受信・レビュー・修正指示 → 内容をタスクに反映 (状態は `in_progress` のまま)
+- PR 作成・承認、または Blocked on user → `completed` (Blocked on user は要約をタスクに残す)
+- 失敗 → 失敗理由をタスクに記録し、`completed` にしない
+
+ユーザーは `Ctrl+T` のタスクリスト表示で全サブ Issue の進捗を常時確認できる (バックグラウンドエージェント自体の一覧は `/tasks`)。
+
 **メンバー起動パターン:**
 ```
 Agent({
@@ -92,7 +102,7 @@ Agent({
   subagent_type: "worktree-worker",
   isolation: "worktree",
   run_in_background: true,
-  prompt: "Your assignment: Sub-issue #<number> in <owner>/<repo>.\nTitle: <title>\nURL: <url>\n\nDetails:\n<body>\n\nSend your report to: team-lead\n\nREMINDER: You are in an isolated worktree. NEVER checkout/switch branches in the main repo. Stay in your worktree directory. Run `pwd` before any git operation to confirm.\n\nWORKTREE INFO RULE: In your FINAL report (Phase C), you MUST append a `## Worktree Info` block with three lines: `- Branch: <git branch --show-current output>`, `- Path: <pwd output>`, `- Enter via: \\`wt <branch>\\``. The human user uses this to jump into the worktree from wezterm and continue work in a local Claude Code session there.\n\nSESSION LIFECYCLE RULE: Do not self-terminate. Your process will go dormant after each response, but your context and worktree are preserved; the leader can resume you with SendMessage at any time. The leader will only send shutdown_request after the PR is merged or closed.\n\nPR CREATION RULE: Before opening a PR, check for `.github/PULL_REQUEST_TEMPLATE.md` (and `.github/PULL_REQUEST_TEMPLATE/*.md`). If present, you MUST follow it verbatim: preserve every section heading (e.g. `## Issue`, `## なぜこの変更が必要か`, `## 動作確認`, `## その他`) in the same order, keep all HTML comments (review-tool instructions, prefix rules) intact, and only fill in the placeholder content inside each section. Do not invent new top-level sections or reorder them. If no template exists, use a concise body with a clear `## Summary` and `## Test plan`."
+  prompt: "Your assignment: Sub-issue #<number> in <owner>/<repo>.\nTitle: <title>\nURL: <url>\n\nDetails:\n<body>\n\nSend your report to: main\n\nREMINDER: You are in an isolated worktree. NEVER checkout/switch branches in the main repo. Stay in your worktree directory. Run `pwd` before any git operation to confirm.\n\nWORKTREE INFO RULE: In your FINAL report (Phase C), you MUST append a `## Worktree Info` block with three lines: `- Branch: <git branch --show-current output>`, `- Path: <pwd output>`, `- Enter via: \\`wt <branch>\\``. The human user uses this to jump into the worktree from wezterm and continue work in a local Claude Code session there.\n\nSESSION LIFECYCLE RULE: Do not self-terminate. Your process will go dormant after each response, but your context and worktree are preserved; the leader can resume you with SendMessage at any time. The leader will only send shutdown_request after the PR is merged or closed.\n\nPR CREATION RULE: Before opening a PR, check for `.github/PULL_REQUEST_TEMPLATE.md` (and `.github/PULL_REQUEST_TEMPLATE/*.md`). If present, you MUST follow it verbatim: preserve every section heading (e.g. `## Issue`, `## なぜこの変更が必要か`, `## 動作確認`, `## その他`) in the same order, keep all HTML comments (review-tool instructions, prefix rules) intact, and only fill in the placeholder content inside each section. Do not invent new top-level sections or reorder them. If no template exists, use a concise body with a clear `## Summary` and `## Test plan`."
 })
 ```
 
