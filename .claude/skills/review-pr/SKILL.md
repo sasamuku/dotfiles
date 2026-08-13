@@ -21,7 +21,7 @@ GitHub PR に対して下記「エージェント一覧」のレビュアーを 
 | `code-reviewer`       | `always`                                      | 品質・設計・可読性・パフォーマンス・テスト                                   |
 | `security-reviewer`   | `always`                                      | セキュリティ脆弱性 (OWASP Top 10 等。XSS / SQL injection 等の一次責任はここ) |
 | `typescript-reviewer` | `extensions=.ts, .tsx, .js, .jsx, .mjs, .cjs` | 型安全性・非同期・JS/TS イディオム (`any` の濫用等の一次責任はここ)          |
-| `postgres-reviewer`   | `always`                                      | Postgres 設計・クエリ・インデックス・RLS・接続管理 (生 SQL / ORM DML / Markdown DB 仕様。DB に関する記述がなければ即終了) |
+| `postgres-reviewer`   | `content=sql\|migrat\|schema\|prisma\|drizzle\|typeorm\|sequelize\|knex\|sqlalchemy\|active_?record\|postgres\|supabase\|\brls\b\|row.?level.?security\|create (table\|policy\|index)\|alter table` | Postgres 設計・クエリ・インデックス・RLS・接続管理 (生 SQL / ORM DML / Markdown DB 仕様。DB に関する記述がなければ即終了) |
 | `meta-reviewer`       | `always`                                      | メタ認知: 問題設定・前提・構造 (症状対処になっていないか / 上流に軽い解はないか / そもそもやるべきか)。指摘は `scope: PR` の PR-level ブロックのみで、行単位指摘はしない |
 
 `trigger` 列の値:
@@ -29,6 +29,7 @@ GitHub PR に対して下記「エージェント一覧」のレビュアーを 
 - `always` — 無条件で起動
 - `paths=<glob...>` (省略可で `; exclude_paths=<glob...>`) — `paths` のいずれかが差分ファイルにマッチし、`exclude_paths` にマッチしないとき起動
 - `extensions=<.ext...>` — 差分ファイルの拡張子のいずれかが該当するとき起動
+- `content=<regex>` — `gh pr diff` の生出力 (ファイルパス含む) に regex が **大文字小文字無視** でマッチするとき起動。diff 全文入りプロンプトを「即終了」のためだけに送るトークン浪費を防ぐ起動前ゲート。境界が曖昧なら regex を緩めに書く (誤起動 1 体分のコストは取りこぼしより安い)
 
 新しい観点の追加 = 既存エージェント (例: `@.claude/agents/code-reviewer.md`) を手本に `.claude/agents/<観点>-reviewer.md` を作り、**この表に 1 行追加する**。
 
@@ -49,9 +50,13 @@ $ARGUMENTS
 gh pr view <number> --json number,title,body,baseRefName,headRefName,files
 gh pr diff <number>
 gh repo view --json nameWithOwner --jq '.nameWithOwner'
-gh api repos/{owner}/{repo}/pulls/{number}/comments
-gh api repos/{owner}/{repo}/pulls/{number}/reviews
+gh api repos/{owner}/{repo}/pulls/{number}/comments \
+  --jq '[.[] | {path, line, side, body, user: .user.login}]'
+gh api repos/{owner}/{repo}/pulls/{number}/reviews \
+  --jq '[.[] | {state, body, user: .user.login}]'
 ```
+
+comments / reviews は `--jq` で必ず絞る。生 JSON は `diff_hunk`・各種 URL・user オブジェクト・reactions 等が大半を占め、重複指摘の回避に必要なのは上記フィールドだけ。この出力は Phase 2 で全エージェントに複製されるため、絞らないとエージェント数ぶんトークンを浪費する。
 
 差分が空なら「レビュー対象の差分がありません」と報告して終了する。
 
@@ -69,7 +74,7 @@ skill が agent prompt に diff 全文を渡す際は、上記の数え方が再
 
 ### Phase 2: トリガー評価とエージェント並列実行
 
-「エージェント一覧」各行の `trigger` を `.files[].path` に対して評価。起動対象が決まったら、**同一メッセージ内の独立した Agent ツール呼び出し**で並列起動する。各エージェントへ渡す prompt は次の節構成にする:
+「エージェント一覧」各行の `trigger` を評価する — `paths=` / `extensions=` は `.files[].path` に対して、`content=` は `gh pr diff` の生出力に対して。起動対象が決まったら、**同一メッセージ内の独立した Agent ツール呼び出し**で並列起動する。各エージェントへ渡す prompt は次の節構成にする:
 
 ```
 ## PR メタ
@@ -79,7 +84,7 @@ skill が agent prompt に diff 全文を渡す際は、上記の数え方が再
 <gh pr diff の生出力をハンクヘッダ込みで貼る>
 
 ## 既存コメント
-<gh api ... /comments の出力>
+<Phase 1 で --jq 絞り込み済みの comments / reviews 出力>
 
 ## 出力フォーマット
 <@.claude/skills/review-pr/output-format.md の本文を丸ごと貼る>

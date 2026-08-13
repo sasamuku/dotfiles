@@ -18,12 +18,17 @@ model: opus
 ## ワークフロー
 
 ### 1. 初期スキャン
-```bash
-# Check for vulnerable dependencies
-npm audit
 
-# Check for secrets in files
-grep -r "api[_-]?key\|password\|secret\|token" --include="*.js" --include="*.ts" --include="*.json" .
+シークレット検索は **レビュー対象の差分ファイルに限定する**。リポジトリ全体の走査は PR レビューの責務 (差分) を超え、トークンと時間を浪費する。対象パスは渡された diff のハンクヘッダ (`+++ b/<path>`) から抽出する (削除されたファイルは除く)。
+
+`npm audit` は性質上、依存ツリー全体を見るコマンド。依存が変わったとき (package.json / lockfile が差分に含まれるとき) だけ実行する。
+
+```bash
+# シークレット検索 (差分ファイルのみ)
+grep -nEi "api[_-]?key|password|secret|token" <diff のハンクヘッダから抽出したパス...>
+
+# 依存の脆弱性チェック (package.json / lockfile が差分に含まれるときのみ)
+npm audit
 ```
 
 ### 2. OWASP Top 10 分析
