@@ -1,7 +1,6 @@
 ---
 name: create-pr-with-review
 description: Review the local diff with flat-perspective sub-agents, fix findings in a loop, then create a PR via the create-pr skill once the review is clean
-disable-model-invocation: true
 ---
 
 # Create PR with Review
