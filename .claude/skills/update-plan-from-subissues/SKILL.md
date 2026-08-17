@@ -1,7 +1,6 @@
 ---
 name: update-plan-from-subissues
 description: Update PLANS.md content based on linked sub-issues status
-disable-model-invocation: true
 ---
 
 # Update Plan from Sub-issues

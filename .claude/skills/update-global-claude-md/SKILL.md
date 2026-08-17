@@ -1,7 +1,6 @@
 ---
 name: update-global-claude-md
 description: Updates the user's global Claude Code instructions file (~/.claude/CLAUDE.md, which is a symlink into the dotfiles repo). Use ONLY when the user explicitly asks to update, edit, add to, or remove from the global CLAUDE.md / global rules / global Claude instructions — typically while working in a different project where ~/.claude/CLAUDE.md isn't the primary editing target. Do NOT trigger for project-local CLAUDE.md files.
-disable-model-invocation: true
 ---
 
 # update-global-claude-md

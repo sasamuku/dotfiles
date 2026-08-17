@@ -1,7 +1,6 @@
 ---
 name: review-pr-by-codex
 description: Run the review-pr workflow on Codex instead of Claude — hand the PR number and the review-pr procedure to Codex via the codex:rescue subagent, then surface Codex's integrated review summary. Use when the user wants a PR reviewed by Codex / GPT, or asks to "review this PR with Codex".
-disable-model-invocation: true
 argument-hint: "[PR番号 | PR URL | 空] [--model <model|spark>] [--effort <...>]"
 ---
 

@@ -1,7 +1,6 @@
 ---
 name: create-skill
 description: Create a new Claude Code skill with best practices. Use when user wants to create a skill, add a SKILL.md, or extend Claude's capabilities.
-disable-model-invocation: true
 allowed-tools: Read, Write, Bash(mkdir *), WebFetch
 ---
 

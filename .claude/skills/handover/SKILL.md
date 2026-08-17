@@ -1,7 +1,6 @@
 ---
 name: handover
 description: Generate a HANDOVER.md file summarizing the current session's work. Use at the end of a session to preserve context for the next session.
-disable-model-invocation: true
 ---
 
 # Handover

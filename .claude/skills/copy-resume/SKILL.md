@@ -1,7 +1,6 @@
 ---
 name: copy-resume
 description: Copies `claude -r <session-id> --fork-session` for the current session to the clipboard. Use when the user wants to fork the current session into a new branch from another terminal, or asks to copy the fork command, session id, or `/fork` command.
-disable-model-invocation: true
 allowed-tools: Bash(bash -c *)
 ---
 

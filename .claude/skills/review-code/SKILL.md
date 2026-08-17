@@ -1,7 +1,6 @@
 ---
 name: review-code
 description: Review local code changes against main branch
-disable-model-invocation: true
 ---
 
 # Review Code

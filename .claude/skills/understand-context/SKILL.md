@@ -1,7 +1,6 @@
 ---
 name: understand-context
 description: Understand current work status and project context. Use when starting work, resuming a session, or checking git state (modified files, staged changes, current branch).
-disable-model-invocation: true
 ---
 
 # Understand Context

@@ -1,7 +1,6 @@
 ---
 name: review-pr
 description: Comprehensive PR review with parallel multi-agent analysis, optional inline comment posting
-disable-model-invocation: true
 ---
 
 # Review PR

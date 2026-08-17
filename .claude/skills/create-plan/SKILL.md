@@ -1,7 +1,6 @@
 ---
 name: create-plan
 description: Create a PLANS.md execution plan document for project management
-disable-model-invocation: true
 ---
 
 # Create Plan

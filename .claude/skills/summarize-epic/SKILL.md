@@ -1,7 +1,6 @@
 ---
 name: summarize-epic
 description: Summarize GitHub Epic issue with sub-issues and related PRs. Use when reviewing epic progress or getting implementation overview.
-disable-model-invocation: true
 ---
 
 # Summarize Epic

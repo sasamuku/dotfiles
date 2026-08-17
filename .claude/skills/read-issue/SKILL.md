@@ -1,7 +1,6 @@
 ---
 name: read-issue
 description: Fetch a GitHub issue with its sub-issues, walk up to the parent Epic, list sibling issues under that Epic, fetch the body of each sibling issue, attach the implementing PR for each closed sibling with body and diff summary, gather related code, and present as a Japanese summary so the reader can grasp the whole task context including the actual contents of siblings and their PRs
-disable-model-invocation: true
 ---
 
 # Read Issue

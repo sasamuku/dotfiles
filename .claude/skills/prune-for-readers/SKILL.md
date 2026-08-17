@@ -1,7 +1,6 @@
 ---
 name: prune-for-readers
 description: ドキュメントやコードコメントから、読者にとって価値の無い記述を取り除いて最終状態だけにする。作業の過程・暫定の注記・自明な説明が残っているときに使う。
-disable-model-invocation: true
 ---
 
 # Prune for Readers
