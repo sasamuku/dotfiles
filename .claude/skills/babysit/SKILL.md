@@ -1,6 +1,6 @@
 ---
 name: babysit
-description: Triage PR review comments and CI failures. Default mode categorizes and presents findings for user decision; --auto mode autonomously fixes, commits, pushes, and replies, and self-starts a 5-minute recurring loop (/loop 5m /babysit --auto) until the PR is mergeable or merged.
+description: Triage PR review comments and CI failures. Default mode categorizes and presents findings for user decision; --auto mode autonomously fixes, commits, pushes, replies, re-kicks Devin Review (/devin review) after pushing fixes when Devin is reviewing the PR, and self-starts a 5-minute recurring loop (/loop 5m /babysit --auto) until the PR is mergeable or merged.
 allowed-tools: Bash(git *), Bash(gh *), Read, Edit, Write
 ---
 
@@ -32,6 +32,8 @@ $ARGUMENTS
 
 - `✅ PR is merged/closed. Stopping.` (Step 1)
 - `✅ No actionable comments or CI failures — PR is mergeable.` (Step 9)
+
+Devin Review が pending の間 (Step 8.5) はこの停止シグナルを出さない — レビュー完了を次回実行で拾うまでループを継続する。
 
 ---
 
@@ -266,6 +268,43 @@ gh api repos/{owner}/{repo}/pulls/{pr_number}/comments -X POST \
 | 意図不明瞭 | `Skipping for now — intent is unclear. Please clarify if action is needed.` |
 | Info, skipped | `Noted.` |
 
+## 自律モード: Step 8.5 — Devin Review の再キック
+
+PR に Devin (`devin-ai-integration[bot]`) のコメントまたはレビューが 1 件でもある場合のみ実行する。Devin が付いていない PR ではこの Step 全体をスキップする。
+
+### 状態判定
+
+「直近のキック」と「Devin の最新アクティビティ」の時刻を比較する:
+
+```bash
+# 直近の /devin review キック (issue コメント) の created_at
+gh api repos/{owner}/{repo}/issues/{pr_number}/comments --paginate \
+  -q '[.[] | select(.body | startswith("/devin review"))] | last | .created_at'
+
+# Devin の最新アクティビティ = 次の 3 つの created_at/submitted_at の最大値
+#   pulls/{pr_number}/comments, pulls/{pr_number}/reviews, issues/{pr_number}/comments
+#   いずれも user.login == "devin-ai-integration[bot]" でフィルタ
+```
+
+- キックの created_at > Devin の最新アクティビティ → **pending** (レビュー実行中)
+- ただしキックから **30 分**経過しても応答がなければ pending 扱いをやめる (Devin 側の失敗とみなし、通常フローに戻る)
+
+**未レビューコミット** = 基準時刻 (直近のキック。キックが 1 件もなければ Devin の最新アクティビティ) より後に push されたコミットがあるか:
+
+```bash
+git log -1 --format=%cI origin/$(git branch --show-current)
+```
+
+この時刻が基準時刻より新しければ未レビューコミットあり。「この実行で push したか」ではなくこの時刻比較で判定する — pending 中に push したコミットを、pending 明けの実行で取りこぼさないため。
+
+### アクション
+
+| 状態 | アクション |
+|---|---|
+| pending | 何もしない (再キックも停止もしない)。Step 9 で `⏳ Devin Review in progress — waiting.` と報告する |
+| pending でなく、**未レビューコミットあり** | `gh pr comment {pr_number} --body "/devin review"` で再キックする |
+| pending でなく、未レビューコミットなし | 再キックしない — コードが変わっていないのに再レビューしても同じ結果しか返らず、無限ループになるため |
+
 ## 自律モード: Step 9 — レポート
 
 ```
@@ -275,9 +314,11 @@ gh api repos/{owner}/{repo}/pulls/{pr_number}/comments -X POST \
 🛠  CI: fixed lint (abc1234)
 🛠  CI: rerun only (flaky) — e2e
 ⏭️  CI: skipped deploy-preview — VERCEL_TOKEN not configured
+🔁 Kicked Devin Review (push あり)
 ```
 
 対応すべきコメントも CI 失敗もない場合:
 
 - チェックに `PENDING` が残っている場合: `⏳ No actionable items yet — waiting for pending checks.` と報告する (停止シグナルではない。次の実行を待つ)
-- 全チェックが完了している場合: `✅ No actionable comments or CI failures — PR is mergeable.` (loop 運用時はこれが停止シグナル)
+- Devin Review が pending の場合 (Step 8.5): `⏳ Devin Review in progress — waiting.` と報告する (停止シグナルではない。次の実行を待つ)
+- 全チェックが完了しており Devin Review も pending でない場合: `✅ No actionable comments or CI failures — PR is mergeable.` (loop 運用時はこれが停止シグナル)
