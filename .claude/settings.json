@@ -135,7 +135,7 @@
       "mcp__serena__insert_before_symbol"
     ],
     "ask": [],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "auto"
   },
   "model": "opus",
   "hooks": {
