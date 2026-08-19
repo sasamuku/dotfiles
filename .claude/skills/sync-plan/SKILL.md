@@ -1,35 +1,38 @@
 ---
 name: sync-plan
-description: Sync PLANS.md content to linked GitHub issue comment. Use when PLANS.md is updated and changes need to be reflected in the GitHub issue.
+description: Sync the plan file (~/.claude/plans/) to the linked GitHub issue comment. Use when the plan is updated and changes need to be reflected in the GitHub issue.
 disable-model-invocation: true
 ---
 
 # Sync Plan
 
-PLANS.md の内容を、連携済みの GitHub Issue コメントに同期する。
+計画ファイルの内容を、連携済みの GitHub Issue コメントに同期する。
 
-## 前提条件
+## 引数
 
-- プロジェクトルートに PLANS.md が存在すること
-- PLANS.md のフロントマターに `issue:` フィールドが含まれていること
+$ARGUMENTS
 
 ## ワークフロー
 
-### 1. PLANS.md から Issue メタデータを読み取る
-
-フロントマターから `issue:` と `issue_url:` を抽出する。
-
-`issue:` フィールドが存在しない場合:
-```
-Error: No issue linked to PLANS.md
-Create an issue-linked plan with: /create-plan <issue-number>
-```
-
-### 2. リポジトリ情報を取得する
+### 1. 計画ファイルを特定する
 
 ```bash
-gh repo view --json owner,name
+REPO=$(gh repo view --json owner,name --jq '"\(.owner.login)/\(.name)"')
+PLAN_DIR="$HOME/.claude/plans/$REPO"
 ```
+
+- 引数に Issue 番号があれば `$PLAN_DIR/issue-<n>.md`
+- なければ `ls -t "$PLAN_DIR"` の最新ファイル。候補が複数あって文脈から特定できない場合はユーザーに確認する
+
+計画ファイルが存在しない場合:
+```
+Error: No plan found for this repository
+Create one with: /create-plan <issue-number>
+```
+
+### 2. フロントマターから Issue メタデータを読み取る
+
+`issue:` と `issue_url:` を抽出する。
 
 ### 3. 既存の同期コメントを検索する
 
@@ -44,7 +47,7 @@ gh api repos/{owner}/{name}/issues/{issue}/comments \
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 CONTENT="<!-- PLANS_SYNC_MARKER:${TIMESTAMP} -->
 
-$(tail -n +5 PLANS.md)"
+$(tail -n +6 "$PLAN_FILE")"  # フロントマター (5 行) をスキップ
 ```
 
 **コメントが既に存在する場合**:
@@ -58,18 +61,19 @@ gh api -X PATCH repos/{owner}/{name}/issues/comments/{comment_id} \
 gh issue comment {issue} --body "$CONTENT"
 ```
 
-### 5. PLANS.md のフロントマターを更新する
+### 5. 計画ファイルのフロントマターを更新する
 
 `last_synced` フィールドを新しいタイムスタンプで更新する。
 
 ### 6. 完了を確認する
 
 ```
-✓ Synced PLANS.md to issue #123
+✓ Synced plan to issue #123
+  File: ~/.claude/plans/{owner}/{repo}/issue-123.md
   Timestamp: 2025-11-12T10:30:00Z
 ```
 
 ## 注意事項
 
-- 同期は一方向: PLANS.md → GitHub Issue
+- 同期は一方向: 計画ファイル → GitHub Issue
 - GitHub コメントを手動編集した場合、次の同期で上書きされる

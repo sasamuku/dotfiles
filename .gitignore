@@ -47,4 +47,3 @@ scratch
 # Project Specific
 PLANS.md
 *.code-workspace
-.issync/**

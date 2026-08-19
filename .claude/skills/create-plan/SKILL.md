@@ -1,35 +1,71 @@
 ---
 name: create-plan
-description: Create a PLANS.md execution plan document for project management
+description: End-to-end workflow that reads a GitHub issue (with epic/sibling/PR context), creates an execution plan file under ~/.claude/plans/, and syncs it back to the issue comment.
 ---
 
 # Create Plan
 
-プロジェクトルートに、実行計画を管理するための PLANS.md を作成する。
+GitHub Issue を読み込み、実行計画ファイルを作成し、Issue に同期する — これらを 1 ステップで実行する。
+
+## 計画ファイルの置き場所 (規約)
+
+```
+~/.claude/plans/<owner>/<repo>/issue-<issue-number>.md
+```
+
+- リポジトリの外に置くため git と無縁 (コンフリクト・コミット混入が起きない)
+- 絶対パスなので worktree・セッションをまたいで同じファイルを参照できる
+- 正本は Issue の同期コメント (PLANS_SYNC_MARKER)。ローカルファイルは作業コピー
+
+パス解決:
+
+```bash
+REPO=$(gh repo view --json owner,name --jq '"\(.owner.login)/\(.name)"')
+PLAN_FILE="$HOME/.claude/plans/$REPO/issue-<issue-number>.md"
+mkdir -p "$(dirname "$PLAN_FILE")"
+```
 
 ## 引数
 
-受け付ける入力:
-- プロジェクトの説明・文脈 (自由記述)
-- GitHub Issue 番号 (例: `123` または `#123`)
-- GitHub Issue の URL
+GitHub Issue 番号 (例: `123` または `#123`) または Issue の URL。
 
 $ARGUMENTS
 
-## 入力の扱い
+**Issue は必須**。引数に Issue の参照がない場合 (自由記述のみ等) は計画ファイルを作らず、次を案内する:
 
-引数が GitHub Issue を参照している場合:
-1. 引数から Issue 番号を抽出する (形式: `#123`, `123`, または GitHub URL)
-2. `gh issue view <issue-number> --json number,title,body,url` で Issue を取得する
-3. Issue から要件と文脈を把握する
-4. 必要に応じてコードベースから関連ファイルを検索する
-5. Issue の情報で PLANS.md の各セクションを埋める
-6. Issue メタデータをフロントマターに追加する (後述の Frontmatter セクション参照)
-7. PLANS.md 作成後、Issue に初回の sync コメントを投稿する
+```
+計画は Issue に紐づけて管理します。先に Issue を作成してください:
+  /create-issue <タイトル・概要>
+作成後、/create-plan <issue-number> で計画を作成できます。
+```
 
-## Frontmatter (Issue 連携時)
+ユーザーが望めば、その場で `/create-issue` スキルのワークフローに従って Issue を作成し、続けて計画作成に進んでよい。
 
-Issue と紐づく PLANS.md を作る際は、以下のフロントマターを先頭に追加する:
+## ワークフロー
+
+### フェーズ 1: Issue の読み込み
+
+引数の Issue 番号を使い、`/read-issue` スキルのワークフローに従う (親 Epic・兄弟 Issue・実装 PR まで含めた文脈収集)。
+
+### フェーズ 2: 計画ファイルの作成
+
+1. フェーズ 1 で収集した情報から要件と文脈を把握する
+2. 必要に応じてコードベースから関連ファイルを検索する
+3. 計画ファイルの各セクションを埋め、フロントマターを付ける (後述)
+4. **重要**: 計画ファイルを作成する前にプレビューを提示し、ユーザー承認 (y/n) を得ること
+
+### フェーズ 3: Issue への同期
+
+`/sync-plan` スキルのワークフローに従い、計画を Issue に投稿する。
+
+完了したら以下を表示する:
+```
+Done: Issue #<number> read, plan created at ~/.claude/plans/<owner>/<repo>/issue-<number>.md, synced to issue.
+```
+
+## Frontmatter
+
+計画ファイルの先頭に、以下のフロントマターを必ず付ける:
 
 ```yaml
 ---
@@ -43,7 +79,7 @@ last_synced: 2025-11-12T10:30:00Z
 - `issue_url`: Issue の完全な GitHub URL
 - `last_synced`: 最終同期日時 (ISO 8601)。`date -u +"%Y-%m-%dT%H:%M:%SZ"` で生成
 
-## PLANS.md の構成
+## 計画ファイルの構成
 
 1. **Purpose / Overview**
    - プロジェクトゴールの要約
@@ -97,25 +133,3 @@ last_synced: 2025-11-12T10:30:00Z
 - 簡潔さと網羅性を両立する
 - 継続的に更新される「生きたドキュメント」として整形する
 - 追跡可能なタスクには Markdown チェックボックス (`- [ ]`) を使う
-- **重要**: PLANS.md を作成する前にプレビューを提示し、ユーザー承認 (y/n) を得ること
-
-## Issue コメント同期 (Issue 連携時)
-
-Issue フロントマター付き PLANS.md を作成したら、Issue にコメントを投稿する:
-
-1. リポジトリ情報を取得: `gh repo view --json owner,name`
-2. タイムスタンプ付きの同期マーカーを生成する
-3. マーカー + PLANS.md 本文 (フロントマターを除く) をコメントとして投稿する:
-
-```bash
-TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-CONTENT="<!-- PLANS_SYNC_MARKER:${TIMESTAMP} -->
-
-$(tail -n +5 PLANS.md)"  # Skip frontmatter (lines 1-4)
-
-gh issue comment <issue-number> --body "$CONTENT"
-```
-
-同期マーカーの形式: `<!-- PLANS_SYNC_MARKER:2025-11-12T10:30:00Z -->`
-
-これにより、`/sync-plan` が後からこのコメントを発見・更新できるようになる。

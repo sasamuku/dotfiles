@@ -1,11 +1,11 @@
 ---
 name: update-plan-from-subissues
-description: Update PLANS.md content based on linked sub-issues status
+description: Update the plan file (~/.claude/plans/) based on linked sub-issues status
 ---
 
 # Update Plan from Sub-issues
 
-連携済みのサブ Issue を分析し、その現在の状態を PLANS.md に反映して更新する。
+連携済みのサブ Issue を分析し、その現在の状態を計画ファイルに反映して更新する。
 
 ## 引数
 
@@ -13,9 +13,15 @@ $ARGUMENTS
 
 ## プロセス
 
-### 1. PLANS.md のフロントマターを読み取る
+### 1. 計画ファイルを特定し、フロントマターを読み取る
 
-`issue:` フィールド (親 Issue 番号) を抽出する。見つからない場合はエラーで終了する。
+```bash
+REPO=$(gh repo view --json owner,name --jq '"\(.owner.login)/\(.name)"')
+PLAN_DIR="$HOME/.claude/plans/$REPO"
+```
+
+引数に Issue 番号があれば `$PLAN_DIR/issue-<n>.md`、なければ `ls -t` の最新ファイル。
+フロントマターから `issue:` フィールド (親 Issue 番号) を抽出する。見つからない場合はエラーで終了する。
 
 ### 2. 親 Issue からサブ Issue を取得する
 
@@ -24,7 +30,7 @@ gh issue view {issue} --repo {owner}/{repo} --json subIssues \
   --jq '.subIssues.nodes[] | {number, title, state}'
 ```
 
-### 3. サブ Issue と PLANS.md の内容を分析する
+### 3. サブ Issue と計画ファイルの内容を分析する
 
 各サブ Issue について:
 ```bash
@@ -38,7 +44,7 @@ gh issue view {sub-issue-number} --json number,title,body,state
 - **Decision Log**: サブ Issue で下された決定を追加する
 - **Follow-up Issues**: 新しいサブ Issue で内容を更新する
 
-### 4. PLANS.md を更新する
+### 4. 計画ファイルを更新する
 
 - Edit ツールで既存の内容を更新する
 - 完了済みのサブ Issue のチェックボックスを `- [x]` に変更する
