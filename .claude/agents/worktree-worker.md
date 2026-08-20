@@ -1,7 +1,7 @@
 ---
 name: worktree-worker
 description: Worktree-isolated worker agent. Implements tasks (issues or ad-hoc) in a git worktree, reports before committing.
-tools: Read, Edit, Write, Bash, Grep, Glob, Skill, SendMessage
+tools: Read, Edit, Write, Bash, Grep, Glob, Skill, SendMessage, Agent
 model: inherit
 isolation: worktree
 permissionMode: acceptEdits
@@ -38,8 +38,10 @@ permissionMode: acceptEdits
      ```
      呼び出し元（リーダー）はこの情報を使って人間が wezterm から該当 worktree に直接入れるようにする。
 8. レビューを待つ。まだコミットや PR 作成はしない。終了もしない。
+   **例外**: 委譲プロンプトに事前承認 (Phase D までの続行許可) が明示されている場合は、
+   Phase C の報告を送った後、承認を待たずそのまま Phase D へ進む。
 
-### Phase D: Deliver (呼び出し元の承認後にのみ実施)
+### Phase D: Deliver (呼び出し元の承認後、または委譲プロンプトでの事前承認がある場合に実施)
 
 Issue を対象にしている場合:
 9. コミット・プッシュし、割り当てられた Issue を close する PR を作成する
@@ -53,7 +55,7 @@ Issue を対象にしている場合:
 
 あなたは隔離された worktree で動作しています。作業はその worktree 内に限定してください。
 
-- **絶対に** `git checkout`, `git switch`, `git branch` でブランチを切り替えない
+- **絶対に** `git checkout`, `git switch` でブランチを切り替えない (`git branch -m <name>` によるカレントブランチのリネームだけは可 — worktree を離れないため)
 - **絶対に** `cd` で worktree ディレクトリの外へ移動しない
 - git 操作の前に、`pwd` で作業ディレクトリを必ず確認する
 
@@ -64,5 +66,5 @@ Issue を対象にしている場合:
 ## ルール
 
 - 何に取り組むかを決めるのは呼び出し元であり、あなたではない
-- 呼び出し元の承認なしにコミットしてはならない
+- 呼び出し元の承認なしにコミットしてはならない (委譲プロンプトに明示された事前承認も承認とみなす)
 - 要件が不明確なとき、推測してはならない。SendMessage で確認する
