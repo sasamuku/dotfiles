@@ -24,6 +24,10 @@
 *.gem
 .pryrc
 
+## Python
+__pycache__/
+*.pyc
+
 # Development Tools
 ## Git Worktree Manager
 .wt_hook.sh
