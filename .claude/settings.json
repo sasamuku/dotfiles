@@ -190,7 +190,8 @@
     "codex@openai-codex": true,
     "frontend-design@claude-code-plugins": true,
     "ponytail@ponytail": true,
-    "slack@claude-plugins-official": true
+    "slack@claude-plugins-official": true,
+    "eli5@claude-community": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -203,6 +204,12 @@
       "source": {
         "source": "github",
         "repo": "DietrichGebert/ponytail"
+      }
+    },
+    "claude-community": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-community"
       }
     }
   },
