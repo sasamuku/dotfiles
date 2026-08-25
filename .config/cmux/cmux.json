@@ -13,6 +13,12 @@
     "openMarkdownInCmuxViewer" : true
   },
 
+  // Pane 前後移動を cmd+[ / ]
+  "shortcuts" : {
+    "focusNextPane" : "cmd+]",
+    "focusPreviousPane" : "cmd+["
+  },
+
   //   "terminal" : {
   //     "autoResumeAgentSessions" : true,
   //     "copyOnSelect" : false,
