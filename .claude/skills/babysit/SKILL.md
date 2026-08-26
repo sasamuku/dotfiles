@@ -274,36 +274,32 @@ PR に Devin (`devin-ai-integration[bot]`) のコメントまたはレビュー�
 
 ### 状態判定
 
-「直近のキック」と「Devin の最新アクティビティ」の時刻を比較する:
+head commit の commit status (`context == "Devin Review"`) で判定する。コメントや review の投稿では判定しない — 指摘ゼロのとき Devin は完了後に何も投稿しない。
 
 ```bash
-# 直近の /devin review キック (issue コメント) の created_at
+sha=$(gh api repos/{owner}/{repo}/pulls/{pr_number} -q .head.sha)
+gh api repos/{owner}/{repo}/commits/$sha/status \
+  -q '.statuses[] | select(.context == "Devin Review") | {state, updated_at}'
+```
+
+| state | 状態 |
+|---|---|
+| `pending` | レビュー実行中。`updated_at` から 30 分経過したら Devin 側の失敗とみなし `success` と同じ扱いにする |
+| `success` | 完了。コメントが増えていなければ「指摘なし完了」 |
+| なし | 未レビューコミット (Devin がまだこの commit を見ていない)。ただし直近の `/devin review` キックが 5 分以内なら反応待ちとして `pending` 扱い (二重キック防止) |
+
+```bash
 gh api repos/{owner}/{repo}/issues/{pr_number}/comments --paginate \
   -q '[.[] | select(.body | startswith("/devin review"))] | last | .created_at'
-
-# Devin の最新アクティビティ = 次の 3 つの created_at/submitted_at の最大値
-#   pulls/{pr_number}/comments, pulls/{pr_number}/reviews, issues/{pr_number}/comments
-#   いずれも user.login == "devin-ai-integration[bot]" でフィルタ
 ```
-
-- キックの created_at > Devin の最新アクティビティ → **pending** (レビュー実行中)
-- ただしキックから **30 分**経過しても応答がなければ pending 扱いをやめる (Devin 側の失敗とみなし、通常フローに戻る)
-
-**未レビューコミット** = 基準時刻 (直近のキック。キックが 1 件もなければ Devin の最新アクティビティ) より後に push されたコミットがあるか:
-
-```bash
-git log -1 --format=%cI origin/$(git branch --show-current)
-```
-
-この時刻が基準時刻より新しければ未レビューコミットあり。「この実行で push したか」ではなくこの時刻比較で判定する — pending 中に push したコミットを、pending 明けの実行で取りこぼさないため。
 
 ### アクション
 
 | 状態 | アクション |
 |---|---|
 | pending | 何もしない (再キックも停止もしない)。Step 9 で `⏳ Devin Review in progress — waiting.` と報告する |
-| pending でなく、**未レビューコミットあり** | `gh pr comment {pr_number} --body "/devin review"` で再キックする |
-| pending でなく、未レビューコミットなし | 再キックしない — コードが変わっていないのに再レビューしても同じ結果しか返らず、無限ループになるため |
+| なし | `gh pr comment {pr_number} --body "/devin review"` で再キックする |
+| `success` | 再キックしない (同じコードの再レビューは無限ループになる)。指摘なし完了なら Step 9 で `✅ Devin Review completed — no issues found.` と報告する |
 
 ## 自律モード: Step 9 — レポート
 
@@ -321,4 +317,5 @@ git log -1 --format=%cI origin/$(git branch --show-current)
 
 - チェックに `PENDING` が残っている場合: `⏳ No actionable items yet — waiting for pending checks.` と報告する (停止シグナルではない。次の実行を待つ)
 - Devin Review が pending の場合 (Step 8.5): `⏳ Devin Review in progress — waiting.` と報告する (停止シグナルではない。次の実行を待つ)
+- Devin Review が指摘なしで完了した場合 (Step 8.5): `✅ Devin Review completed — no issues found.` を添えたうえで下の停止シグナルを出す
 - 全チェックが完了しており Devin Review も pending でない場合: `✅ No actionable comments or CI failures — PR is mergeable.` (loop 運用時はこれが停止シグナル)
