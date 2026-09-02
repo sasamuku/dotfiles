@@ -73,7 +73,7 @@ alias editz='$EDITOR ~/.zshrc'
 alias sourcez="source ~/.zshrc"
 alias be='bundle exec'
 alias cl='claude'
-alias clf='CLAUDE_CODE_SUBAGENT_MODEL=claude-sonnet-5 claude --model claude-fable-5 --append-system-prompt "基本的にタスクや作業の実行は、適切な粒度で subagents に実行手順が明確な指示を与えて委譲すること。あなたは全体進行の俯瞰と立案を行う。自己判断による例外は認める"'
+alias clf='CLAUDE_CODE_SUBAGENT_MODEL=claude-sonnet-5 claude --model claude-fable-5-1 --append-system-prompt "基本的にタスクや作業の実行は、適切な粒度で subagents に実行手順が明確な指示を与えて委譲すること。あなたは全体進行の俯瞰と立案を行う。自己判断による例外は認める"'
 alias ccr='npx @sasazame/ccresume@latest'
 alias lg='lazygit'
 
