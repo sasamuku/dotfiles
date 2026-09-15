@@ -21,6 +21,7 @@ GitHub PR に対して下記「エージェント一覧」のレビュアーを 
 | `security-reviewer`   | `always`                                      | セキュリティ脆弱性 (OWASP Top 10 等。XSS / SQL injection 等の一次責任はここ) |
 | `typescript-reviewer` | `extensions=.ts, .tsx, .js, .jsx, .mjs, .cjs` | 型安全性・非同期・JS/TS イディオム (`any` の濫用等の一次責任はここ)          |
 | `postgres-reviewer`   | `content=sql\|migrat\|schema\|prisma\|drizzle\|typeorm\|sequelize\|knex\|sqlalchemy\|active_?record\|postgres\|supabase\|\brls\b\|row.?level.?security\|create (table\|policy\|index)\|alter table` | Postgres 設計・クエリ・インデックス・RLS・接続管理 (生 SQL / ORM DML / Markdown DB 仕様。DB に関する記述がなければ即終了) |
+| `ponytail-reviewer`   | `always`                                      | 過剰設計: 不要な依存・推測的抽象・stdlib/ネイティブ機能の再実装・短縮可能なロジック (「削れるか」のみ。正しさ・セキュリティ・性能は扱わない) |
 | `meta-reviewer`       | `always`                                      | メタ認知: 問題設定・前提・構造 (症状対処になっていないか / 上流に軽い解はないか / そもそもやるべきか)。指摘は `scope: PR` の PR-level ブロックのみで、行単位指摘はしない |
 
 `trigger` 列の値:
