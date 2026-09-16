@@ -15,6 +15,13 @@
 
 **`git worktree add` を直接使わない** — リポジトリ固有の `.wt_hook.sh` (`.env` コピー・`pnpm install` 等) が発火せず、後続の pre-push フック等が壊れるため。代わりに `wt add <branch>` を使う。
 
+- `wt` は `.zshrc` で読み込む Zsh 関数。非対話シェルでは、対象リポジトリを作業ディレクトリにして次のように実行する (`feat/example` は実際のブランチ名に置き換える)。
+
+  ```sh
+  zsh -lc 'source "$HOME/.config/zsh/functions/wt.zsh" && wt add feat/example'
+  ```
+
+- 上記の子シェル内でのディレクトリ移動は、後続のコマンドに引き継がれない。作成先を確認し、後続コマンドの作業ディレクトリに指定する。
 - 作成された worktree を作業ディレクトリとして、同じ Codex セッションで作業を継続してよい
 - worktree が sandbox の書き込み範囲外の場合は、必要な範囲に限ってユーザーへ権限昇格を要求する。新しい Codex セッションの起動は必須ではない
 
