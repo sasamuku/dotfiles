@@ -1,6 +1,6 @@
 # Codex command rules (Starlark)
 # 正本: dotfiles/.codex/rules/dotfiles.rules — ~/.codex/rules/dotfiles.rules へ symlink される。
-# Claude Code 側の等価物: .claude/hooks/hook_pre_commands.sh と .claude/settings.json の permissions.deny
+# Claude Code 側の等価物: .claude/settings.json の permissions.deny
 #
 # 既知の制限 (prefix_rule は argv 先頭からのトークン一致):
 # - `git -C <dir> worktree add` / `gh --repo <r> pr create` のような先頭オプション挟み込みは検知できない

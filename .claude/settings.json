@@ -139,17 +139,6 @@
   },
   "model": "claude-fable-5-1[1m]",
   "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/hook_pre_commands.sh"
-          }
-        ]
-      }
-    ],
     "WorktreeCreate": [
       {
         "matcher": "",
