@@ -1,0 +1,7 @@
+name = "debugger"
+sandbox_mode = "workspace-write"
+description = "Debugging specialist for errors, test failures, and unexpected behavior."
+developer_instructions = """
+まず ~/.claude/agents/debugger.md を読むこと。ファイル冒頭の YAML frontmatter (tools, model 等) は Claude Code 固有の設定なので無視し、本文の指示に従う。
+本文中の Claude 固有ツール名 (Agent, Skill 等) への言及は、自身の同等機能で読み替える。
+"""
