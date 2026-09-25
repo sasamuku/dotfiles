@@ -51,3 +51,12 @@ scratch
 # Project Specific
 PLANS.md
 *.code-workspace
+
+**/.claude/settings.local.json
+
+# Claude Code がクラウドから同期するスキルのキャッシュ
+.claude/skills/synced/
+.agents/skills/synced/
+
+# cmux の codex ラッパーが ~ をリテラル展開して作るディレクトリ
+/~/
