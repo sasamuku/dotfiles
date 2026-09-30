@@ -137,7 +137,6 @@
     "ask": [],
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5-1[1m]",
   "hooks": {
     "WorktreeCreate": [
       {
@@ -204,7 +203,13 @@
   },
   "alwaysThinkingEnabled": false,
   "effortLevel": "high",
+  "modelSettings": {
+    "claude-opus-5": {
+      "effortLevel": "medium"
+    }
+  },
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
+  "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true
 }
