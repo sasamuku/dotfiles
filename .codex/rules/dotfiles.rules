@@ -3,7 +3,7 @@
 # Claude Code 側の等価物: .claude/settings.json の permissions.deny
 #
 # 既知の制限 (prefix_rule は argv 先頭からのトークン一致):
-# - `git -C <dir> worktree add` / `gh --repo <r> pr create` のような先頭オプション挟み込みは検知できない
+# - `git -C <dir> worktree add` のような先頭オプション挟み込みは検知できない
 # - 絶対パス実行 (/usr/bin/curl 等) は basename ルールへの解決 (resolve-host-executables) でカバーされる
 # - リダイレクト・コマンド置換・環境変数展開・ワイルドカードを含むコマンド文字列は、個別コマンドに分割されず
 #   現在の prefix_rule に一致しない (Codex 仕様)。パイプ・&&・; はセグメント分割され各々評価されるが、
@@ -25,34 +25,9 @@ prefix_rule(
     not_match = [["git", "worktree", "list"]],
 )
 
-# force 系 (--force / -f / --force-with-lease、末尾オプション含む) をすり抜けなく捕捉するため push 全体を prompt にする
-prefix_rule(
-    pattern = ["git", "push"],
-    decision = "prompt",
-    justification = "リモートへの反映のため実行前に確認する (force 系はとくに注意)",
-    match = [["git", "push", "--force", "origin", "main"], ["git", "push", "origin", "main", "--force"], ["git", "push", "--force-with-lease"], ["git", "push"]],
-    not_match = [["git", "pull"], ["git", "commit", "-m", "x"]],
-)
-
 prefix_rule(
     pattern = ["sudo"],
     decision = "forbidden",
     justification = "エージェントから sudo は実行しない",
     match = [["sudo", "rm", "-rf", "/tmp/x"]],
-)
-
-prefix_rule(
-    pattern = ["gh", "pr", ["create", "merge"]],
-    decision = "prompt",
-    justification = "外部公開される操作のため実行前に確認する",
-    match = [["gh", "pr", "create", "--title", "t"], ["gh", "pr", "merge", "123"]],
-    not_match = [["gh", "pr", "view", "123"]],
-)
-
-prefix_rule(
-    pattern = ["gh", "issue", "create"],
-    decision = "prompt",
-    justification = "外部公開される操作のため実行前に確認する",
-    match = [["gh", "issue", "create", "--title", "t"]],
-    not_match = [["gh", "issue", "view", "1"]],
 )
