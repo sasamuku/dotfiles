@@ -24,7 +24,6 @@ AI ツールを活用した開発ワークフローの実践ガイド。
 | `/create-plan #123` | Issue から PLANS.md を生成 |
 | `/sync-plan` | PLANS.md を Issue コメントに同期 |
 | `/update-plan-from-subissues` | 子 Issue のステータスで計画を更新 |
-| `/summarize-epic` | Epic Issue の進捗をサマリ表示 |
 
 ### 開発
 
