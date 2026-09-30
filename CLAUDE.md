@@ -22,7 +22,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/sasamuku/dotfiles/master/s
 setup.sh
 ├── setup_brew.sh      # Homebrew + パッケージ
 ├── setup_zsh.sh       # Zsh + sheldon
-├── setup_dotfiles.sh  # Git, Claude, Codex, Serena, Neovim
+├── setup_dotfiles.sh  # Git, Claude, Codex, Neovim
 │   ├── setup_claude_mcp.sh  # MCP サーバー
 │   └── setup_codex.sh       # Codex (グローバル指示・rules・agent role・共有 skill の symlink)
 └── setup_macos.sh     # macOS 環境設定
@@ -38,7 +38,7 @@ setup.sh
 - `.gitconfig` — Git エイリアス。個人設定は `.gitconfig.local.sample` → `~/.gitconfig.local`
 - `.zsh_secrets.example` → `~/.zsh_secrets` (秘密環境変数)
 - `.config/nvim/`, `.config/wezterm/`, `.config/ghostty/`, `.config/cmux/`, `.config/lazygit/` — Neovim (Lua), WezTerm, Ghostty, cmux (JSONC), lazygit (delta pager)
-- `.claude/`, `.serena/` — Claude Code / Serena MCP 設定 (skills / agents の正本は `.claude/`)
+- `.claude/` — Claude Code 設定 (skills / agents の正本)
 - `.agents/skills/` — 製品非依存 skill の置き場。vendored skill の実体と、`.claude/skills/` への symlink (Codex が native 探索する)
 - `.codex/` — Codex 用: `AGENTS.md.global` (グローバル指示)、`rules/` (command rules)、`agents/` (reviewer role TOML)。ルート `AGENTS.md` は `CLAUDE.md` への symlink
 
@@ -65,12 +65,11 @@ setup.sh
 
 `setup_claude_mcp.sh` で設定 (`claude mcp add`): **chrome-devtools**, **deepwiki**, **aws-mcp**
 
-**playwright**, **context7**, **serena** などは Claude Code のプラグイン (`@claude-plugins-official` 等) 経由で導入するため `setup_claude_mcp.sh` の管轄外。`/plugin install <name>@<marketplace>` で有効化する。
+**playwright**, **context7** などは Claude Code のプラグイン (`@claude-plugins-official` 等) 経由で導入するため `setup_claude_mcp.sh` の管轄外。`/plugin install <name>@<marketplace>` で有効化する。
 
 ## セットアップ後の手順
 
 1. 1Password にサインイン
 2. `.gitconfig.local.sample` → `~/.gitconfig.local`
 3. `.zsh_secrets.example` → `~/.zsh_secrets`
-4. `.serena/serena_config.yml.sample` → `~/.serena/serena_config.yml`
-5. 再起動
+4. 再起動

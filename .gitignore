@@ -32,14 +32,12 @@ __pycache__/
 ## Git Worktree Manager
 .wt_hook.sh
 
+# Legacy local data
+.serena/
+
 # AI Tools
 ## Claude
 .claude/settings.local.json
-
-## Serena
-.serena/serena_config.yml
-.serena/project.yml
-.serena/.gitignore
 
 ## Playwright MCP
 .playwright-mcp/

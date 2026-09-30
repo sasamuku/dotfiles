@@ -24,9 +24,9 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 "${SCRIPT_DIR}/setup_zsh.sh"
 echo ""
 
-# 3. Dotfiles (Claude, Serena, Neovim)
+# 3. Dotfiles (Claude, Codex, Neovim)
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "🔧 Step 3/4: Dotfiles (Claude, Serena, Neovim)"
+echo "🔧 Step 3/4: Dotfiles (Claude, Codex, Neovim)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 "${SCRIPT_DIR}/setup_dotfiles.sh"
 echo ""

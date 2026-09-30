@@ -21,6 +21,5 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/sasamuku/dotfiles/main/set
 
 1. Copy `.gitconfig.local.sample` → `~/.gitconfig.local`
 2. Copy `.zsh_secrets.example` → `~/.zsh_secrets`
-3. Copy `.serena/serena_config.yml.sample` → `~/.serena/serena_config.yml`
 
 See [CLAUDE.md](CLAUDE.md) for detailed documentation.

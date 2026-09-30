@@ -27,15 +27,6 @@ ln -sfn ${DOTFILES_DIR}/.claude/hooks ~/.claude/hooks
 ln -sfn ${DOTFILES_DIR}/.claude/agents ~/.claude/agents
 ln -sfn ${DOTFILES_DIR}/.claude/skills ~/.claude/skills
 
-# Serena config
-echo "🔧 Setting up Serena configuration..."
-mkdir -p ~/.serena
-ln -sfn ${DOTFILES_DIR}/.serena/serena_config.yml ~/.serena/serena_config.yml
-if [ ! -f ~/.serena/serena_config.yml ]; then
-  echo "  ⚠️  Warning: Serena config symlink created but source file not found"
-  echo "  Copy .serena/serena_config.yml.sample to .serena/serena_config.yml in the dotfiles repo"
-fi
-
 # Neovim config (init.lua + lua/ ツリー全体)
 echo "📁 Creating Neovim config symlink..."
 mkdir -p ~/.config
@@ -114,5 +105,4 @@ echo ""
 echo "📝 Next steps:"
 echo "  1. Copy .gitconfig.local.sample to ~/.gitconfig.local for personal git settings"
 echo "  2. Copy .zsh_secrets.example to ~/.zsh_secrets for private environment variables"
-echo "  3. Copy .serena/serena_config.yml.sample to ~/.serena/serena_config.yml and add your project paths"
-echo "  4. Restart Claude Code and your shell to apply the new settings"
+echo "  3. Restart Claude Code and your shell to apply the new settings"

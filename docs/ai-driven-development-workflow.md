@@ -92,7 +92,6 @@ Model Context Protocol による機能拡張:
 
 - **playwright** - テスト用ブラウザ自動化
 - **context7** - 最新ライブラリドキュメント
-- **serena** - セマンティックコードナビゲーション
 
 ## ベストプラクティス
 
