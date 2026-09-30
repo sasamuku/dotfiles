@@ -1,80 +1,14 @@
 ---
 name: handover
-description: Generate a HANDOVER.md file summarizing the current session's work. Use at the end of a session to preserve context for the next session.
+description: Save session context and remaining work to a timestamped handover file under scratch/.
 ---
 
 # Handover
 
-現在のセッションの文脈を次のセッションへ引き継ぐためのハンドオーバーファイルを作成する。
+対象: $ARGUMENTS。会話と `git status`・`git diff`・`git diff --cached`・`git log --oneline -10` から、次のセッションで失われる情報を整理する。
 
-## 手順
+- 保存先はプロジェクトルートの `scratch/YYYYMMDD-HHMM-<topic>.md`。必要ならディレクトリを作り、時刻は `date +%Y%m%d-%H%M`、topicは作業内容の短いケバブケースにする。
+- `# Handover` の下に What was done / Decisions / Rejected approaches / Gotchas / Learnings / Next steps / Related files を置く。各節は短い箇条書き、空の節は省略する。判断・却下案には根拠を残し、残作業には優先順位を付ける。
+- セッション固有の文脈を保存し、プロジェクト全体の規約は `CLAUDE.md` に置く。`scratch/` のgitignore・worktree共有は対象環境の設定で確認し、共有されると決めつけない。
 
-### 1. コンテキストを収集する
-
-現在のセッションの会話を振り返り、以下を整理する:
-
-- 取り組んだ内容
-- 下した判断とその根拠
-- 試したが採用しなかったアプローチ
-- 直面した問題とその解決方法
-- 得られた学び
-- 残っている作業
-
-### 2. 変更内容を確認する
-
-```bash
-git status
-git diff
-git diff --cached
-git log --oneline -10
-```
-
-### 3. 保存先を決定する
-
-ハンドオーバーファイルはプロジェクトルートの `scratch/` 配下に保存する:
-
-- `scratch/` が存在しない場合は `mkdir -p scratch` で作成する
-- ファイル名は `scratch/YYYYMMDD-HHMM-<descriptive-name>.md` 形式 (例: `scratch/20260511-1430-auth-refactor.md`)。タイムスタンプは `date +%Y%m%d-%H%M` で取得し、`<descriptive-name>` はセッションの作業内容を反映したケバブケースの短い名前にする
-
-### 4. ハンドオーバーファイルを生成する
-
-以下のセクション構成で書き出す:
-
-```markdown
-# Handover
-
-## What was done
-- [Completed work items with brief descriptions]
-
-## Decisions
-- [Design decisions and their rationale]
-
-## Rejected approaches
-- [Approaches considered but not adopted, with reasons]
-
-## Gotchas
-- [Problems encountered and their solutions]
-
-## Learnings
-- [Key insights gained during the session]
-
-## Next steps
-- [Remaining work items, in priority order]
-
-## Related files
-- [Files that were created or modified]
-```
-
-### 5. 確認する
-
-生成した内容をユーザーに見せて確認してもらう。
-
-## 注意事項
-
-- 各セクションは簡潔にまとめ、箇条書きのみで書く
-- 空のセクションは省略する
-- コンテキストがリセットされた際に失われる情報にフォーカスする
-- ハンドオーバーファイルはセッション固有のコンテキスト用。プロジェクト全体のルールは `CLAUDE.md` に置く
-- `scratch/` は gitignore されるが worktree 間で共有されるため、ハンドオーバーファイルの置き場所として最適
-
-$ARGUMENTS
+保存した内容とファイルへのリンクをユーザーに提示して確認してもらう。

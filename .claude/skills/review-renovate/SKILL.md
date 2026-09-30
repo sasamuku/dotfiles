@@ -1,54 +1,14 @@
 ---
 name: review-renovate
-description: Review and merge renovate PRs with automerge configuration updates
+description: Review Renovate dependency updates, fix CI failures, and merge verified PRs.
 disable-model-invocation: true
 ---
 
 # Review Renovate
 
-構造化されたワークフローに従い、Renovate PR をレビューしてマージする。
+対象: $ARGUMENTS。未指定なら `gh pr list --author=app/renovate --state open` で一覧を取得する。
 
-## 引数
-
-$ARGUMENTS
-
-## ワークフロー
-
-1. **オープンな Renovate PR を一覧表示する**:
-   ```bash
-   gh pr list --author=app/renovate --state open
-   ```
-
-2. **各 PR の詳細を確認する**:
-   ```bash
-   gh pr view <number>
-   gh pr checks <number>
-   ```
-
-3. **CI が失敗している場合**:
-   - チェックアウト: `gh pr checkout <number>`
-   - コンフリクトを確認し、必要に応じて解消する
-   - 実行: `pnpm install && pnpm test && pnpm build && pnpm lint`
-   - 問題を修正してプッシュする
-
-4. **バージョン変更のリスクを評価する**:
-   - **patch**: リスク低 — 簡易レビュー
-   - **minor**: リスク中 — 新機能の確認
-   - **major**: リスク高 — 詳細なレビューが必要
-
-5. **CHANGELOG / リリースノートを確認する**
-
-6. **ピア依存関係の互換性を確認する**
-
-7. **承認してマージする**:
-   ```bash
-   gh pr review --approve <number>
-   gh pr merge <number>
-   ```
-
-## レビュー基準
-
-- **セキュリティアップデート**: 常に最優先で対応する
-- **Patch アップデート**: リスク低 — 簡易レビュー
-- **Minor アップデート**: リスク中 — 新機能の確認
-- **Major アップデート**: リスク高 — 詳細なレビューが必要
+1. `gh pr view <N>` と `gh pr checks <N>` で変更・CIを確認する。
+2. リリースノート・CHANGELOG・peer依存の互換性を確認する。patchは簡易、minorは新機能、majorは破壊的変更を重点的に見る。セキュリティ更新を優先する。
+3. CI失敗は対象PRをチェックアウトして原因・コンフリクトを確認し、リポジトリに実在するinstall・test・build・lintコマンドで検証する。必要な修正をpushする。
+4. 必須CIが完了・成功し、互換性と変更内容を確認できたPRを `gh pr review --approve <N>` → `gh pr merge <N>` で承認・マージする。pending・失敗・未確認の問題は完了扱いせず報告する。
