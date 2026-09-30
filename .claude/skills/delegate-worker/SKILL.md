@@ -1,62 +1,33 @@
 ---
 name: delegate-worker
-description: Delegate a task to a worktree-worker agent running in an isolated git worktree. Use this skill when you want a sub-agent to implement code changes, fix bugs, or investigate errors in a separate worktree — keeping the main session clean. Trigger on phrases like "delegate this to a worker", "fix this in a worktree", "have a worker handle this", or when the user wants code changes done in isolation.
+description: Delegate implementation or investigation to a worktree-worker in an isolated git worktree.
 argument-hint: <task-description>
 ---
 
-# ワーカーへのタスク委譲
+# Delegate Worker
 
-隔離された git worktree 内で `worktree-worker` エージェントを起動し、バックグラウンドでタスクを処理させる。
+引数: $ARGUMENTS (委譲する作業)。タスク・担当範囲・関連ファイル・エラー・再現手順をプロンプトに含める。Issue指定があれば `gh issue view` でタイトル・本文・URLを取得する。
+調査のみなら `report only, do not implement or commit` を明示する。
 
-## 引数
+## 起動・追随
 
-$ARGUMENTS
-
-## ワークフロー
-
-### 1. プロンプトを準備する
-
-引数からワーカー用のプロンプトを組み立てる。以下を含める:
-
-- **タスクの説明**: ワーカーが行うべき内容
-- **タスクの種別**: 調査・分析のみ (コード変更なし) の場合、ワーカーが実装に踏み込まないよう、「report only, do not implement or commit」とプロンプトに明記する
-- **Issue のコンテキスト** (Issue URL が提供された場合): `gh issue view` でタイトル・本文・URL を取得し、ワーカーが Issue をクローズする PR を作成できるよう含める
-- **関連コンテキスト**: ユーザーが言及したファイルパス、エラーメッセージ、再現手順
-
-### 2. ワーカーを起動する
-
-```
+```text
 Agent({
   name: "worker",
   subagent_type: "worktree-worker",
   isolation: "worktree",
   run_in_background: true,
-  prompt: "<prepared prompt>\n\nIn your first report, include the absolute path of your worktree so the parent session can cd into it.\n\nSend your report to: main"
+  prompt: "<task/context>\nIn your first report, include the absolute path of your worktree.\nSend your report to: main"
 })
 ```
 
-`Send your report to: main` — ここでの `main` は git ブランチではなく、**親セッション名** (トップレベルの Claude Code セッションのデフォルト名) を指す。ワーカーは SendMessage を呼ぶ際にこれを `to` フィールドとして使用する。
+`main` はgitブランチではなく親セッション名。複数workerがいれば名前を区別し、以降の宛先にも使う。進捗・完了は通知で受け取り、ポーリングしない。
 
-ワーカーはバックグラウンドで実行され、レポートや完了は自動的に通知される。**ポーリングや手動待機は不要** — 通知が届くまで他の作業を続けるか、待機する。
+最初の報告でパスを受け取ったら [enter-worktree](../enter-worktree/SKILL.md) に従い既存worktreeへ移動する。調査のみでコードの確認が不要なら省略できる。パスやブランチ名を推測して新規作成しない。
 
-### 3. ワーカーの worktree に追随する
+## 報告・提出
 
-ワーカーが worktree のパスを報告したら、ユーザーがリアルタイムで変更を確認できるよう、親セッションをそこへ移動する (調査 only タスクでユーザーがコードを見る必要がなければ、このステップは省略してよい):
-
-```
-EnterWorktree({ path: "<worker's worktree absolute path>" })
-```
-
-注意事項:
-- `name` ではなく `path` を渡すこと。これにより既存の worktree に入る (新規作成ではない)。
-- この環境では worktree は `.claude/worktrees/` 配下ではなく、リポジトリ隣接ディレクトリ (例: `<project>-<branch>`) に作られる。`EnterWorktree` の `path` モードは `git worktree list` に登録されていれば入れるため、隣接パスでも問題なく追随できる。
-- ワーカーのブランチがそこにチェックアウトされているため、ユーザーはすぐに変更後のコードを確認できる。ブランチ名は worktree-worker が自動採番する (`agent-<id>` 形式) ため、親セッションから事前に指定する必要はない。
-- 後で元のディレクトリに戻るには: `ExitWorktree({ action: "keep" })`。worktree はワーカーが所有しているため `"keep"` を使うこと (`"remove"` は不可)。
-- ユーザーが後から手動で出入りしたい場合は `/enter-worktree <branch>` / `/exit-worktree` スキルが使える。
-
-### 4. コミュニケーション
-
-- ワーカーは SendMessage で進捗を報告する。各レポートが届いたら確認する。
-- 修正が必要であれば `SendMessage(to: "worker")` でフィードバックを伝える。
-- 承認したら、ワーカーに成果物の提出 (コミット & プッシュ、ユーザーが PR を求めている場合や Issue が割り当てられている場合は PR) に進むよう指示する。
-- ワーカーが完了を報告したら (最終レポート — 例: 「PR opened at ...」「commit pushed」、または調査タスクであれば「report ready」)、`SendMessage(to: "worker", message: {type: "shutdown_request"})` を送り、`ExitWorktree({ action: "keep" })` でセッションを元のディレクトリに戻す。PR のマージなど下流のイベントを待たず、ワーカーの成果物が出た時点でシャットダウンする。
+- 報告を確認し、必要な修正を `SendMessage` で伝える。
+- 実装を承認したらコミット・pushへ進める。PRが依頼されている場合やIssueが割り当てられている場合はPRも作成させ、割り当てIssueがあればcloseするPRにする。調査のみなら報告で終了する。
+- 最終成果物 (PR・push・調査報告) が届いたら `SendMessage` の `shutdown_request` でworkerを終了する。マージなど下流のイベントを待たない。
+- worktreeへ移動していた場合は [exit-worktree](../exit-worktree/SKILL.md) の `keep` で元へ戻る。workerのworktree・ブランチは削除しない。

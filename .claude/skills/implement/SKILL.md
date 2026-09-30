@@ -1,74 +1,42 @@
 ---
 name: implement
-description: Fully automated pipeline from an approved plan to a green PR. Delegates implementation to a worktree-worker, creates the PR, then hands off to /babysit --auto until CI is green and the PR is mergeable.
+description: Implement an approved issue plan in a worktree, create a PR, and run babysit --auto until CI is green and the PR is mergeable.
 disable-model-invocation: true
 argument-hint: <issue-number>
 ---
 
 # Implement
 
-承認済みの計画 (`~/.claude/plans/<owner>/<repo>/issue-<N>.md`) を worktree で実装し、PR 作成 → `/babysit --auto` 接続まで自動で行う。人間のゲートは計画承認の 1 点のみで、それ以降は自走する。
+引数: $ARGUMENTS (Issue番号・URL)。URLのowner/repoが現在のリポジトリと異なれば中止する。
 
-## 引数
+## 計画の確認
 
-GitHub Issue 番号 (例: `123` または `#123`) または Issue の URL。
+[plan-issue](../plan-issue/SKILL.md) の規約に従い、`~/.claude/plans/<owner>/<repo>/issue-<N>.md` を作業コピー、Issueの `PLANS_SYNC_MARKER` コメントを正本とする。
 
-$ARGUMENTS
+- ローカルファイルがあっても同期コメントと照合する。一致すれば既存の承認を引き継ぐ。ローカルがなければ正本を取り込む。
+- 差分があれば会話での承認内容・更新時刻を確認し、未同期の変更を捨てずに整合させる。どちらが承認済みか判別できなければ確認する。ファイルの存在だけで承認済みと扱わない。
+- 計画がなければ `/plan-issue <N>` で作成し、承認後に続行する。却下なら停止する。
 
-## フェーズ 0: 計画の確認
+## 委譲
 
-1. 引数から Issue 番号 `N` を抽出する (`123` / `#123` / URL 末尾の番号)。URL の owner/repo がカレントリポジトリと異なる場合はエラーで中止する
-2. 計画ファイルを確認する:
+`worktree-worker` を `name: worker-<N>`、`isolation: worktree`、`run_in_background: true` で起動する。通知で報告を受け、ポーリングしない。プロンプトに以下を含める:
 
-```bash
-REPO=$(gh repo view --json owner,name --jq '"\(.owner.login)/\(.name)"')
-PLAN_FILE="$HOME/.claude/plans/$REPO/issue-$N.md"
-```
+- Issue番号・URLと整合済み計画の絶対パス。計画の全項目を実装し、範囲外の機能は追加しない。
+- 事前承認: Phase Cの報告後、追加承認を待たずPhase D (コミット・push・PR作成) へ進む。
+- リポジトリのテスト・lint・型チェックを通してコミットし、[review-code](../review-code/SKILL.md) で全変更をレビューする。Critical/Warningの修正・検証・コミットは最大3周。
+- push前に `git branch -m feat/<N>-<slug>` で改名する。slugはIssueタイトルから英小文字ケバブケース2〜4語。
+- [create-pr](../create-pr/SKILL.md) に従い、IssueをcloseするPRを作成する。レビューが3周で収束しなければDraftを維持し、残課題を本文へ記載する。
+- 計画の矛盾・技術的不成立・重要情報の欠落が判明したら、作業を中断し、以後のコミット・push・PR作成に進まず報告する。
+- 完了時に作業コピーの受け入れ基準・Discoveries・Decision Logを更新する。この計画ファイルのみworktree外の編集を許可する。Issueへの同期は親が行う。
+- 報告先は親セッション (`Send your report to: main`、gitブランチ名ではない)。最終報告の先頭は `RESULT: PR <url>` (正常完了) / `RESULT: DRAFT-PR <url>` (レビュー未収束) / `RESULT: ABORTED <理由>` (中断)、末尾はWorktree Info (Branch / 絶対Path)。
 
-`$PLAN_FILE` が存在しない場合は `/plan-issue $N` のワークフローを実行する (プレビュー承認で一度停止)。承認が **n** ならそこで中止し、計画を修正のうえ再実行するよう案内する。
+## 完了処理
 
-## フェーズ 1: worker への委譲
+最終報告を受けたら `SendMessage` の `shutdown_request` でworkerを終了し、`/plan-issue <N>` の更新モードで計画をIssueへ同期する。
 
-```
-Agent({
-  name: "worker-<N>",
-  subagent_type: "worktree-worker",
-  isolation: "worktree",
-  prompt: "<下記を含むプロンプト>\n\nSend your report to: main"
-})
-```
+- `PR`: 報告されたworktreeへ [enter-worktree](../enter-worktree/SKILL.md) で入り、そこで `/babysit --auto <url>` を実行する。元ディレクトリから修正・pushしない。
+- `DRAFT-PR` / `ABORTED`: babysitを起動せず、URL・残課題または中断理由を報告して停止する。
 
-(worker 名に Issue 番号を含めるのは、複数 Issue の並行実行時に SendMessage の宛先が衝突しないため。起動は元々バックグラウンド)
+[babysit](../babysit/SKILL.md) の停止条件に従い、mergeable・PR終了・進行不能などで監視が終了したら、入ったworktreeから `/exit-worktree keep` で戻る。ループ稼働中はPR側に留まり、マージ自体は待たない。単発実行しかできなければ継続監視なしと報告して戻る。
 
-プロンプトに含めるもの:
-
-- **計画ファイルの絶対パス** (`$PLAN_FILE`) と Issue 番号・URL。計画を実装判断の正とし、全項目を実装すること。計画にない機能を追加しないこと
-- **事前承認の明示**: 「この委譲はユーザー承認済みの計画に基づく。Phase C の報告後、呼び出し元の承認を待たずに Phase D (コミット・push・PR 作成) まで続行してよい」
-- **実装後の検証**: リポジトリのテスト・リンタ・型チェックを実行し、通してからコミットする
-- **レビューループ**: コミット後、`/review-code` スキルのワークフローで全変更をレビューし、Critical/Warning を修正してコミット。最大 3 周
-- **ブランチ名**: push 前に `git branch -m feat/<N>-<slug>` でリネームする (slug は Issue タイトルから 2〜4 語の英小文字ケバブケース)
-- **PR 作成**: `/create-pr` スキルのワークフローに従い (push を内包する)、Issue を close する PR を作成する
-- **計画の更新**: 実装完了後、`$PLAN_FILE` の受け入れ基準にチェックを付け、発見・逸脱を Discoveries/Decision Log に追記する。`$PLAN_FILE` は worktree 外の管理ファイルであり、直接編集してよい (worktree 隔離ルールの対象外)。Issue への同期は親セッションが行うため不要
-- **失敗時**: 計画の矛盾・技術的不成立・重要情報の欠落に気づいたら、コミットせず中断して報告する。レビューが 3 周で収束しない場合は **Draft PR** として作成し、残課題を PR 本文に明記する
-- **最終報告の形式**: 報告の 1 行目を次のいずれかにする — `RESULT: PR <url>` (正常完了) / `RESULT: DRAFT-PR <url>` (レビュー未収束) / `RESULT: ABORTED <理由>` (中断)。末尾に Worktree Info ブロック (Branch / Path) を必ず含める
-
-worker はバックグラウンドで実行される。ポーリング不要 — 通知が届くまで他の作業を続けてよい。
-
-## フェーズ 2: 完了処理
-
-worker から `RESULT:` 報告を受け取ったら:
-
-1. `SendMessage(to: "worker-<N>", message: {type: "shutdown_request"})` で worker を終了する
-2. `/plan-issue $N` の更新モードで計画を Issue へ同期する
-3. `RESULT:` の種別で分岐する:
-   - **`PR <url>`**: まず報告の Worktree Info のパスへ `EnterWorktree({ path: "<path>" })` で移動してから `/babysit --auto <url>` を起動する。babysit は `git branch --show-current` で CI・push 先を解決するため、**PR ブランチの worktree 内で実行することが必須** (元ディレクトリの main から起動しない)。worker の worktree は shutdown 後も残るのでそのまま使う。babysit は自前の `/loop 5m` で CI グリーン・mergeable まで自走し、merge 後は `ExitWorktree({ action: "keep" })` で元のディレクトリへ戻る
-   - **`DRAFT-PR <url>`**: babysit は起動せず、残課題と URL をユーザーに報告して停止する (未収束のまま自動対応を続けない — 人間の判断待ち)
-   - **`ABORTED <理由>`**: 理由をユーザーに報告して停止する。計画の修正が必要なら `/plan-issue` → 再 `/implement` を案内する
-
-## 完了表示
-
-```
-Done: Issue #<N> implemented.
-PR: <url>
-babysit --auto running until mergeable.
-```
+PRの状態・監視の稼働/停止・未解決事項を実態どおり報告する。監視開始を完了扱いしない。
