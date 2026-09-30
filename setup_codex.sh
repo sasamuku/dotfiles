@@ -2,7 +2,7 @@
 set -eu
 
 # Codex CLI Setup Script
-# 正本は .claude/ と .codex/ (dotfiles repo)。Codex にはグローバル指示・rules・agent role・共有 skill を symlink で公開する。
+# 正本は .agents/skills/ (共有 skill)、.claude/ (Claude 設定)、.codex/ (Codex 設定)。Codex へ symlink で公開する。
 # ~/.codex/config.toml, auth.json, sessions 等の Codex 自己管理ファイルには一切触れない。
 # 前提: setup_dotfiles.sh の Claude セットアップ済み (agent role が ~/.claude/agents, ~/.claude/skills を参照するため)
 

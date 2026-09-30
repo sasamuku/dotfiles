@@ -38,8 +38,8 @@ setup.sh
 - `.gitconfig` — Git エイリアス。個人設定は `.gitconfig.local.sample` → `~/.gitconfig.local`
 - `.zsh_secrets.example` → `~/.zsh_secrets` (秘密環境変数)
 - `.config/nvim/`, `.config/wezterm/`, `.config/ghostty/`, `.config/cmux/`, `.config/lazygit/` — Neovim (Lua), WezTerm, Ghostty, cmux (JSONC), lazygit (delta pager)
-- `.claude/` — Claude Code 設定 (skills / agents の正本)
-- `.agents/skills/` — 製品非依存 skill の置き場。vendored skill の実体と、`.claude/skills/` への symlink (Codex が native 探索する)
+- `.claude/` — Claude Code 設定。専用 skill・agents の正本と、共有 skill への symlink
+- `.agents/skills/` — 共有 skill の正本 (vendored skill を含む)。Codex が探索し、`.claude/skills/` から symlink で参照する
 - `.codex/` — Codex 用: `AGENTS.md.global` (グローバル指示)、`rules/` (command rules)、`agents/` (reviewer role TOML)。ルート `AGENTS.md` は `CLAUDE.md` への symlink
 
 ## シェル環境
