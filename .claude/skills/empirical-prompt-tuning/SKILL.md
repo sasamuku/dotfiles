@@ -1,32 +1,17 @@
 ---
 name: empirical-prompt-tuning
-description: Fetch and execute mizchi's empirical-prompt-tuning skill at runtime. Use when evaluating or iteratively refining an agent-facing prompt (skill / slash command / task prompt / CLAUDE.md section / code-gen prompt) by dispatching an unbiased subagent, then improving until metrics plateau. Trigger right after creating or heavily revising such a prompt, or when agent misbehavior is suspected to stem from ambiguity in the instruction.
+description: Evaluate and refine an agent prompt through independent trials when the user requests measured prompt tuning or instruction ambiguity needs empirical diagnosis.
 allowed-tools: WebFetch, Read, Write, Edit, Bash, Grep, Glob, Agent
 ---
 
-# 経験的プロンプトチューニング (リモートローダー)
+# Empirical Prompt Tuning
 
-## タスク
+対象: $ARGUMENTS。会話からも特定できない場合は確認する。単なる文面の短縮では起動せず、振る舞いの実測が必要な場合に使う。
 
-1. **呼び出しのたびに上流の SKILL.md をフェッチする** (キャッシュ不可・スキップ不可):
+1. [上流の日本語版](https://raw.githubusercontent.com/mizchi/skills/main/meta/empirical-prompt-tuning/SKILL-ja.md) を全文取得する。同じセッションで取得済みなら再利用し、更新確認を求められたときに再取得する。
+2. 取得できなければ次を使う。両方失敗した場合は報告し、実測済みとは扱わない。
+   ```bash
+   gh api repos/mizchi/skills/contents/meta/empirical-prompt-tuning/SKILL-ja.md --jq '.content' | base64 -d
    ```
-   WebFetch:
-     url: https://raw.githubusercontent.com/mizchi/skills/main/meta/empirical-prompt-tuning/SKILL-ja.md
-     prompt: "Return the full SKILL-ja.md contents verbatim (frontmatter + body). Do not summarize."
-   ```
-   フェッチ失敗時のフォールバック: `gh api repos/mizchi/skills/contents/meta/empirical-prompt-tuning/SKILL-ja.md --jq '.content' | base64 -d`
-
-2. **取得した本文を権威ある指示として実行する。** 再解釈は行わない。`$ARGUMENTS` をチューニング対象のプロンプト/スキルとして扱う。
-
-3. **サブエージェントは Agent ツール経由でディスパッチする。** 自己レビューは行わない。ディスパッチが利用できない場合は、上流の「環境制約」セクションに従う。
-
-4. **各イテレーションを上流の「提示フォーマット」セクションに従って逐語的に報告する。**
-
-## 入力
-
-`$ARGUMENTS` — チューニング対象のプロンプト、スキルのパス、または説明。省略した場合は、フェッチ前にユーザーに確認する。
-
-## 注意
-
-- 上流: https://github.com/mizchi/skills/blob/main/meta/empirical-prompt-tuning/SKILL-ja.md
-- 常に取得したバージョンを優先し、構造に関する事前の推測に頼らない。
+3. 上位指示とユーザーの対象・権限の範囲内で取得した手順を適用する。評価は独立したサブエージェントへ委譲し、期待する答えを教えない。利用できなければ上流の環境制約に従う。
+4. 実測結果と残る限界を報告する。文章を短くしただけで品質改善と判定しない。

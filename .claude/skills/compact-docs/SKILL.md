@@ -1,58 +1,12 @@
 ---
 name: compact-docs
-description: Compress, reduce, optimize, or shrink documentation files. Use when docs are verbose, redundant, or need consolidation for clarity.
+description: Compress documentation while preserving meaning. Use when asked to shorten, deduplicate, or consolidate documents.
 allowed-tools: Read, Edit
 ---
 
 # Compact Docs
 
-ドキュメントファイルを圧縮・最適化する。
+対象: $ARGUMENTS。未指定なら会話から対象を特定し、不明な場合だけ確認する。
 
-## 引数
-
-圧縮対象の Markdown ファイルへのパス (例: `docs/README.md`, `CONTRIBUTING.md`)。
-
-$ARGUMENTS
-
-## プロセス
-
-### 1. 対象ドキュメントを読み、分析する
-
-- 全体構造と内容を把握する
-- セクション間の関係性を理解する
-
-### 2. 圧縮テクニックを適用する
-
-**A. 重複情報を削減する**
-- 複数セクションで繰り返されている内容を特定する
-- 重複をクロスリファレンスに置き換える
-- 同一概念の異なる表現を統一する
-
-**B. 冗長な説明を簡素化する**
-- 長文を箇条書きに変換する
-- 重要情報を保ったまま、過度な詳細は要約する
-- 詳しい説明より簡潔な表現を優先する
-
-**C. 矛盾を検出する**
-- セクション間の不整合を特定する
-- 矛盾する記述を報告する (自動修正はしない)
-
-**D. 履歴情報を削除する**
-- 変更履歴や更新日時を削除する
-- 「〜を追加」「〜に変更」といった履歴的記述を削除する
-- 履歴は Git が管理するため、ドキュメントに書かない
-
-### 3. 圧縮レポートを生成する
-
-次を含める:
-- 適用した圧縮テクニックと例
-- 圧縮前後の行数と削減率
-- 検出した矛盾 (ある場合)
-- 推奨される次のアクション
-
-## ガイドライン
-
-- **意味を保つ** - 簡潔さのために情報の質を犠牲にしない
-- **構造を維持する** - 元のドキュメントの構成を維持する
-- **明示的に書く** - 何をなぜ変えたかを示す
-- **矛盾は自動修正しない** - 手動レビューのため報告に留める
+[prune-for-readers](../prune-for-readers/SKILL.md) に従い、意味と必要な構造を保って圧縮する。
+変更内容、圧縮前後の行数・文字数と削減率、未解消の矛盾を簡潔に報告する。

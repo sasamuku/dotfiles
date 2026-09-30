@@ -1,18 +1,7 @@
 ---
 name: commit-and-push
-description: Commit changes and push to remote repository
+description: Commit changes and push the current branch.
 disable-model-invocation: true
 ---
 
-# Commit and Push
-
-変更をコミットし、リモートリポジトリへプッシュする。
-
-## タスク
-
-以下のワークフローを実行する:
-
-1. **コミットを作成** - `/commit` スキルのワークフローに従う
-2. **リモートへプッシュ** - `/push` スキルのワークフローに従う
-
-詳細な手順は個別スキルを参照すること。
+`/commit` で変更をコミットし、`git push` する。upstream 未設定なら送信先を確認して `git push -u <remote> <branch>`。別ブランチや force push に切り替えない。

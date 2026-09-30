@@ -29,7 +29,7 @@ PR 指定の優先順は review-pr と同一:
 
 ### 1. review-pr の手順を読み込む
 
-`@.claude/skills/review-pr/SKILL.md` の本文を読み込む。さらに同ディレクトリの参照ファイル (`output-format.md` 等) も読み込み、Codex が単体で完結できるよう全文をタスクプロンプトに埋め込む。
+`@.claude/skills/review-pr/SKILL.md` の本文を読み込む。参照ファイルは `output-format.md` のみ読み、Phase 1〜4 とともにタスクプロンプトへ埋め込む。投稿用の `posting.md` は読み込まない。
 
 - reviewer agent 一覧の観点 (`code-reviewer` / `security-reviewer` / `typescript-reviewer` / `postgres-reviewer`) は **Claude のサブエージェントなので Codex からは起動できない**。Codex には「これらの観点を 1 人で順に当てる」よう指示に変換する (観点名そのものではなく、各行の『一次責任』列の内容を観点リストとして渡す)。
 
@@ -50,11 +50,11 @@ PR 指定の優先順は review-pr と同一:
   各観点 (品質/設計, セキュリティ, 型安全性, Postgres) を順に自分で当てること。
   TS/JS 差分がなければ型安全性観点は省略、DB 記述がなければ Postgres 観点は省略してよい。
 
-## review-pr 手順書 (全文)
-<review-pr/SKILL.md 本文>
+## review-pr 手順書
+<review-pr/SKILL.md のエージェント一覧・引数・Phase 1〜4>
 
 ## 出力フォーマット
-<review-pr 配下の output-format 等の本文>
+<review-pr/output-format.md の本文>
 ```
 
 PR 指定が「引数なし」の場合は、プロンプト内で「現在のブランチに対応する PR を `gh pr view` で自動検出してからレビューせよ」と指示する。
