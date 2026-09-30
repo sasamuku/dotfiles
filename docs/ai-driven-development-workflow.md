@@ -16,7 +16,6 @@ AI ツールを活用した開発ワークフローの実践ガイド。
 | `/read-issue 123` | Issue の詳細を取得・表示 |
 | `/fix-issue 123` | Issue を分析し、修正を実装、テスト実行 |
 | `/create-issue` | 新規 GitHub Issue を作成 |
-| `/create-sub-issue` | 親 Issue にリンクした子 Issue を作成 |
 
 ### 計画
 
