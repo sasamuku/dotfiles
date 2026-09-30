@@ -1,51 +1,23 @@
 ---
 name: work-in-worktree
-description: Create a new git worktree via `wt add` (firing .wt_hook.sh) and move the current session into it so the MAIN agent works there directly — no sub-agent. Use when the session started on main/master and the user wants to do the task themselves in an isolated worktree. Trigger on phrases like "worktree を作ってそこで作業して", "このセッションで worktree に入って直接やって", "work in a worktree yourself". For delegating to a background sub-agent instead, use /delegate-worker.
+description: Create a worktree with wt add and move the Claude Code session there for the main agent to work directly.
 argument-hint: <task-description or branch-name>
 ---
 
-# メインセッションで worktree 作業
+# Work in Worktree
 
-worktree を新規作成してセッションごと移動し、**メインエージェント自身**がそこでタスクを実施する。サブエージェントは起動しない。コード変更は worktree に隔離されるため、main ブランチを汚さない。
+引数: $ARGUMENTS (タスクまたはブランチ名)。委譲はせず、このセッションで作業する。
 
-## 引数
-
-$ARGUMENTS
-
-## 前提
-
-すでに worktree セッション内 (EnterWorktree 済み) の場合、リポジトリ隣接パスへの切り替えはできない (`path` 切り替えは `.claude/worktrees/` 配下のみ)。先に `/exit-worktree` で元のディレクトリに戻ってから実行する。
-
-## ワークフロー
-
-### 1. ブランチ名を決める
-
-- 引数がブランチ名形式 (`feat/...` 等) ならそれを使う。タスク説明なら内容から `feat/<topic>` / `fix/<topic>` で簡潔に命名する
-- `git show-ref --verify --quiet refs/heads/<branch>` が成功する (= 既存ブランチ) 場合は中断し、別名にするか `/enter-worktree` で既存 worktree に入るかをユーザーに確認する
-
-### 2. worktree を作成する
-
-`git worktree add` は使わず、`.wt_hook.sh` を発火させるため `wt add` を経由する:
+1. 既にworktreeセッション内なら、隣接パスへの切り替え前に `/exit-worktree keep` で戻る。
+2. 指定ブランチを使う。タスク説明なら `feat/<topic>` / `fix/<topic>` を決める。`git show-ref --verify --quiet refs/heads/<branch>` で既存なら中断し、別名か既存worktreeへの移動かを確認する。
+3. `.wt_hook.sh` を発火させるため、`git worktree add` を直接使わず以下を実行する。
 
 ```bash
 zsh -c 'source ~/.config/zsh/functions/wt.zsh && wt add "<branch>"'
 ```
 
-- worktree はリポジトリ隣接の `<parent>/<project>-<safe-branch>` に作られる (`/` は `-` に変換)
-- 出力の `Created worktree at: <path>` から絶対パスを取得し、フック出力 (依存インストール等) にエラーがないか確認する
+出力の `Created worktree at: <path>` から絶対パスを取得し、フックのエラーを確認する。
 
-### 3. セッションを移動する
-
-```
-EnterWorktree({ path: "<created worktree absolute path>" })
-```
-
-`name` ではなく `path` を渡す (`name` は `.claude/worktrees/` 配下に別 worktree を新規作成してしまい、`.wt_hook.sh` が発火しない)。
-
-### 4. タスクを実施する
-
-フィーチャーブランチ上なのでブランチ安全性ルールの確認は不要。コード変更・テスト・コミットを進め、指示に応じてプッシュ・PR 作成まで行う。
-
-### 5. 終了時
-
-`/exit-worktree` (keep) で元のディレクトリに戻る。worktree とブランチが不要になったら (PR マージ後など)、戻ったあとに `wt remove <branch>` または `wt clean` を案内する。
+4. [enter-worktree](../enter-worktree/SKILL.md) に従い作成先へ移動する。`name` による別worktreeの新規作成を避ける。
+5. featureブランチで依頼された実装・検証・コミットを行い、push・PR作成は依頼範囲に従う。
+6. 終了時は `/exit-worktree keep` で戻る。不要になったworktreeの削除は、戻った後に `wt remove <branch>` / `wt clean` を案内する。

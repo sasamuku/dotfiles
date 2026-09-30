@@ -1,41 +1,22 @@
 ---
 name: enter-worktree
-description: Switch the current session into an existing git worktree (e.g. one created by /delegate-worker or `wt add`). Use when the user wants to enter, cd into, or follow a worktree — trigger on phrases like "enter the worktree", "worktree に入って", "ワーカーの worktree に移動して".
+description: Move the Claude Code session into an existing worktree specified by branch or absolute path.
 argument-hint: <branch-or-path>
 ---
 
-# 既存 worktree への移動
+# Enter Worktree
 
-セッションのカレントディレクトリを既存の worktree へ切り替える。`/delegate-worker` のワーカーが作った worktree や `wt add` で作った worktree に追随するために使う。
+引数: $ARGUMENTS。`git worktree list` から登録済みの絶対パスを解決する。
 
-## 引数
+- 絶対パス指定: 一覧への登録を確認する。
+- ブランチ指定: チェックアウト先を探す。
+- 未指定: 候補が1件なら使い、複数ならユーザーに選ばせる。
+- 該当なし: 中断し、`wt add <branch>` または `/delegate-worker` を案内する。`git worktree add` は直接使わない。
 
-$ARGUMENTS
-
-## ワークフロー
-
-### 1. worktree のパスを解決する
-
-```bash
-git worktree list
+```text
+EnterWorktree({ path: "<absolute path>" })
 ```
 
-- 引数が**絶対パス**ならそのまま使う (一覧に存在することを確認する)
-- 引数が**ブランチ名**なら、一覧から該当ブランチがチェックアウトされている worktree のパスを探す
-- 引数が**ない**場合: 一覧を表示し、候補が 1 つならそれを使う。複数あれば AskUserQuestion でユーザーに選ばせる
-- 該当する worktree がない場合は中断し、`/delegate-worker` または `wt add <branch>` での作成を案内する (`git worktree add` は直接使わない)
+`name` は新規作成になるため使わない。登録済みならリポジトリ隣接パスでも入れる。ただし既にworktreeセッション内の場合、切り替え先は `.claude/worktrees/` 配下に限られる。隣接パスへ移るには先に `/exit-worktree keep` で戻る。
 
-### 2. セッションを切り替える
-
-```
-EnterWorktree({ path: "<resolved absolute path>" })
-```
-
-- `name` ではなく必ず `path` を渡す。`name` は新規作成になってしまう
-- `path` は `git worktree list` に登録済みであれば、リポジトリ隣接ディレクトリ (例: `<project>-<branch>`) でも入れる
-- ただし**すでに worktree セッション内にいる場合**、隣接パスへの切り替えはできない (`path` 切り替えは `.claude/worktrees/` 配下のみ)。先に `/exit-worktree` で戻ってから入り直す
-
-### 3. 移動後
-
-- 現在のブランチと `git status` を簡潔に報告する
-- 元のディレクトリに戻るには `/exit-worktree` を使う
+移動後はブランチ・`git status` を報告する。復帰は [exit-worktree](../exit-worktree/SKILL.md) に従う。

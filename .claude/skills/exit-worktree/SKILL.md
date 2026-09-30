@@ -1,37 +1,19 @@
 ---
 name: exit-worktree
-description: Exit the current worktree session and return to the original working directory. Use when the user wants to leave a worktree entered via /enter-worktree or /delegate-worker — trigger on phrases like "exit the worktree", "worktree から出て", "元のディレクトリに戻って".
+description: Return the Claude Code session from a worktree, keeping it by default or removing it when requested.
 argument-hint: [keep|remove]
 ---
 
-# worktree からの離脱
+# Exit Worktree
 
-`EnterWorktree` で入った worktree セッションを終了し、元のディレクトリに戻る。
+引数: $ARGUMENTS。既定は `keep` (worktree・ブランチを保持)。`remove` は削除指定。
 
-## 引数
-
-$ARGUMENTS
-
-## ワークフロー
-
-### 1. action を決める
-
-- 引数なし → `"keep"` (デフォルト)
-- `keep` → worktree とブランチをディスクに残す
-- `remove` → worktree とブランチを削除する
-
-### 2. 終了する
-
-```
-ExitWorktree({ action: "keep" })  // または "remove"
+```text
+ExitWorktree({ action: "keep" })  // 削除指定なら "remove"
 ```
 
-注意事項:
+- `path` で入ったworktreeは `remove` でも削除されない。`keep` で戻り、削除が必要なら `wt remove <branch>` を案内する。worker所有なら先にworkerを終了させる。
+- `remove` が未コミット変更・未マージコミットで失敗した場合、一覧を示し、**ユーザーの破棄承認後だけ** `discard_changes: true` で再実行する。
+- worktreeセッション外ならno-opと報告して終了する。
 
-- **`path` で入った worktree (= `/delegate-worker` や `/enter-worktree` 経由) は `"remove"` では削除されない**。`"keep"` で元のディレクトリに戻るのが正しい。削除したい場合は、戻ったあとに `wt remove <branch>` を案内する (worktree がワーカー所有なら先にワーカーをシャットダウンする)
-- `"remove"` 指定時に未コミット変更や未マージコミットがあるとツールがエラーで一覧を返す。その場合は**ユーザーに確認してから** `discard_changes: true` で再実行する。無断で破棄しない
-- worktree セッションがアクティブでない場合は no-op となる。その旨を報告して終了する
-
-### 3. 終了後
-
-- 戻り先のディレクトリと、worktree を残した場合はそのパス・ブランチ名を報告する
+復帰先を報告し、保持した場合はworktreeのパス・ブランチも示す。
