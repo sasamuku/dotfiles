@@ -27,7 +27,7 @@ argument-hint: <issue-number>
 - push前に `git branch -m feat/<N>-<slug>` で改名する。slugはIssueタイトルから英小文字ケバブケース2〜4語。
 - [create-pr](../create-pr/SKILL.md) に従い、IssueをcloseするPRを作成する。レビューが3周で収束しなければDraftを維持し、残課題を本文へ記載する。
 - 計画の矛盾・技術的不成立・重要情報の欠落が判明したら、作業を中断し、以後のコミット・push・PR作成に進まず報告する。
-- 完了時に作業コピーの受け入れ基準・Discoveries・Decision Logを更新する。この計画ファイルのみworktree外の編集を許可する。Issueへの同期は親が行う。
+- 完了時に作業コピーの受け入れ基準・調査で判明したこと・判断記録を更新する。この計画ファイルのみworktree外の編集を許可する。Issueへの同期は親が行う。
 - 報告先は親セッション (`Send your report to: main`、gitブランチ名ではない)。最終報告の先頭は `RESULT: PR <url>` (正常完了) / `RESULT: DRAFT-PR <url>` (レビュー未収束) / `RESULT: ABORTED <理由>` (中断)、末尾はWorktree Info (Branch / 絶対Path)。
 
 ## 完了処理

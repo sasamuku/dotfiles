@@ -9,6 +9,8 @@ argument-hint: <issue-number>
 引数: $ARGUMENTS (Issue番号・URL)。解決順は引数→会話→対象リポジトリの計画ファイルが1件ならそれ→確認。Issue不明なら計画を作らず `/create-issue` を案内する。作成が依頼された場合は起票後に続ける。
 URLのowner/repoを含め対象を解決し、以後の `gh` 操作で明示する。
 
+Issueに掲載する計画・コメントは日本語で統一し、見出しに英語を併記しない。製品名・API名・コード識別子・引用は原表記を保つ。
+
 ## 正本・モード
 
 正本はIssueの `PLANS_SYNC_MARKER` コメント。作業コピーは `~/.claude/plans/<owner>/<repo>/issue-<N>.md`。フロントマターは `issue`・`issue_url`・`last_synced`。
@@ -20,19 +22,19 @@ URLのowner/repoを含め対象を解決し、以後の `gh` 操作で明示す�
 
 新規は [read-issue](../read-issue/SKILL.md) の `--full` で親・兄弟・実装PRまで読み、関連コードを調べる。プレビューを提示し、ユーザー承認後に作業コピーを書き出す。
 
-更新は会話の決定・レビュー結果・子Issueの状態を反映し、再承認は不要。完了した受け入れ基準にチェックし、解決した問いはDecision Logへ移す。発見・後続課題・日付付きの判断を記録する。既存構造を保ち、節を追加しない。
+更新は会話の決定・レビュー結果・子Issueの状態を反映し、再承認は不要。完了した受け入れ基準にチェックし、解決した問いは判断記録へ移す。発見・後続課題・日付付きの判断を記録する。既存構造を保ち、節を追加しない。
 
 新規計画の構成:
 
-1. Purpose / Overview: 目的・価値
-2. Context & Direction: 背景・制約
-3. Validation & Acceptance Criteria: 検証可能な受け入れ基準 (`- [ ]`)
-4. Specification: 仕様・設計
-5. Open Questions: 未解決事項
-6. Discoveries & Insights: 発見
-7. Decision Log: 日付・判断・根拠
-8. Outcomes & Retrospectives: 結果・振り返り
-9. Follow-up Issues: 後続・対象外
+1. 目的: 目的・価値
+2. 背景と方針: 背景・制約
+3. 検証と受け入れ基準: 検証可能な受け入れ基準 (`- [ ]`)
+4. 仕様: 仕様・設計
+5. 未解決事項: 未解決の問い
+6. 調査で判明したこと: 発見
+7. 判断記録: 日付・判断・根拠
+8. 結果と振り返り: 成果・振り返り
+9. 後続の課題: 後続・対象外
 
 ## 同期 (両モード必須)
 
