@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 ## PR 作成
 
-1. PR テンプレート (`.github/pull_request_template.md`、大文字名、同名ディレクトリ) とリポジトリ指示を確認する。テンプレートがなければ直近の PR を参考にし、慣習もなければ Summary / Test Plan の最小構成にする。
+1. PR テンプレート (`.github/pull_request_template.md`、大文字名、同名ディレクトリ) とリポジトリ指示を確認する。テンプレートがなければ、変更内容に応じて本文の構成を判断する。
 2. base、現在のブランチ、全コミット・差分を確認し、ブランチを push する。upstream 未設定なら `git push -u origin <branch>`。
 3. タイトル・本文をリポジトリ指定の言語に揃える。指定がなければテンプレート、直近 PR の言語の順で判断する。タイトルは既存慣習を優先し、なければ絵文字なしの Conventional Commits。
 4. 本文を一時ファイルに作り、`gh pr create --draft --title "..." --body-file <file> --base <base>` で作成する。編集済みの本文をテンプレートで上書きしない。
