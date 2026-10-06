@@ -51,6 +51,7 @@ done
 # Shared skills (per-skill symlink, 他ツール管理の既存エントリは上書きしない)
 echo "📁 Linking shared skills into ~/.agents/skills..."
 mkdir -p ~/.agents/skills
+link_owned "${DOTFILES_DIR}/.agents/.skill-lock.json" ~/.agents/.skill-lock.json
 for skill in "${DOTFILES_DIR}"/.agents/skills/*/; do
   name=$(basename "${skill}")
   target=~/.agents/skills/${name}
