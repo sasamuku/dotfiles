@@ -56,5 +56,8 @@ PLANS.md
 .claude/skills/synced/
 .agents/skills/synced/
 
+# スキルの退避データ
+.claude/skills/.trash/
+
 # cmux の codex ラッパーが ~ をリテラル展開して作るディレクトリ
 /~/
