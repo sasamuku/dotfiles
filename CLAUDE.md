@@ -57,9 +57,11 @@ setup.sh
 
 - `wt` — fzf で worktree 一覧。`Ctrl+D` で削除
 - `wt add <branch>` — ブランチと worktree を新規作成
-- `wt remove <branch>` — worktree とブランチを削除
+- `wt remove [-D] <branch>` — worktree とブランチを削除。`-D` 指定時のみ未コミット変更・未追跡ファイル・未マージのブランチも削除する。`main` / `master` と現在の worktree は削除しない
 - `wt clean` — マージ済みブランチと worktree を一括削除 (対話確認あり)
 - `wt init` — `.wt_hook.sh` テンプレート生成 (例: `.env` コピー、依存インストール)
+
+`wt add` / `wt co` と Claude Code の作成 hook は、初期化を新しい worktree 内で `bash -e -o pipefail` により実行する。失敗時は非ゼロで終了し、調査・復旧のため worktree を残す。親シェルの環境変数は変更しない。
 
 ## MCP サーバー
 

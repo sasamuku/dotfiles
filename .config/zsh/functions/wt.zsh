@@ -4,20 +4,57 @@
 #   wt              - Show worktree list with fzf
 #   wt add <branch> - Create new branch and worktree
 #   wt co <branch>  - Checkout existing branch to worktree
-#   wt remove <branch> - Remove worktree and branch
+#   wt remove [-D] <branch> - Remove worktree and branch (-D: force)
 #   wt clean        - Remove merged branches and their worktrees
 #   wt init         - Create .wt_hook.sh template
+
+# NUL-delimited paths; an optional branch name is matched literally.
+function _wt_paths() {
+    local record worktree_path
+    while IFS= read -r -d '' record; do
+        case "$record" in
+            'worktree '*)
+                worktree_path=${record#worktree }
+                [[ -n "$1" ]] || printf '%s\0' "$worktree_path"
+                ;;
+            "branch refs/heads/$1")
+                printf '%s\0' "$worktree_path"
+                return 0
+                ;;
+        esac
+    done < <(git worktree list --porcelain -z)
+    [[ -z "$1" ]]
+}
+
+function _wt_setup() {
+    local project_root=$1 worktree_path=$2 branch_name=$3
+    if [[ -f "$project_root/.wt_hook.sh" ]]; then
+        echo "Executing .wt_hook.sh..." >&2
+        WT_WORKTREE_PATH="$worktree_path" WT_BRANCH_NAME="$branch_name" WT_PROJECT_ROOT="$project_root" \
+            bash -e -o pipefail "$project_root/.wt_hook.sh" || {
+                echo "Initialization failed; worktree retained at: $worktree_path" >&2
+                return 1
+            }
+    fi
+    echo "Created worktree at: $worktree_path"
+    echo "Branch: $branch_name"
+}
 
 function wt() {
     local cmd=$1
 
     if [[ -z "$cmd" ]]; then
-        # Show worktree list with fzf
-        local selected=$(git worktree list | fzf \
-            --preview-window="right:70%:wrap" \
-            --preview='
-                worktree_path=$(echo {} | awk "{print \$1}")
-                branch=$(echo {} | sed "s/.*\[//" | sed "s/\]//")
+        local entry branch_name
+        local -a selection
+        while true; do
+            selection=()
+            while IFS= read -r -d '' entry; do
+                selection+=("$entry")
+            done < <(_wt_paths | fzf --read0 --print0 --expect=ctrl-d \
+                --preview-window="right:70%:wrap" \
+                --preview='
+                worktree_path={}
+                branch=$(git -C "$worktree_path" branch --show-current)
 
                 echo "┌──────────────────────────────────────────────────┐"
                 echo "│ 🌳 Branch: $branch"
@@ -47,31 +84,21 @@ function wt() {
                 echo "📜 Recent commits:"
                 echo "───────────────────────────────────────────────────"
                 git -C "$worktree_path" log --oneline --color=always -10 2>/dev/null | sed "s/^/  /"
-            ' \
-            --bind='ctrl-d:execute-silent(
-                worktree_path=$(echo {} | awk "{print \$1}")
-                branch=$(echo {} | sed "s/.*\[//" | sed "s/\]//")
-
-                # Prevent deletion of main branch
-                if [[ "$branch" == "main" || "$branch" == "master" ]]; then
-                    echo "Cannot delete main/master branch" >&2
-                    exit 1
-                fi
-
-                # Remove worktree and branch
-                git worktree remove --force "$worktree_path" 2>/dev/null
-                git branch -D "$branch" 2>/dev/null
-            )+reload(git worktree list)' \
-            --header="🌲 Git Worktree Manager | Enter: navigate | Ctrl+D: delete" \
-            --border \
-            --height=80% \
-            --layout=reverse \
-            --prompt="🔍 " | awk '{print $1}'
-        )
-
-        if [[ -n "$selected" ]]; then
-            cd "$selected"
-        fi
+                ' \
+                --header="Git Worktree Manager | Enter: navigate | Ctrl+D: delete clean worktree" \
+                --border --height=80% --layout=reverse --prompt="🌲 ")
+            (( ${#selection} >= 2 )) || return 0
+            if [[ "${selection[1]}" != "ctrl-d" ]]; then
+                cd -- "${selection[2]}"
+                return $?
+            fi
+            branch_name=$(git -C "${selection[2]}" branch --show-current) || return 1
+            if [[ -z "$branch_name" ]]; then
+                echo "Cannot delete a detached worktree from the picker" >&2
+                return 1
+            fi
+            wt remove "$branch_name" || return $?
+        done
 
     elif [[ "$cmd" == "add" ]]; then
         local branch_name=$2
@@ -93,57 +120,41 @@ function wt() {
         local safe_name=${branch_name//\//-}
         local worktree_path="$parent_dir/${project_name}-${safe_name}"
 
-        # Create new branch and worktree
-        git worktree add -b "$branch_name" "$worktree_path"
-
-        if [[ $? -eq 0 ]]; then
-            echo "Created worktree at: $worktree_path"
-            echo "Branch: $branch_name"
-
-            # Store project root before changing directory
-            local project_root=$(git rev-parse --show-toplevel)
-
-            cd "$worktree_path"
-
-            # Execute .wt_hook.sh if it exists in the project root
-            if [[ -f "$project_root/.wt_hook.sh" ]]; then
-                echo "Executing .wt_hook.sh..."
-                export WT_WORKTREE_PATH="$worktree_path"
-                export WT_BRANCH_NAME="$branch_name"
-                export WT_PROJECT_ROOT="$project_root"
-                source "$project_root/.wt_hook.sh"
-                unset WT_WORKTREE_PATH
-                unset WT_BRANCH_NAME
-                unset WT_PROJECT_ROOT
-            fi
-        fi
+        git worktree add -b "$branch_name" "$worktree_path" || return $?
+        cd -- "$worktree_path" || return $?
+        _wt_setup "$project_root" "$worktree_path" "$branch_name"
 
     elif [[ "$cmd" == "remove" ]]; then
-        local branch_name=$2
-
-        if [[ -z "$branch_name" ]]; then
-            echo "Usage: wt remove <branch_name>"
+        shift
+        local branch_option=-d
+        local -a remove_options=()
+        if [[ "$1" == -D ]]; then
+            remove_options=(--force)
+            branch_option=-D
+            shift
+        fi
+        if (( $# != 1 )) || [[ -z "$1" || "$1" == -* ]]; then
+            echo "Usage: wt remove [-D] <branch_name>"
             return 1
         fi
+        local branch_name=$1
 
-        # Find worktree path by branch name
-        local worktree_info=$(git worktree list | grep "\[$branch_name\]")
-
-        if [[ -z "$worktree_info" ]]; then
-            echo "No worktree found for branch: $branch_name"
+        if [[ "$branch_name" == main || "$branch_name" == master ]]; then
+            echo "Cannot delete main/master branch" >&2
             return 1
         fi
-
-        local worktree_path=$(echo "$worktree_info" | awk '{print $1}')
-
-        # Remove worktree
-        git worktree remove --force "$worktree_path"
-
-        if [[ $? -eq 0 ]]; then
-            # Delete branch
-            git branch -D "$branch_name"
-            echo "Removed worktree and branch: $branch_name"
+        local worktree_path
+        if ! IFS= read -r -d '' worktree_path < <(_wt_paths "$branch_name"); then
+            echo "No worktree found for branch: $branch_name" >&2
+            return 1
         fi
+        if [[ "$worktree_path" == "$(git rev-parse --show-toplevel)" ]]; then
+            echo "Cannot delete the current worktree" >&2
+            return 1
+        fi
+        git worktree remove "${remove_options[@]}" -- "$worktree_path" || return $?
+        git branch "$branch_option" -- "$branch_name" || return $?
+        echo "Removed worktree and branch: $branch_name"
 
     elif [[ "$cmd" == "init" ]]; then
         # Check if .wt_hook.sh already exists
@@ -155,7 +166,8 @@ function wt() {
         # Create .wt_hook.sh with copy and symlink template
         cat > .wt_hook.sh << 'EOF'
 #!/bin/bash
-# .wt_hook.sh - Executed after 'wt add' command in worktree directory
+set -e -o pipefail
+# .wt_hook.sh - Run with Bash in the new worktree by wt add/co and Claude Code
 # Available variables:
 # - $WT_WORKTREE_PATH: Path to the new worktree (current directory)
 # - $WT_BRANCH_NAME: Name of the branch
@@ -202,72 +214,38 @@ EOF
         echo "Created .wt_hook.sh template"
 
     elif [[ "$cmd" == "clean" ]]; then
-        # Get current branch
-        local current_branch=$(git branch --show-current)
-
-        # Get all merged branches (exclude main, master, and current branch)
-        local merged_branches=$(git branch --merged main | grep -v '^\*' | grep -v 'main$' | grep -v 'master$' | grep -v "^[* ]*${current_branch}$" | sed 's/^[ *]*//')
-
-        if [[ -z "$merged_branches" ]]; then
+        local current_branch base=main merged_branches branch worktree_path confirmation
+        current_branch=$(git branch --show-current) || return $?
+        git show-ref --verify --quiet refs/heads/main || base=master
+        merged_branches=$(git branch --merged "$base" --format='%(refname:short)') || return $?
+        local -a branches_to_delete=()
+        while IFS= read -r branch; do
+            [[ -z "$branch" || "$branch" == main || "$branch" == master || "$branch" == "$current_branch" ]] && continue
+            branches_to_delete+=("$branch")
+        done <<< "$merged_branches"
+        if (( ${#branches_to_delete} == 0 )); then
             echo "No merged branches to clean up"
             return 0
         fi
-
-        echo "The following merged branches will be deleted:"
-        echo ""
-
-        local branches_to_delete=()
-        local worktrees_to_delete=()
-
-        while IFS= read -r branch; do
-            if [[ -n "$branch" ]]; then
-                branches_to_delete+=("$branch")
-
-                # Check if worktree exists for this branch
-                local worktree_info=$(git worktree list | grep "\[$branch\]")
-                if [[ -n "$worktree_info" ]]; then
-                    local worktree_path=$(echo "$worktree_info" | awk '{print $1}')
-                    worktrees_to_delete+=("$worktree_path")
-                    echo "  🌳 $branch (worktree: $worktree_path)"
-                else
-                    echo "  📌 $branch (no worktree)"
-                fi
-            fi
-        done <<< "$merged_branches"
-
-        echo ""
+        echo 'The following merged branches will be deleted:'
+        printf '  %s\n' "${branches_to_delete[@]}"
         echo -n "Delete these branches and worktrees? (y/n): "
         read -r confirmation
-
-        if [[ "$confirmation" != "y" && "$confirmation" != "Y" ]]; then
+        if [[ "$confirmation" != y && "$confirmation" != Y ]]; then
             echo "Cancelled"
             return 0
         fi
-
-        echo ""
-        local deleted_count=0
-
+        local deleted_count=0 result=0
         for branch in "${branches_to_delete[@]}"; do
-            # Remove worktree if exists
-            local worktree_info=$(git worktree list | grep "\[$branch\]")
-            if [[ -n "$worktree_info" ]]; then
-                local worktree_path=$(echo "$worktree_info" | awk '{print $1}')
-                git worktree remove --force "$worktree_path" 2>/dev/null
-                if [[ $? -eq 0 ]]; then
-                    echo "✓ Removed worktree: $worktree_path"
-                fi
+            if IFS= read -r -d '' worktree_path < <(_wt_paths "$branch"); then
+                wt remove "$branch" || { result=1; continue; }
+            else
+                git branch -d -- "$branch" || { result=1; continue; }
             fi
-
-            # Delete branch
-            git branch -D "$branch" 2>/dev/null
-            if [[ $? -eq 0 ]]; then
-                echo "✓ Deleted branch: $branch"
-                ((deleted_count++))
-            fi
+            (( deleted_count++ ))
         done
-
-        echo ""
         echo "Cleaned up $deleted_count branch(es)"
+        return $result
 
     elif [[ "$cmd" == "co" ]]; then
         local branch_input=$2
@@ -291,15 +269,15 @@ EOF
         if [[ "$branch_input" =~ ^([^/]+)/(.+)$ ]]; then
             # Check if it's a remote reference (e.g., origin/feature/branch)
             local potential_remote="${match[1]}"
-            if git remote | grep -q "^${potential_remote}$"; then
+            if git remote | grep -Fxq -- "$potential_remote"; then
                 remote_name="$potential_remote"
                 branch_name="${match[2]}"
             fi
         fi
 
         # Check if branch is already checked out in a worktree
-        local existing_worktree=$(git worktree list | grep "\[$branch_name\]" | awk '{print $1}')
-        if [[ -n "$existing_worktree" ]]; then
+        local existing_worktree
+        if IFS= read -r -d '' existing_worktree < <(_wt_paths "$branch_name"); then
             echo "Error: Branch '$branch_name' is already checked out at: $existing_worktree"
             return 1
         fi
@@ -312,7 +290,7 @@ EOF
         # Check if local branch exists
         if git show-ref --verify --quiet "refs/heads/$branch_name"; then
             echo "Creating worktree from local branch: $branch_name"
-            git worktree add "$worktree_path" "$branch_name"
+            git worktree add "$worktree_path" "$branch_name" || return $?
         else
             # Local branch doesn't exist, try remote
             echo "Local branch not found, checking remote..."
@@ -322,36 +300,20 @@ EOF
 
             # Fetch from remote
             echo "Fetching from $target_remote..."
-            git fetch "$target_remote" 2>/dev/null
+            git fetch "$target_remote" || return $?
 
             # Check if remote branch exists
             if git show-ref --verify --quiet "refs/remotes/$target_remote/$branch_name"; then
                 echo "Creating worktree from remote branch: $target_remote/$branch_name"
-                git worktree add -b "$branch_name" "$worktree_path" --track "$target_remote/$branch_name"
+                git worktree add -b "$branch_name" "$worktree_path" --track "$target_remote/$branch_name" || return $?
             else
                 echo "Error: Branch '$branch_name' not found in local or remote '$target_remote'"
                 return 1
             fi
         fi
 
-        if [[ $? -eq 0 ]]; then
-            echo "Created worktree at: $worktree_path"
-            echo "Branch: $branch_name"
-
-            cd "$worktree_path"
-
-            # Execute .wt_hook.sh if it exists in the project root
-            if [[ -f "$project_root/.wt_hook.sh" ]]; then
-                echo "Executing .wt_hook.sh..."
-                export WT_WORKTREE_PATH="$worktree_path"
-                export WT_BRANCH_NAME="$branch_name"
-                export WT_PROJECT_ROOT="$project_root"
-                source "$project_root/.wt_hook.sh"
-                unset WT_WORKTREE_PATH
-                unset WT_BRANCH_NAME
-                unset WT_PROJECT_ROOT
-            fi
-        fi
+        cd -- "$worktree_path" || return $?
+        _wt_setup "$project_root" "$worktree_path" "$branch_name"
 
     else
         echo "Unknown command: $cmd"
@@ -359,7 +321,7 @@ EOF
         echo "  wt                 - Show worktree list with fzf (Ctrl+D to delete)"
         echo "  wt add <branch>    - Create new branch and worktree"
         echo "  wt co <branch>     - Checkout existing branch to worktree"
-        echo "  wt remove <branch> - Remove worktree and branch"
+        echo "  wt remove [-D] <branch> - Remove worktree and branch (-D: force)"
         echo "  wt clean           - Remove merged branches and their worktrees"
         echo "  wt init            - Create .wt_hook.sh template"
         return 1

@@ -34,7 +34,7 @@ permissionMode: acceptEdits
      ## Worktree Info
      - Branch: <branch-name>   # `git branch --show-current` の出力
      - Path: <absolute-path>   # `pwd` の出力
-     - Enter via: `wt <branch-name>`
+     - Enter via: `cd -- "<absolute-path>"`
      ```
      呼び出し元（リーダー）はこの情報を使って人間が wezterm から該当 worktree に直接入れるようにする。
 8. レビューを待つ。まだコミットや PR 作成はしない。終了もしない。

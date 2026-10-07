@@ -29,7 +29,7 @@ PARENT_DIR=$(dirname "$PROJECT_ROOT")
 SAFE_NAME=$(echo "$NAME" | tr '/' '-')
 WORKTREE_PATH="$PARENT_DIR/${PROJECT_NAME}-${SAFE_NAME}"
 
-if ! git -C "$PROJECT_ROOT" worktree add -b "$NAME" "$WORKTREE_PATH" >/dev/null 2>&1; then
+if ! git -C "$PROJECT_ROOT" worktree add -b "$NAME" "$WORKTREE_PATH" >/dev/null; then
     echo "Failed to create worktree" >&2
     exit 1
 fi
@@ -40,8 +40,9 @@ if [ -f "$PROJECT_ROOT/.wt_hook.sh" ]; then
     export WT_WORKTREE_PATH="$WORKTREE_PATH"
     export WT_BRANCH_NAME="$NAME"
     export WT_PROJECT_ROOT="$PROJECT_ROOT"
-    if ! (cd "$WORKTREE_PATH" && bash "$PROJECT_ROOT/.wt_hook.sh") >&2; then
-        echo "Warning: .wt_hook.sh failed (worktree was created)" >&2
+    if ! (cd "$WORKTREE_PATH" && bash -e -o pipefail "$PROJECT_ROOT/.wt_hook.sh") >&2; then
+        echo "Initialization failed; worktree retained at: $WORKTREE_PATH" >&2
+        exit 1
     fi
 fi
 
