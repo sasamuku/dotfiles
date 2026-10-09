@@ -1,6 +1,6 @@
 # 設計判断とリファレンス
 
-整理日: 2026-10-08。Future (Future Architect 社の Terraform ガイドライン) は設計の選択肢と推奨。HashiCorp は Terraform の仕様と推奨。AWS の資料は AWS 向けの補足。要件に応じて採否を判断し、資料全体に準拠していると無条件には宣言しない。
+整理日: 2026-10-08。Future (Future Architect 社の Terraform ガイドライン) は設計の選択肢と推奨。HashiCorp は Terraform の仕様と推奨。AWS の資料は AWS 向けの補足。
 
 ## 論点別早見表
 
@@ -23,7 +23,7 @@
 - [HashiCorp: Refactor modules](https://developer.hashicorp.com/terraform/language/modules/develop/refactoring): 既存 state を保って module を移動・改名するときに読む。新規構築と同じ手順にしない
 - [HashiCorp: Dependency lock file](https://developer.hashicorp.com/terraform/language/files/dependency-lock): provider の選択結果と再現性を確認する。Future は lock file を Git の管理対象外とする方針を示すが、無条件には採用せず、HashiCorp の推奨・既存運用との違いを説明する
 
-bootstrap とは、state 保存先バケットなど backend より先に必要な resource の初期構築を指す。そこで一時的に使う local state も機密情報として扱い、Git へ保存しない。Future の bootstrap 例は state の commit を許容するが、本スキルでは採用しない。
+bootstrap (state bucket など backend より先に必要な resource の初期構築) の手順は [state-bootstrap.md](state-bootstrap.md)。Future の bootstrap 例は state の commit を許容するが採用せず、local state は S3 へ移行してから削除する。
 
 ## 根拠と説明の書き方
 
