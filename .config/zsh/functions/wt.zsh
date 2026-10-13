@@ -44,13 +44,12 @@ function wt() {
     local cmd=$1
 
     if [[ -z "$cmd" ]]; then
-        local entry branch_name
+        local entry branch_name selected paths
         local -a selection
         while true; do
             selection=()
-            while IFS= read -r -d '' entry; do
-                selection+=("$entry")
-            done < <(_wt_paths | fzf --read0 --print0 --expect=ctrl-d \
+            paths=$(_wt_paths)
+            selected=$(printf '%s' "$paths" | fzf --read0 --print0 --expect=ctrl-d \
                 --preview-window="right:70%:wrap" \
                 --preview='
                 worktree_path={}
@@ -87,6 +86,9 @@ function wt() {
                 ' \
                 --header="Git Worktree Manager | Enter: navigate | Ctrl+D: delete clean worktree" \
                 --border --height=80% --layout=reverse --prompt="🌲 ")
+            while IFS= read -r -d '' entry; do
+                selection+=("$entry")
+            done <<< "$selected"
             (( ${#selection} >= 2 )) || return 0
             if [[ "${selection[1]}" != "ctrl-d" ]]; then
                 cd -- "${selection[2]}"
