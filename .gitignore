@@ -47,7 +47,6 @@ scratch/
 scratch
 
 # Project Specific
-PLANS.md
 *.code-workspace
 
 **/.claude/settings.local.json

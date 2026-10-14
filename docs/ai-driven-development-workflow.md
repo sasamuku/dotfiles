@@ -5,7 +5,7 @@ AI ツールを活用した開発ワークフローの実践ガイド。
 ## 概要
 
 開発ライフサイクル全体で AI を活用:
-**Issue → Plan → Implement → Review → Commit → PR**
+**Issue → Implement → Review → Commit → PR**
 
 ## 主要コマンド
 
@@ -15,14 +15,6 @@ AI ツールを活用した開発ワークフローの実践ガイド。
 |---------|---------|
 | `/read-issue 123` | Issue の詳細を取得・表示 |
 | `/create-issue` | 新規 GitHub Issue を作成 |
-
-### 計画
-
-| コマンド | 用途 |
-|---------|---------|
-| `/create-plan #123` | Issue から PLANS.md を生成 |
-| `/sync-plan` | PLANS.md を Issue コメントに同期 |
-| `/update-plan-from-subissues` | 子 Issue のステータスで計画を更新 |
 
 ### 開発
 
@@ -46,9 +38,6 @@ AI ツールを活用した開発ワークフローの実践ガイド。
 ```bash
 # Issue を理解する
 /read-issue 42
-
-# 実行計画を作成
-/create-plan #42
 ```
 
 ### 2. 実装
@@ -84,10 +73,9 @@ Model Context Protocol による機能拡張:
 ## ベストプラクティス
 
 1. **コンテキストから始める** - 大きなタスクの前に `git status` と関連差分を確認
-2. **先に計画** - 複雑な機能は `/create-plan` を使用
-3. **反復** - 小さくレビュー可能な単位で作業
-4. **検証** - コミット前に必ずテスト実行
-5. **シンプルに** - ボイラープレートは AI に任せ、ロジックに集中
+2. **反復** - 小さくレビュー可能な単位で作業
+3. **検証** - コミット前に必ずテスト実行
+4. **シンプルに** - ボイラープレートは AI に任せ、ロジックに集中
 
 ## エージェント
 
@@ -95,4 +83,3 @@ Model Context Protocol による機能拡張:
 
 - `code-reviewer` - 自動コードレビュー
 - `debugger` - デバッグ支援
-- `plan-driven-coder` - PLANS.md に基づく実装
