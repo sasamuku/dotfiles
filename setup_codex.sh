@@ -52,6 +52,14 @@ done
 echo "📁 Linking shared skills into ~/.agents/skills..."
 mkdir -p ~/.agents/skills
 link_owned "${DOTFILES_DIR}/.agents/.skill-lock.json" ~/.agents/.skill-lock.json
+# 削除済み skill のダングリング symlink を掃除 (dotfiles 配下を指すものだけ)
+for link in ~/.agents/skills/*; do
+  if [ -L "${link}" ] && [ ! -e "${link}" ]; then
+    case "$(readlink "${link}")" in
+      "${DOTFILES_DIR}"/*) rm "${link}" && echo "  🧹 Removed stale $(basename "${link}")" ;;
+    esac
+  fi
+done
 for skill in "${DOTFILES_DIR}"/.agents/skills/*/; do
   name=$(basename "${skill}")
   target=~/.agents/skills/${name}
