@@ -1,11 +1,11 @@
 ---
 name: prune-for-readers
-description: Shorten documentation and code comments by removing repetition, obvious explanations, and obsolete process notes while preserving facts and decision-relevant context.
+description: Shorten, deduplicate, or consolidate documentation and code comments by removing repetition, obvious explanations, and obsolete process notes while preserving facts and decision-relevant context.
 ---
 
 # Prune for Readers
 
-対象: $ARGUMENTS。指定がなければ直近の変更で書いた文書・コメント。
+対象: $ARGUMENTS。指定がなければ直近の変更で書いた文書・コメント。会話から特定できず不明な場合だけ確認する。
 
 読者の理解・判断に寄与しない記述を削り、重複をまとめる。削減のために事実・条件・意味を変えない。
 
