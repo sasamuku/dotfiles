@@ -1,9 +1,9 @@
 ---
-name: prune-for-readers
+name: compact-docs
 description: Shorten, deduplicate, or consolidate documentation and code comments by removing repetition, obvious explanations, and obsolete process notes while preserving facts and decision-relevant context.
 ---
 
-# Prune for Readers
+# Compact Docs
 
 対象: $ARGUMENTS。指定がなければ直近の変更で書いた文書・コメント。会話から特定できず不明な場合だけ確認する。
 
@@ -15,4 +15,4 @@ description: Shorten, deduplicate, or consolidate documentation and code comment
 - 文書構造は読みやすさに必要な範囲で保つ。重複の参照化は、その参照先を読む負担も考慮する。
 - 矛盾や削除判断の割れる箇所は勝手に解釈を確定せず、ユーザーに示す。
 
-変更後は意味の保持と参照切れを確認する。圧縮量を求められた場合は変更前後の文字数・削減率を報告し、文字数をトークン数と混同しない。
+変更後は意味の保持と参照切れを確認する。毎回、変更前後の行数・文字数と、それぞれの削減率を簡潔に報告する。増減がなくても報告し、文字数をトークン数と混同しない。
