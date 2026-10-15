@@ -40,7 +40,7 @@ setup.sh
 - `.config/nvim/`, `.config/wezterm/`, `.config/ghostty/`, `.config/cmux/`, `.config/lazygit/` — Neovim (Lua), WezTerm, Ghostty, cmux (JSONC), lazygit (delta pager)
 - `.claude/` — Claude Code 設定。専用 skill・agents の正本と、共有 skill への symlink
 - `.agents/skills/` — 共有 skill の正本 (vendored skill を含む)。Codex が探索し、`.claude/skills/` から symlink で参照する
-- `.codex/` — Codex 用: `AGENTS.md.global` (グローバル指示)、`rules/` (command rules)、`agents/` (reviewer role TOML)。ルート `AGENTS.md` は `CLAUDE.md` への symlink
+- `.codex/` — Codex 用: `AGENTS.md.global` (グローバル指示)、`rules/` (command rules)、`agents/` (実装・レビュー等の role TOML)。ルート `AGENTS.md` は `CLAUDE.md` への symlink
 
 ## シェル環境
 
