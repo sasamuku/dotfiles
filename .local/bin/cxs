@@ -1,0 +1,250 @@
+#!/usr/bin/env python3
+"""Local account selection for the next Codex CLI process."""
+import json
+import os
+from pathlib import Path
+import re
+import sys
+
+if sys.version_info < (3, 11):
+    sys.exit('cxs: Python 3.11 or later is required.')
+import tomllib
+
+HOME = Path.home().resolve()
+SHARED = HOME / '.codex'
+ROOT = HOME / '.local/share/codex-accounts'
+REGISTRY = HOME / '.config/codex-accounts/accounts.json'
+SHARED_NAMES = ('config.toml', 'hooks.json', 'keybindings.json', 'AGENTS.md', 'rules', 'agents')
+HISTORY_DIRS = ('sessions', 'archived_sessions', 'attachments', 'visualizations',
+                'thread-writer-locks', 'rollout-migrations')
+HISTORY_NAMES = (*HISTORY_DIRS, 'session_index.jsonl', 'history.jsonl',
+                 'state_5.sqlite', 'goals_1.sqlite', 'thread_history_1.sqlite')
+
+
+def fail(message):
+    raise ValueError(message)
+
+
+def select_account(names, current):
+    if not sys.stdin.isatty() or not sys.stdout.isatty():
+        fail('Interactive selection requires a terminal; use cxs NAME.')
+    import select
+    import termios
+    import tty
+
+    fd = sys.stdin.fileno()
+    try:
+        attributes = termios.tcgetattr(fd)
+    except termios.error:
+        fail('Could not open the account menu; use cxs NAME.')
+    selected = names.index(current)
+    drawn = 0
+
+    def clear_menu():
+        if drawn:
+            sys.stdout.write(f'\x1b[{drawn}A' + '\r\x1b[2K\r\n' * drawn
+                             + f'\x1b[{drawn}A\r')
+
+    try:
+        tty.setraw(fd)
+        sys.stdout.write('\x1b[?25l')
+        while True:
+            width, height = os.get_terminal_size(sys.stdout.fileno())
+            if height < 4 or width < 44 or os.environ.get('TERM') == 'dumb':
+                fail('Terminal cannot display the account menu; use cxs NAME.')
+            visible = min(len(names), 5, height - 3)
+            start = max(0, min(selected - visible // 2, len(names) - visible))
+            clear_menu()
+            lines = ['Codex account']
+            for index in range(start, start + visible):
+                name = names[index]
+                limit = width - 14
+                label = name if len(name) <= limit else name[:limit - 1] + '…'
+                label += ' \x1b[32m*\x1b[0m' if name == current else ''
+                lines.append(('\x1b[1;36m❯ ' + label + '\x1b[0m')
+                             if index == selected else '  ' + label)
+            lines.append('↑↓ Move · Enter Select · Esc Cancel')
+            sys.stdout.write(''.join('\r\x1b[2K' + line + '\r\n' for line in lines))
+            sys.stdout.flush()
+            drawn = len(lines)
+            key = os.read(fd, 1)
+            if key == b'\x1b':
+                for _ in range(2):
+                    if not select.select([fd], [], [], 0.1)[0]:
+                        break
+                    key += os.read(fd, 1)
+            if key in (b'\x1b[A', b'\x1bOA'):
+                selected = (selected - 1) % len(names)
+            elif key in (b'\x1b[B', b'\x1bOB'):
+                selected = (selected + 1) % len(names)
+            elif key in (b'\r', b'\n'):
+                return names[selected]
+            elif not key or key in (b'\x1b', b'\x03', b'\x04'):
+                return None
+    except KeyboardInterrupt:
+        return None
+    except (OSError, termios.error):
+        fail('Could not open the account menu; use cxs NAME.')
+    finally:
+        try:
+            clear_menu()
+            sys.stdout.write('\x1b[0m\x1b[?25h')
+            sys.stdout.flush()
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, attributes)
+
+
+def name_check(name):
+    if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,63}', name) or name == 'default':
+        fail('Use 1–64 letters, digits, underscores or hyphens; default is reserved.')
+
+
+def read_registry():
+    if not REGISTRY.exists():
+        return {'accounts': {}, 'selected': 'default'}
+    return json.loads(REGISTRY.read_text())
+
+
+def save_registry(data):
+    REGISTRY.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+    temporary = REGISTRY.with_suffix('.tmp')
+    fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    try:
+        with os.fdopen(fd, 'w') as stream:
+            json.dump(data, stream, indent=2)
+            stream.write('\n')
+        temporary.replace(REGISTRY)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def account_home(data, name):
+    name_check(name)
+    home = Path(data['accounts'][name]).expanduser().resolve()
+    shared = SHARED.resolve()
+    if (not home.is_relative_to(HOME) or home == HOME
+            or home.is_relative_to(shared) or shared.is_relative_to(home)
+            or REGISTRY.resolve().is_relative_to(home)):
+        fail('Account home must be inside your home and separate from ~/.codex and the registry.')
+    for other, location in data['accounts'].items():
+        if other != name:
+            existing = Path(location).expanduser().resolve()
+            if home.is_relative_to(existing) or existing.is_relative_to(home):
+                fail('Account homes must not overlap.')
+    return home
+
+
+def shared_links(home):
+    # Authentication, operational state, plugins and system skills stay local.
+    pending = []
+
+    def link(source, target):
+        if target.is_symlink():
+            if target.resolve() != source.resolve():
+                fail(f'Refusing to replace existing symlink: {target}')
+        elif target.exists():
+            if source.is_dir() and target.is_dir():
+                for child in source.iterdir():
+                    link(child, target / child.name)
+            else:
+                fail(f'Refusing to replace existing file: {target}')
+        else:
+            pending.append((source, target))
+
+    if home.exists():
+        for entry in home.iterdir():
+            if entry.is_symlink() and entry.name not in (*SHARED_NAMES, *HISTORY_NAMES):
+                fail(f'Refusing linked account state: {entry}')
+    local_history = []
+    linked_history = []
+    for filename in HISTORY_NAMES:
+        target = home / filename
+        source = SHARED / filename
+        if target.is_symlink():
+            if target.resolve() != source.resolve():
+                fail(f'Refusing to replace existing history symlink: {target}')
+            linked_history.append(filename)
+        elif target.exists() or any(
+                (home / (filename + suffix)).exists() for suffix in ('-wal', '-shm')):
+            local_history.append(filename)
+    if local_history and linked_history:
+        fail('Mixed local and shared history; complete the offline history migration first.')
+    if not local_history:
+        for filename in HISTORY_NAMES:
+            if filename not in linked_history:
+                pending.append((SHARED / filename, home / filename))
+    for filename in SHARED_NAMES:
+        source = SHARED / filename
+        if source.exists():
+            link(source, home / filename)
+    home.mkdir(mode=0o700, parents=True, exist_ok=True)
+    for source, target in pending:
+        if source.parent == SHARED and source.name in HISTORY_DIRS:
+            source.mkdir(mode=0o700, parents=True, exist_ok=True)
+        target.symlink_to(source, target_is_directory=source.is_dir())
+    return not local_history
+
+
+def launch(binary, args, home=None):
+    if home is not None:
+        shared_links(home)
+        sqlite_home = home
+        os.environ['CODEX_HOME'] = str(home)
+        os.environ['CODEX_SQLITE_HOME'] = str(sqlite_home)
+        overrides = ['-c', 'cli_auth_credentials_store="file"',
+                     '-c', 'sqlite_home=' + json.dumps(str(sqlite_home))]
+        config = home / 'config.toml'
+        if config.is_file():
+            with config.open('rb') as stream:
+                servers = tomllib.load(stream).get('mcp_servers', {})
+            if 'node_repl' in servers:
+                overrides += ['-c', 'mcp_servers.node_repl.env.CODEX_HOME=' + json.dumps(str(home))]
+        args = [*overrides, *args]
+    os.execv(binary, [binary, *args])
+
+
+def main():
+    mode, binary, *args = sys.argv[1:]
+    data = read_registry()
+    if mode == 'run':
+        selected = data.get('selected', 'default')
+        home = None if selected == 'default' else account_home(data, selected)
+        launch(binary, args, home)
+    elif mode == 'switch':
+        if args and args[0] == 'add' and len(args) in (2, 3):
+            name = args[1]
+            name_check(name)
+            if name in data['accounts']:
+                fail('Account name already exists.')
+            data['accounts'][name] = str(Path(args[2]).expanduser() if len(args) == 3 else ROOT / name)
+            home = account_home(data, name)
+            shared_links(home)
+            data['accounts'][name] = str(home)
+            save_registry(data)
+            print(f'Added {name}. Authenticate with: cxs login {name}')
+        elif len(args) == 2 and args[0] == 'login':
+            launch(binary, ['login'], account_home(data, args[1]))
+        else:
+            names = ['default', *data['accounts']]
+            if not args:
+                choice = select_account(names, data.get('selected', 'default'))
+                if choice is None:
+                    return
+                args = [choice]
+            if len(args) != 1 or args[0] not in names:
+                fail('Usage: cxs [NAME|default] | cxs add NAME [HOME] | cxs login NAME')
+            if args[0] != 'default':
+                shared_links(account_home(data, args[0]))
+            data['selected'] = args[0]
+            save_registry(data)
+            print(f'Next Codex launch: {args[0]}')
+    else:
+        fail('Unknown operation.')
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except (ValueError, KeyError, OSError, EOFError) as error:
+        print(f'cxs: {error}', file=sys.stderr)
+        sys.exit(1)

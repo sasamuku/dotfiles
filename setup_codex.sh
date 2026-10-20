@@ -75,4 +75,18 @@ for skill in "${DOTFILES_DIR}"/.agents/skills/*/; do
   fi
 done
 
+# Account switcher (all account names, homes and selection remain local).
+mkdir -p ~/.local/bin ~/.config/zsh/functions
+for entry in ".local/bin/cxs" ".config/zsh/functions/codex.zsh"; do
+  dst="$HOME/$entry"
+  src="$DOTFILES_DIR/$entry"
+  if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
+    :
+  elif [ -e "$dst" ] || [ -L "$dst" ]; then
+    echo "  ⚠️  Skip $dst: already exists"
+  else
+    ln -s "$src" "$dst"
+  fi
+done
+
 echo "✅ Codex setup completed!"

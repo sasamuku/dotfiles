@@ -107,6 +107,9 @@ fi
 if [[ -f "$HOME/.config/zsh/functions/yazi.zsh" ]]; then
     source "$HOME/.config/zsh/functions/yazi.zsh"
 fi
+if [[ -f "$HOME/.config/zsh/functions/codex.zsh" ]]; then
+    source "$HOME/.config/zsh/functions/codex.zsh"
+fi
 export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
