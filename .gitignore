@@ -42,6 +42,9 @@ __pycache__/
 ## Playwright MCP
 .playwright-mcp/
 
+## sasamuku スキルの自律ランの記録
+.sasamuku/
+
 # Scratch Directory
 scratch/
 scratch
