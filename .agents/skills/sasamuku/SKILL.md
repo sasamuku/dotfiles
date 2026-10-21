@@ -22,9 +22,11 @@ disable-model-invocation: true
 
 ## 原則
 
-作業を始める前に、次の原則のスキルを開いて読み、それに従う。
+次の原則のスキルを開いて読み、判断の拠り所にする。
 
-- **principle-two-way-door**: 決定が、元に戻せる Two-way door か、戻せない One-way door かを見分ける。
+- **principle-two-way-door**: 常に読む。決定が、元に戻せる Two-way door か、戻せない One-way door かを見分ける。
+- **principle-documentation**: ドキュメント、指示ファイル、コードコメントを書くときと、見直すときに読む。
+- **principle-terraform**: Terraform の構成を設計、レビュー、変更するときに読む。
 
 ## プレイブック
 
