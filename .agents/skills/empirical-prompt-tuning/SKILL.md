@@ -2,6 +2,7 @@
 name: empirical-prompt-tuning
 description: Evaluate and refine an agent prompt through independent trials when the user requests measured prompt tuning or instruction ambiguity needs empirical diagnosis.
 allowed-tools: WebFetch, Read, Write, Edit, Bash, Grep, Glob, Agent
+disable-model-invocation: true
 ---
 
 # Empirical Prompt Tuning

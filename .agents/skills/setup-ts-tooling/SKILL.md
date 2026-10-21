@@ -1,6 +1,7 @@
 ---
 name: setup-ts-tooling
 description: TypeScript プロジェクトの初期フェーズに必要な品質チェック・テスト・CI 補助ツールを選択して導入する。lint・整形は Biome を使う。
+disable-model-invocation: true
 ---
 
 # Setup TS Tooling

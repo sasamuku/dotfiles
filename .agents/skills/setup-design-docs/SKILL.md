@@ -1,6 +1,7 @@
 ---
 name: setup-design-docs
 description: プロジェクトに ADR と Design Docs の管理雛形を導入する。テンプレート、一覧、採番・ステータス・更新ルールを整備したいときに使う。
+disable-model-invocation: true
 ---
 
 # Setup Design Docs

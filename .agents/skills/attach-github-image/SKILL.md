@@ -1,6 +1,7 @@
 ---
 name: attach-github-image
 description: GitHub Issue・PR の本文に画像を添付する、または差し替えるときに使う。
+disable-model-invocation: false
 ---
 
 # Attach GitHub Image

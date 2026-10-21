@@ -1,6 +1,7 @@
 ---
 name: handover
 description: Save session context and remaining work to a timestamped handover file under scratch/.
+disable-model-invocation: true
 ---
 
 # Handover

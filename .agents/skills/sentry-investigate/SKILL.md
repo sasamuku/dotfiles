@@ -3,6 +3,7 @@ name: sentry-investigate
 description: Investigate a Sentry issue URL and trace its root cause in the codebase.
 argument-hint: <sentry-issue-url>
 allowed-tools: mcp__sentry__get_issue_details, mcp__sentry__analyze_issue_with_seer, mcp__sentry__get_issue_tag_values, mcp__sentry__search_issue_events, Read, Grep, Glob
+disable-model-invocation: false
 ---
 
 # Sentry Investigation

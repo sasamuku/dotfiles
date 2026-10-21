@@ -2,6 +2,7 @@
 name: read-issue
 description: Read a GitHub issue, its parent and sub-issues, and relevant code. Use --full when the user needs all sibling issue bodies and their implementing PRs.
 argument-hint: <issue-number-or-url> [--full]
+disable-model-invocation: false
 ---
 
 # Read Issue

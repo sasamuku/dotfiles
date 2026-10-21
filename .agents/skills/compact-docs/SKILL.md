@@ -1,6 +1,7 @@
 ---
 name: compact-docs
 description: Shorten, deduplicate, or consolidate documentation and code comments by removing repetition, obvious explanations, and obsolete process notes while preserving facts and decision-relevant context.
+disable-model-invocation: true
 ---
 
 # Compact Docs

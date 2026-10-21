@@ -1,3 +1,8 @@
+pre-commit:
+  commands:
+    skill-policy:
+      run: uv run scripts/sync_skill_policy.py --check --staged
+
 pre-push:
   commands:
     lychee:

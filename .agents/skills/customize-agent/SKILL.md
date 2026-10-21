@@ -1,6 +1,7 @@
 ---
 name: customize-agent
 description: Claude Code・Codexの指示、スキル、hook、サブエージェント、権限設定を作成・整理するときに使う。
+disable-model-invocation: false
 ---
 
 # Customize Agent
@@ -24,5 +25,7 @@ description: Claude Code・Codexの指示、スキル、hook、サブエージ�
 - 対象に応じて [Claude](references/claude.md) または [Codex](references/codex.md) だけ読む。両対応が必要な場合は共通内容を一箇所に保ち、製品固有部分を分離する。
 - 編集先の正本・symlink・既存の優先順位を確認する。変更する機能の記法・対応状況は公式資料で確認し、製品間で設定をそのまま転用しない。
 - スキルは利用条件が分かる短いdescriptionと、判断に必要な本文に絞る。利用可能な `skill-creator` があれば作成・検証に使う。機能一覧や手順を重複させない。
+- dotfiles管理の共有スキルを新規作成するときは、自動呼び出しの可否を確認する（指定済みなら再確認しない）。許可なら `disable-model-invocation: false`、手動専用なら `true` をフロントマター末尾に置く。更新時は変更依頼がなければ既存設定を保持する。
+- 呼び出し設定の追加・変更後は、dotfilesリポジトリで `uv run scripts/sync_skill_policy.py --write` を実行し、Codex用メタデータも一緒にコミットする。
 - hookは既存ハンドラを残し、イベント・対象・入出力・終了コード・タイムアウト・失敗時の動作を定める。イベント入力をシェルコードとして展開しない。状態変更する処理は再実行時の影響も確認する。
 - 形式・参照・探索先を検証する。hookには正常・対象外・失敗の安全な入力例を通し、ブロック目的なら実際に拒否されることを確認する。実行していない検証や再読み込みの必要性を報告する。

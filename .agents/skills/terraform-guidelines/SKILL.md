@@ -1,6 +1,7 @@
 ---
 name: terraform-guidelines
 description: Terraform の設計・レビュー・運用の判断基準。新規構成の設計、既存構成のレビュー (環境分離・root/child module・state 境界)、state backend と CI 権限の初回構築 (bootstrap)、公式資料と公開ガイドラインに基づく設計判断の根拠づけをケース別の参照資料で扱う。
+disable-model-invocation: false
 ---
 
 # Terraform Guidelines

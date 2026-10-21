@@ -1,7 +1,7 @@
 ---
 name: review-renovate
 description: Review Renovate dependency updates, fix CI failures, and merge verified PRs.
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # Review Renovate

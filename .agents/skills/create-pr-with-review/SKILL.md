@@ -1,6 +1,7 @@
 ---
 name: create-pr-with-review
 description: Review local changes with independent specialists, fix findings, then create a PR using create-pr.
+disable-model-invocation: false
 ---
 
 # Create PR with Review

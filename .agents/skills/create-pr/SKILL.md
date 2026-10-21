@@ -1,7 +1,7 @@
 ---
 name: create-pr
 description: Create a GitHub PR using repository conventions, fix CI failures, then present review-comment triage. Honor requests to leave it draft or only create the PR.
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # Create PR

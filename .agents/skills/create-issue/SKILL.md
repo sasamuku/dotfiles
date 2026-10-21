@@ -1,7 +1,7 @@
 ---
 name: create-issue
 description: Draft and create a GitHub issue using repository templates and user-approved content.
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # Create Issue

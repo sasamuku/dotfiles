@@ -1,6 +1,7 @@
 ---
 name: eli10
 description: 地頭のよい知的好奇心が旺盛な 10 歳向けの図解説明。/eli10 <topic>、または「シンプルだが幼稚すぎない」説明 (本物の仕組み・正しい用語) を求められたときに使う。
+disable-model-invocation: true
 ---
 
 # eli10

@@ -1,6 +1,7 @@
 ---
 name: anything-else
 description: セッション終了前のやり残しチェック。会話・git・関連 issue から、今やること / 後回し / 問題なしに仕分けて提案する。「他にやることある?」「終わる前に確認して」で使う。
+disable-model-invocation: false
 ---
 
 # Anything Else

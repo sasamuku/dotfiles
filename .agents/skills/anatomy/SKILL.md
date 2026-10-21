@@ -5,6 +5,7 @@ license: MIT
 compatibility: Written for Claude Code; also runs in Antigravity, OpenCode and Codex. Needs Node.js 20.10+, and Chrome or Chromium for the checks.
 metadata:
   opencode/slash: "true"
+disable-model-invocation: true
 ---
 
 # Anatomy

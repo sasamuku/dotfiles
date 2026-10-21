@@ -6,6 +6,7 @@ metadata:
   version: "3.0"
   author: tt-a1i
   based_on: Cocoon-AI/architecture-diagram-generator (MIT, v1.0)
+disable-model-invocation: true
 ---
 
 # Archify

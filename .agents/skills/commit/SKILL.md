@@ -1,7 +1,7 @@
 ---
 name: commit
 description: Organize requested changes into logical Conventional Commits following the repository's language and conventions.
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # Commit

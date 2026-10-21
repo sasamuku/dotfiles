@@ -1,6 +1,7 @@
 ---
 name: derive-optimal-solution
 description: Compare options for a design, process, or organizational decision. Use when the user wants to challenge assumptions, find a root cause, or choose an approach with meaningful trade-offs.
+disable-model-invocation: true
 ---
 
 # Derive Optimal Solution

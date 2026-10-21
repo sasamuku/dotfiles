@@ -1,6 +1,7 @@
 ---
 name: update-global-claude-md
 description: Edit ~/.claude/CLAUDE.md when the user explicitly requests a global Claude instruction change; excludes project-local instructions.
+disable-model-invocation: true
 ---
 
 # Update Global Claude Instructions

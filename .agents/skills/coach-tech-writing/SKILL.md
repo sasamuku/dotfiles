@@ -1,6 +1,7 @@
 ---
 name: coach-tech-writing
 description: Collaboratively edit a technical article or engineering essay, discussing structure, claims, titles, and the author's voice. Use for iterative writing coaching, not routine document formatting.
+disable-model-invocation: true
 ---
 
 # Coach Tech Writing

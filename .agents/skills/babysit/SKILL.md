@@ -2,6 +2,7 @@
 name: babysit
 description: Triage PR comments and CI failures. Default reports recommendations; --auto fixes, commits, pushes, replies, and monitors until completion. --once disables recurring execution.
 allowed-tools: Bash(git *), Bash(gh *), Read, Edit, Write
+disable-model-invocation: false
 ---
 
 # Babysit

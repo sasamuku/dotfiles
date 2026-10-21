@@ -2,6 +2,7 @@
 name: delegate-worker
 description: Delegate implementation or investigation to a worktree-worker in an isolated git worktree.
 argument-hint: <task-description>
+disable-model-invocation: true
 ---
 
 # Delegate Worker

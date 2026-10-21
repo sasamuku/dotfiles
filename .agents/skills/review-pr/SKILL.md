@@ -1,6 +1,7 @@
 ---
 name: review-pr
 description: Review a GitHub PR with parallel specialists, verify and consolidate findings, and optionally post selected comments as a pending review.
+disable-model-invocation: false
 ---
 
 # Review PR

@@ -1,6 +1,7 @@
 ---
 name: clean-worktrees
 description: ghq 配下の古い追加 Git worktree を整理・削除する依頼で使う。
+disable-model-invocation: false
 ---
 
 # Clean Worktrees
