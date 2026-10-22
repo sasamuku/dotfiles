@@ -34,7 +34,7 @@ setup.sh
 - `.zshrc`, `.zprofile`, `.zshenv` — Zsh 設定
 - `.config/sheldon/plugins.toml` — sheldon プラグイン
 - `.config/starship.toml` — Starship プロンプト
-- `.config/mise/config.toml` — mise (Node.js 25.2.1, Go 1.23.2, Ruby 3.2.2)
+- `.config/mise/config.toml` — mise (Node.js 26.12.1, Go 1.27.3, Ruby 3.2.2)
 - `.gitconfig` — Git エイリアス。個人設定は `.gitconfig.local.sample` → `~/.gitconfig.local`
 - `.zsh_secrets.example` → `~/.zsh_secrets` (秘密環境変数)
 - `.config/nvim/`, `.config/wezterm/`, `.config/ghostty/`, `.config/cmux/`, `.config/lazygit/` — Neovim (Lua), WezTerm, Ghostty, cmux (JSONC), lazygit (delta pager)
