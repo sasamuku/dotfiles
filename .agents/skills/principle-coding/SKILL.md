@@ -1,7 +1,7 @@
 ---
 name: principle-coding
 description: 設計・コード・テスト・変更の進め方で判断に迷ったときに参照する、名前で通じる原則の一覧と、原則どうしがぶつかったときの優先順位。コードやテストを書くとき、レビューするときに使う。
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # Coding
