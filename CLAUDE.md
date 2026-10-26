@@ -6,6 +6,8 @@
 
 macOS のセットアップと設定管理用の個人 dotfiles リポジトリ。Homebrew パッケージ管理、シェルスクリプトによる自動セットアップ、各種開発ツールの設定を含む。
 
+複数 PC で共有する公開リポジトリ。Issue・PR・コミットには、他のローカルリポジトリの名前・パス・ファイル構成・設定内容を記録しない。個別環境の作業記録はローカルに置く。
+
 個人リポジトリのため `main` への直接 push・直接変更を許可。PR レビューやフィーチャーブランチは不要。
 
 **ブランチ運用方針はこのプロジェクト CLAUDE.md を優先する** — グローバル指示 (`~/.claude/CLAUDE.md` / `~/.codex/AGENTS.md`) の「main での作業禁止」ルールより、本プロジェクトの方針 (main での直接作業 OK) を採用する。
@@ -51,17 +53,15 @@ setup.sh
 
 エイリアス: `.zshrc` (`ls`, `showz`, `editz`, `sourcez`, `be`, `ghql`, `dc`, `nf`, `ng`, `devc`) / `.gitconfig` (`st`, `co`, `br`, `cm`, `pr`, `lg`, `wa`, `wl`, `wr`)
 
-## git worktree マネージャ (`wt`)
+## Worktrunk
 
-`.config/zsh/functions/wt.zsh` の Zsh 関数:
+worktree の操作は [Worktrunk](https://worktrunk.dev/) に統一する。
 
-- `wt` — fzf で worktree 一覧。`Ctrl+D` で削除
-- `wt add <branch>` — ブランチと worktree を新規作成
-- `wt remove [-D] <branch>` — worktree とブランチを削除。`-D` 指定時のみ未コミット変更・未追跡ファイル・未マージのブランチも削除する。`main` / `master` と現在の worktree は削除しない
-- `wt clean` — マージ済みブランチと worktree を一括削除 (対話確認あり)
-- `wt init` — `.wt_hook.sh` テンプレート生成 (例: `.env` コピー、依存インストール)
+個人用の初期化処理は各リポジトリの `.config/wt.toml` に置き、グローバル Git ignore でローカル管理する。PC 固有のパスやリポジトリ別 hook は dotfiles に置かない。チームで追跡済みの設定はそのまま利用する。ローカル設定は新しい PC へ自動では引き継がれない。
 
-`wt add` / `wt co` と Claude Code の作成 hook は、初期化を新しい worktree 内で `bash -e -o pipefail` により実行する。失敗時は非ゼロで終了し、調査・復旧のため worktree を残す。親シェルの環境変数は変更しない。
+Git 管理外の設定は追加 worktree にも自動では引き継がれない。追加 worktree からも初期化を使う場合は、`pre-start` で設定自身をコピーする。
+
+作業開始前に必要な初期化は `pre-start` に置く。設定と承認の仕様は [公式 hook 資料](https://worktrunk.dev/hook/) を参照する。
 
 ## MCP サーバー
 

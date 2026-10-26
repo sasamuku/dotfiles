@@ -20,7 +20,7 @@ prefix_rule(
 prefix_rule(
     pattern = ["git", "worktree", "add"],
     decision = "forbidden",
-    justification = "git worktree add を直接使わない。.wt_hook.sh を発火させるため wt add <branch> を使う",
+    justification = "git worktree add を直接使わない。初期化 hook を実行するため Worktrunk の wt switch --create <branch> を使う",
     match = [["git", "worktree", "add", "-b", "feat", "../repo-feat"]],
     not_match = [["git", "worktree", "list"]],
 )

@@ -29,8 +29,8 @@ __pycache__/
 *.pyc
 
 # Development Tools
-## Git Worktree Manager
-.wt_hook.sh
+## Worktrunk (repository-local configuration)
+/.config/wt.toml
 
 # Legacy local data
 .serena/

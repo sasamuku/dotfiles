@@ -11,5 +11,6 @@ disable-model-invocation: false
 - 元のリポジトリ、main/master ブランチの worktree、開始時の作業ディレクトリを含む実行中の worktree、locked、ghq 外は削除しない。
 - 作成日時が不明なら保持する。mtime・ctime・コミット日時で代用しない。
 - 整理の実行依頼でのみ削除する。この条件の削除は承認済みとして追加確認しない。調査・一覧・スキル編集だけでは削除しない。
+- 削除には `wt -C <元のリポジトリ> remove --no-delete-branch --force --foreground <worktreeの絶対パス>` を使う。`--force-delete` は使わず、ブランチを保持する。
 - 削除前に候補のパス・作成日時・経過日数を示し、削除後にパスと登録の消失を確認する。削除・保持・失敗と理由を報告する。
 - 定期実行は設定しない。

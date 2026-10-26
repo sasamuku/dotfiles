@@ -9,11 +9,13 @@
 
 ## worktree 作成のルール
 
-**`git worktree add` を直接使わない** — リポジトリ固有の `.wt_hook.sh` (`.env` コピー・`pnpm install` 等) が発火せず、後続の pre-push フック等が壊れるため。代わりに:
+**`git worktree add` を直接使わない** — 初期化 hook を実行するため Worktrunk を使う。
 
 1. **`/delegate-worker`** — バックグラウンドのサブエージェントに委譲する
 2. **`/work-in-worktree`** — メインセッション自身が worktree で作業する
-3. **`wt add <branch>`** — シェルから手動作成 (`.wt_hook.sh` を発火させる)
+3. **`wt switch --create <branch>`** — シェルから作成する
+
+個人用の初期化処理は各リポジトリの `.config/wt.toml` で管理する。作業開始前に必要な処理は `pre-start` に置き、承認と初期化の完了を確認してから作業する。
 
 ## ソース参照は常にクリック可能にする
 

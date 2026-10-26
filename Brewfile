@@ -29,6 +29,7 @@ brew "sheldon"
 brew "starship"
 brew "tmux"
 brew "watch"
+brew "worktrunk"
 brew "yazi"
 
 cask "1password"

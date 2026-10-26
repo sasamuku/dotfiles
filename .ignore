@@ -13,4 +13,4 @@
 !.envrc
 !.tool-versions
 
-!.wt_hook.sh
+!/.config/wt.toml

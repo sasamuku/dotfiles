@@ -95,11 +95,10 @@ export PATH="$HOME/.claude/local:$PATH"
 # mise
 eval "$(mise activate zsh)"
 
-# Load custom functions
-if [[ -f "$HOME/.config/zsh/functions/wt.zsh" ]]; then
-    source "$HOME/.config/zsh/functions/wt.zsh"
-fi
+# Worktrunk
+eval "$(command wt config shell init zsh)"
 
+# Load custom functions
 if [[ -f "$HOME/.config/zsh/functions/ghq.zsh" ]]; then
     source "$HOME/.config/zsh/functions/ghq.zsh"
 fi

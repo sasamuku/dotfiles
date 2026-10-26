@@ -122,19 +122,6 @@
     "ask": [],
     "defaultMode": "auto"
   },
-  "hooks": {
-    "WorktreeCreate": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.claude/hooks/hook_worktree_create.sh"
-          }
-        ]
-      }
-    ]
-  },
   "statusLine": {
     "type": "command",
     "command": "$HOME/.claude/statusline.sh"
@@ -163,9 +150,16 @@
     "frontend-design@claude-code-plugins": true,
     "ponytail@ponytail": true,
     "slack@claude-plugins-official": true,
-    "eli5@claude-community": true
+    "eli5@claude-community": true,
+    "worktrunk@worktrunk": true
   },
   "extraKnownMarketplaces": {
+    "worktrunk": {
+      "source": {
+        "source": "github",
+        "repo": "max-sixty/worktrunk"
+      }
+    },
     "openai-codex": {
       "source": {
         "source": "github",

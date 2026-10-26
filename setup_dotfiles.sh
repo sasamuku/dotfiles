@@ -23,7 +23,6 @@ ln -sfn ${DOTFILES_DIR}/.claude/commands ~/.claude/commands
 ln -sfn ${DOTFILES_DIR}/.claude/CLAUDE.md ~/.claude/CLAUDE.md
 ln -sfn ${DOTFILES_DIR}/.claude/settings.json ~/.claude/settings.json
 ln -sfn ${DOTFILES_DIR}/.claude/statusline.sh ~/.claude/statusline.sh
-ln -sfn ${DOTFILES_DIR}/.claude/hooks ~/.claude/hooks
 ln -sfn ${DOTFILES_DIR}/.claude/agents ~/.claude/agents
 ln -sfn ${DOTFILES_DIR}/.claude/skills ~/.claude/skills
 
@@ -69,7 +68,6 @@ ln -sfn ${DOTFILES_DIR}/.config/mise/config.toml ~/.config/mise/config.toml
 # Zsh functions
 echo "📁 Creating Zsh functions symlink..."
 mkdir -p ~/.config/zsh/functions
-ln -sfn ${DOTFILES_DIR}/.config/zsh/functions/wt.zsh ~/.config/zsh/functions/wt.zsh
 ln -sfn ${DOTFILES_DIR}/.config/zsh/functions/ghq.zsh ~/.config/zsh/functions/ghq.zsh
 ln -sfn ${DOTFILES_DIR}/.config/zsh/functions/yazi.zsh ~/.config/zsh/functions/yazi.zsh
 
