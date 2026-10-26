@@ -1,7 +1,7 @@
 ---
 name: pbcopy
 description: macOS でテキストをクリップボードへコピーするときに使う。
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 - pbcopy／pbpaste の両方に `LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8` を指定する。
