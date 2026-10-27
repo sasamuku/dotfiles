@@ -1,7 +1,7 @@
 ---
 name: principle-terraform
 description: Terraform の構成を設計、レビュー、変更するときの原則と事例。module と state の境界、backend の初回構築、環境の取り違えの防ぎ方、設計判断の根拠の示し方を扱う。
-disable-model-invocation: false
+disable-model-invocation: true
 ---
 
 # Terraform
