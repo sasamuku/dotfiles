@@ -63,3 +63,6 @@ scratch
 
 # cmux の codex ラッパーが ~ をリテラル展開して作るディレクトリ
 /~/
+
+# yomiyasu の検査記録
+.yomiyasu/
