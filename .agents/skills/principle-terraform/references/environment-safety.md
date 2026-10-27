@@ -16,15 +16,6 @@
 - 既存資産を保つ変更では、同じ条件での plan を比べ、意図しない作り直しが無いこと。
 - fmt、validate、`terraform test` (1.6 以降。`mock_provider` は 1.7 以降) は、振る舞いの確認である。モックで通っても、実アカウントの権限や接続性の証明にはならない。
 
-## 事例
-
-| 悪い例 | 良い例 |
-|---|---|
-| provider に region だけを書く | `allowed_account_ids = [var.account_id]` も書く |
-| 1 つの root で `-var env=prod` を渡して、適用先を切り替える | 環境ごとの root ディレクトリがあり、実行した場所で適用先が決まる |
-| CI の apply role を、どのブランチからでも引き受けられる | 環境の protected branch や environment に限定する |
-| `instance_count` の既定値を本番の値にしておく | 環境ごとに違う値は、必須の入力にする |
-
 ## 出典
 
 - Future Architect: [環境分離](https://future-architect.github.io/arch-guidelines/documents/forTerraform/terraform_guidelines.html#環境分離)
