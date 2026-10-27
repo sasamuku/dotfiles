@@ -26,6 +26,7 @@ disable-model-invocation: true
 
 - **principle-two-way-door**: 常に読む。決定が、元に戻せる Two-way door か、戻せない One-way door かを見分ける。
 - **principle-documentation**: ドキュメント、指示ファイル、コードコメントを書くときと、見直すときに読む。
+- **principle-aws-architecture**: AWS の構成を設計、レビューするときに読む。
 - **principle-terraform**: Terraform の構成を設計、レビュー、変更するときに読む。
 - **principle-coding**: コードやテストを書くとき、レビューするときに読む。
 
