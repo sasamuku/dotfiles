@@ -35,6 +35,13 @@ if [ -d ~/.config/nvim ] && [ ! -L ~/.config/nvim ]; then
 fi
 ln -sfn ${DOTFILES_DIR}/.config/nvim ~/.config/nvim
 
+# Snapzy config (link the directory so app saves preserve dotfiles management)
+echo "📁 Creating Snapzy config symlink..."
+if [ -d ~/.config/snapzy ] && [ ! -L ~/.config/snapzy ]; then
+  mv ~/.config/snapzy ~/.config/snapzy.bak.$(date +%Y%m%d-%H%M%S)
+fi
+ln -sfn "${DOTFILES_DIR}/.config/snapzy" ~/.config/snapzy
+
 # Ghostty config
 echo "📁 Creating Ghostty config symlink..."
 mkdir -p ~/.config/ghostty
