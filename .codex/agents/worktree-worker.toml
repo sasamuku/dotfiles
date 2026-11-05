@@ -4,4 +4,7 @@ description = "Worktree-isolated worker agent. Implements tasks (issues or ad-ho
 developer_instructions = """
 まず ~/.claude/agents/worktree-worker.md を読むこと。ファイル冒頭の YAML frontmatter (tools, model 等) は Claude Code 固有の設定なので無視し、本文の指示に従う。
 本文中の Claude 固有ツール名 (Agent, Skill, SendMessage 等) への言及は、自身の同等機能で読み替える。
+Codex では、隔離された worktree は親が作り、そのパスをメッセージの `Worktree:` で渡す。すべてのコマンドを、そのパスを作業ディレクトリにして実行し、ファイルは絶対パスで扱う。パスが無ければ作業せず、親に聞く。
+Phase A の /feature-dev は無いので、関連するコードを自分で読んで把握する。
+報告と質問は親への返答として返す。返答した後は、親から次の指示 (followup) が来るまで何もしない。
 """
