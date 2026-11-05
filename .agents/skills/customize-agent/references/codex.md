@@ -8,7 +8,7 @@ CLI・アプリなど利用環境とバージョンを確認する。利用可�
 | スキル | `.agents/skills/<name>/SKILL.md`、個人共通は `~/.agents/skills/`。既存の管理元・symlinkを尊重する | [Skills](https://learn.chatgpt.com/docs/build-skills) |
 | 実行ルール | `.rules` の `prefix_rule()`。文章規約はここに書かない | [Rules](https://learn.chatgpt.com/docs/agent-configuration/rules) |
 | hook | 設定階層の `hooks.json` または `config.toml` の `[hooks]`。同じ階層で表現を重複させない | [Hooks](https://learn.chatgpt.com/docs/hooks) |
-| サブエージェント | `.codex/agents/*.toml`。既存の登録方法と対応形式を確認する | [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) |
+| サブエージェント | `.codex/agents/*.toml`。既存の登録方法と対応形式を確認する。toml 自体を symlink にしない (Codex は symlink の toml を読まず、spawn が `agent type is currently not available` で失敗する。ディレクトリごとのリンクは使える。原因はログ `~/.codex/logs_*.sqlite` の `failed to apply role` で分かる) | [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) |
 | 権限・その他設定 | `~/.codex/config.toml`、`.codex/config.toml`。管理側の制約・プロジェクトの信頼状態も確認する | [Configuration](https://learn.chatgpt.com/docs/config-file/config-basic) |
 
 Claudeの `paths` 付きルールを `AGENTS.md` にコピーしても同じスコープにはならない。指示の探索階層と作業ディレクトリに合わせて配置する。
