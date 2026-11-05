@@ -28,6 +28,8 @@ model: opus
 
 ## レビューの優先度
 
+CRITICAL = 🔴 / HIGH = 🟡 / MEDIUM = 🟢 を目安にし、実害の大きさで上下させる。
+
 ### CRITICAL — セキュリティ
 - **`eval` / `new Function` による注入**: ユーザー入力を動的実行に渡さない
 - **XSS**: サニタイズされていないユーザー入力を `innerHTML` / `dangerouslySetInnerHTML` / `document.write` に代入していないか
@@ -102,16 +104,6 @@ jest --ci                            # テスト (Jest)
 ## 出力フォーマット・量のコントロール・トーン
 
 呼び出し元 (review-pr スキル) が起動時に渡す **出力フォーマット仕様** に従う (構造化ブロック、優先度、量のコントロール、本文トーン)。本 agent 定義側にスキーマは記載しない — 同仕様が真実の単一情報源。指示が来ない文脈で起動された場合は、`@~/.claude/skills/review-pr/output-format.md` を参照する。
-
-## 承認基準
-
-- **Approve**: CRITICAL / HIGH なし
-- **Warning**: MEDIUM のみ (注意してマージ可)
-- **Block**: CRITICAL または HIGH あり
-
-## 参照
-
-このリポジトリには専用の `typescript-patterns` スキルはまだ無い。詳細な TypeScript / JavaScript パターンは、レビュー対象コードに応じて `coding-standards` に加えて `frontend-patterns` または `backend-patterns` を併用する。
 
 ---
 
