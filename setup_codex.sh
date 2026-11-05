@@ -3,6 +3,7 @@ set -eu
 
 # Codex CLI Setup Script
 # 正本は .agents/skills/ (共有 skill)、.claude/ (Claude 設定)、.codex/ (Codex 設定)。Codex へ symlink で公開する。
+# agent role と共有 skill はディレクトリごとリンクする。Codex は agent role のファイル自体が symlink だと読まない (O_NOFOLLOW)。
 # ~/.codex/config.toml, auth.json, sessions 等の Codex 自己管理ファイルには一切触れない。
 # 前提: setup_dotfiles.sh の Claude セットアップ済み (agent role が ~/.claude/agents, ~/.claude/skills を参照するため)
 
@@ -31,6 +32,23 @@ link_owned() {
   ln -sfn "${src}" "${dst}"
 }
 
+# ディレクトリごと dotfiles にリンクする。実ディレクトリが残っていれば、中の dotfiles 管理の symlink と .DS_Store を消し、
+# 空になれば削除、ほかのものが残れば link_owned がディレクトリごと退避する
+link_dir() {
+  src=$1; dst=$2
+  if [ -d "${dst}" ] && [ ! -L "${dst}" ]; then
+    for entry in "${dst}"/* "${dst}"/.[!.]*; do
+      [ -L "${entry}" ] || continue
+      case "$(readlink "${entry}")" in
+        "${DOTFILES_DIR}"/*) rm "${entry}" ;;
+      esac
+    done
+    rm -f "${dst}/.DS_Store"
+    rmdir "${dst}" 2>/dev/null && echo "  🧹 Replaced per-entry links in ${dst} with a directory link"
+  fi
+  link_owned "${src}" "${dst}"
+}
+
 # Global instructions
 echo "📝 Creating Codex global AGENTS.md symlink..."
 mkdir -p ~/.codex
@@ -43,37 +61,13 @@ link_owned "${DOTFILES_DIR}/.codex/rules/dotfiles.rules" ~/.codex/rules/dotfiles
 
 # Agent roles (~/.codex/agents は $CODEX_HOME/agents として自動探索される)
 echo "🤖 Linking Codex agent roles..."
-mkdir -p ~/.codex/agents
-for role in "${DOTFILES_DIR}"/.codex/agents/*.toml; do
-  link_owned "${role}" ~/.codex/agents/"$(basename "${role}")"
-done
+link_dir "${DOTFILES_DIR}/.codex/agents" ~/.codex/agents
 
-# Shared skills (per-skill symlink, 他ツール管理の既存エントリは上書きしない)
+# Shared skills (npx skills add -g などのグローバル導入は dotfiles の .agents/skills に入る)
 echo "📁 Linking shared skills into ~/.agents/skills..."
-mkdir -p ~/.agents/skills
+mkdir -p ~/.agents
 link_owned "${DOTFILES_DIR}/.agents/.skill-lock.json" ~/.agents/.skill-lock.json
-# 削除済み skill のダングリング symlink を掃除 (dotfiles 配下を指すものだけ)
-for link in ~/.agents/skills/*; do
-  if [ -L "${link}" ] && [ ! -e "${link}" ]; then
-    case "$(readlink "${link}")" in
-      "${DOTFILES_DIR}"/*) rm "${link}" && echo "  🧹 Removed stale $(basename "${link}")" ;;
-    esac
-  fi
-done
-for skill in "${DOTFILES_DIR}"/.agents/skills/*/; do
-  name=$(basename "${skill}")
-  target=~/.agents/skills/${name}
-  if [ -L "${target}" ]; then
-    case "$(readlink "${target}")" in
-      "${DOTFILES_DIR}"/*) ln -sfn "${DOTFILES_DIR}/.agents/skills/${name}" "${target}" ;;
-      *) echo "  ⚠️  Skip ${name}: exists (managed elsewhere)" ;;
-    esac
-  elif [ -e "${target}" ]; then
-    echo "  ⚠️  Skip ${name}: exists (real directory)"
-  else
-    ln -s "${DOTFILES_DIR}/.agents/skills/${name}" "${target}"
-  fi
-done
+link_dir "${DOTFILES_DIR}/.agents/skills" ~/.agents/skills
 
 # Account switcher (all account names, homes and selection remain local).
 mkdir -p ~/.local/bin ~/.config/zsh/functions
@@ -88,5 +82,22 @@ for entry in ".local/bin/cxs" ".config/zsh/functions/codex.zsh"; do
     ln -s "$src" "$dst"
   fi
 done
+
+# Codex は agent role の toml 自体が symlink だと読まず、spawn_agent が "agent type is currently not available" で失敗する。
+# 共有の ~/.codex/agents と、CXS の各アカウントの agents に残っていないかを確かめる
+python3 - <<'PY'
+import json
+from pathlib import Path
+
+home = Path.home()
+dirs = [home / '.codex/agents']
+registry = home / '.config/codex-accounts/accounts.json'
+if registry.exists():
+    dirs += [Path(p).expanduser() / 'agents' for p in json.loads(registry.read_text())['accounts'].values()]
+for d in dirs:
+    for f in sorted(d.glob('**/*.toml')):
+        if f.is_symlink():
+            print(f'  ⚠️  Codex cannot load a symlinked agent role: {f}')
+PY
 
 echo "✅ Codex setup completed!"
