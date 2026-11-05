@@ -2,9 +2,9 @@
 
 ユーザーが選んだ指摘だけを投稿し、submit せず Pending 状態に残す。行番号未確定・PR全体の指摘はインライン投稿しない。
 
-- `path` はファイル、`line` は元ファイルの絶対行番号、`side` は head 側 RIGHT / base 側 LEFT。範囲指定なら `start_line` と対応する `start_side` も含める。
+- `path` はファイル、`line` は元ファイルの絶対行番号、`side` は head 側 RIGHT / base 側 LEFT。
 - `body` は統合済み指摘のタイトルと本文。構造化メタデータは入れず、優先度ラベルは絵文字と重複させない。
-- 指摘範囲の完全な置換なら `suggestion` ブロックを使い、それ以外は通常のコードブロックにする。
+- 指摘行の完全な置換なら `suggestion` ブロックを使い、それ以外は通常のコードブロックにする。
 - API 失敗時はエラーと未投稿分を報告し、成功した投稿を重複作成しない。
 
 **1. 既存 Pending Review を確認** (自分が作成したもののみ対象):
@@ -27,7 +27,7 @@ cat <<'PAYLOAD' | gh api repos/{owner}/{repo}/pulls/{PR番号}/reviews --method 
       "path": "src/example.ts",
       "line": 10,
       "side": "RIGHT",
-      "body": "🔴 **Critical**: SQL injection via unsanitized input\n\nUse parameterized queries."
+      "body": "🔴 SQL injection via unsanitized input\n\nUse parameterized queries."
     }
   ]
 }

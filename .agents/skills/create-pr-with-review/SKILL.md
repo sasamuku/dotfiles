@@ -14,7 +14,7 @@ disable-model-invocation: false
 
 ## 独立したレビュー
 
-[review-pr](../review-pr/SKILL.md) のエージェント一覧・トリガー評価・Phase 2〜4を使う。PR差分はローカル差分に、差分内テストは本ブランチの変更行に読み替える。GitHubの情報取得・投稿は行わない。
+[review-pr](../review-pr/SKILL.md) のエージェント一覧・Phase 2〜4を使う。PR差分はローカル差分に、差分内テストは本ブランチの変更行に読み替える。GitHubの情報取得・投稿は行わない。
 
 該当reviewerを、メインセッションの履歴を継承しない独立したサブエージェントとして並列起動する。渡す情報は以下だけ:
 
