@@ -61,6 +61,17 @@ setup.sh
 
 エイリアス: `.zshrc` (`ls`, `showz`, `editz`, `sourcez`, `be`, `ghql`, `dc`, `nf`, `ng`, `devc`) / `.gitconfig` (`st`, `co`, `br`, `cm`, `pr`, `lg`, `wa`, `wl`, `wr`)
 
+## スリープ防止
+
+「PC をスリープさせない」「蓋を閉じても処理を続ける」依頼には、既存の [lidrun](tools/lidrun/README.md) を使う。リポジトリのルートで実行する。
+
+- ビルド: `make -C tools/lidrun`
+- 有効化: `./tools/lidrun/build/lidrun on`
+- 解除: `./tools/lidrun/build/lidrun off`
+- 状態確認: `./tools/lidrun/build/lidrun status`
+
+有効・無効を回答する前に、その都度 `status` を実行する。管理者認証や使用上の注意はリンク先の README を参照する。
+
 ## Worktrunk
 
 worktree の操作は [Worktrunk](https://worktrunk.dev/) に統一する。
