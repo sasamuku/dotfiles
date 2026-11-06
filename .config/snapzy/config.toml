@@ -1,5 +1,5 @@
 schema_version = 1
-snapzy_min_version = "2.0.0"
+snapzy_min_version = "2.1.0"
 
 [general]
 language = "en"
@@ -22,7 +22,7 @@ retention_days = 3
 
 [menu_bar]
 icon_style = "default"
-item_order = ["captureArea", "captureAreaAnnotate", "captureApplication", "captureFullscreen", "captureActiveWindow", "scrollingCapture", "captureOCR", "captureSmartElement", "captureObjectCutout", "captureDelayed", "recordScreen", "recordApplication", "openAnnotate", "combineImages", "editVideo", "cloudUploads", "openHistory", "shortcutList"]
+item_order = ["captureArea", "captureAreaAnnotate", "captureApplication", "captureFullscreen", "captureActiveWindow", "scrollingCapture", "captureOCR", "captureSmartElement", "captureObjectCutout", "captureDelayed", "recordScreen", "recordApplication", "openAnnotate", "combineImages", "editVideo", "cloudUploads", "openHistory", "shortcutList", "captureDelayedFullscreen", "pickColor"]
 hidden_items = []
 
 [capture]
@@ -43,6 +43,8 @@ show_selection_area_overlay = true
 reverse_magnifier_zoom_direction = false
 show_magnifier_by_default = false
 show_magnifier_color_panel = true
+magnifier_size = "medium"
+include_window_shadow = true
 
 [capture.scrolling]
 show_hints = true
@@ -103,6 +105,7 @@ hold_duration = 0.3
 [quick_access]
 enabled = true
 play_sounds = true
+open_in_finder_after_save = true
 position = "bottomRight"
 auto_dismiss = true
 auto_dismiss_delay = 10.0
@@ -112,6 +115,7 @@ drag_drop = true
 two_finger_swipe_to_dismiss = true
 swipe_sensitivity = 1.0
 trackpad_swipe_mode = "inverted"
+pin_zoom_mode = "fixedViewport"
 swipe_left_action = "dismiss"
 swipe_right_action = "dismiss"
 hide_card_when_window_open = true
@@ -201,26 +205,31 @@ key = "5"
 modifiers = ["command", "shift"]
 
 [shortcuts.global.pause_resume_recording]
-enabled = true
+enabled = false
 key = ""
 modifiers = []
 
 [shortcuts.global.toggle_pen_recording]
-enabled = true
+enabled = false
 key = ""
 modifiers = []
 
 [shortcuts.global.restart_recording]
-enabled = true
+enabled = false
 key = ""
 modifiers = []
 
 [shortcuts.global.delete_recording]
-enabled = true
+enabled = false
 key = ""
 modifiers = []
 
 [shortcuts.global.delayed_capture]
+enabled = false
+key = ""
+modifiers = []
+
+[shortcuts.global.delayed_fullscreen]
 enabled = true
 key = ""
 modifiers = []
@@ -265,6 +274,11 @@ enabled = true
 key = "H"
 modifiers = ["command", "shift"]
 
+[shortcuts.global.pick_color]
+enabled = true
+key = ""
+modifiers = []
+
 [shortcuts.overlay.area_application_capture]
 enabled = true
 key = "A"
@@ -277,8 +291,8 @@ modifiers = []
 
 [shortcuts.quick_access.edit_latest_capture]
 enabled = false
-key = "↩"
-modifiers = ["command"]
+key = ""
+modifiers = []
 
 [shortcuts.quick_access.card_actions]
 enabled = true
@@ -321,6 +335,7 @@ modifiers = ["command"]
 [shortcuts.annotate_tools]
 disabled = []
 crop = "c"
+cutOut = "x"
 selection = "v"
 rectangle = "r"
 filledRectangle = "f"
