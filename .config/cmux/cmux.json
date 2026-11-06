@@ -185,4 +185,8 @@
   //       "globalSearch" : "cmd+opt+f"
   //     }
   //   },
+  "computerUse": {
+    "enabled": false,
+    "showInMenuBar": false
+  },
 }
