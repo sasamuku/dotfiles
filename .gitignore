@@ -29,6 +29,8 @@ __pycache__/
 *.pyc
 
 # Development Tools
+/.config/cmux/*.cmux-write.lock
+
 ## Worktrunk (repository-local configuration)
 /.config/wt.toml
 
