@@ -25,7 +25,7 @@ disable-model-invocation: false
 ## Phase 1: 情報収集
 
 ```bash
-gh pr view <number> --json number,title,body,baseRefName,headRefName,files
+gh pr view <number> --json number,title,body,baseRefName,baseRefOid,headRefName,headRefOid,files
 gh pr diff <number>
 gh api repos/{owner}/{repo}/pulls/{number}/comments --paginate \
   --jq '[.[] | {path,line,side,body,user:.user.login}]'
@@ -35,18 +35,22 @@ gh api repos/{owner}/{repo}/pulls/{number}/reviews --paginate \
 
 PR本文を意図・範囲の判断に使い、既存指摘との重複を避ける。空差分なら終了する。コメントの不要な JSON フィールドは渡さない。
 
+差分・参照コード・検証結果は対象の base/head SHA に揃える。差分は merge-base → head、検証結果は head と merge 結果を区別し、対応不明なら未確認とする。既存環境で対象版を検証できない場合だけ作業場所を隔離する。
+
 ## Phase 2: reviewer の選定と並列実行
 
-親がマネージャーとして、PR の目的と diff から依頼する reviewer を決める。表の「依頼する場面」に当たり、起動のコスト (1 体ごとに diff 全体を読む) に見合う指摘が見込めるものだけを選ぶ。`standard-reviewer` 以外で一次責任が重なるなら、差分により近い 1 体にする。選んだ reviewer と見送った reviewer は、理由を 1 行ずつ添えて Phase 4 で示す。
+親がマネージャーとして、PR の目的と diff から依頼する reviewer を決める。表の「依頼する場面」に当たり、起動のコスト (1 体ごとに担当差分を読む) に見合う指摘が見込めるものだけを選ぶ。`standard-reviewer` 以外で一次責任が重なるなら、差分により近い 1 体にする。選んだ reviewer と見送った reviewer は、理由を 1 行ずつ添えて Phase 4 で示す。
 
-選んだ reviewer を並列起動する。各 prompt には PRタイトル・本文・base/head、生の diff (ハンクヘッダ込み)、既存指摘、[output-format.md](output-format.md) の内容を渡す。失敗した reviewer があれば残りで続け、未実施の観点を報告する。
+選んだ reviewer を並列起動する。各 prompt には PRタイトル・本文・base/head SHA、生の diff (ハンクヘッダ込み)、既存指摘、[output-format.md](output-format.md) の内容を渡す。失敗した reviewer があれば残りで続け、未実施の観点を報告する。
+
+読み切れない差分は分担する。親は読了範囲と専門観点の確認状況を把握し、未確認が残れば指摘ゼロでも完了とせず、残りを報告する。
 
 ## Phase 3: 指摘の集約と検証
 
 1. 指摘を `{priority,file,line,side,title,body,suggestion?,source}` に揃える。
 2. 同ファイル・同根本原因の指摘を統合する (同一行、近接 ±3 行、同関数の行番号/関数名フォールバック)。同じ行でも修正が独立する問題は分ける。
 3. 出典を併記し、重複説明を削る。優先度は高い方を起点に実害で調整し、修正案は単純置換できるものを優先する。
-4. **独立検証**: 統合した指摘 1 件ごとに、読み取り専用の新しいサブエージェントを並列で起動する。渡すのは PR タイトル・本文、diff、その指摘 1 件だけにし、ほかの指摘と出典の reviewer は渡さない。検証役は head のコードと呼び出し元を読み、指摘の主張が成り立つかを `確認` / `否定` / `判定不能` で判定し、根拠の `file:line` を添えて返す。読むだけで決まらなければ、ファイルを変えず外部に送らない範囲でコマンドを実行してよく (`node -e`、テストなど)、公式ドキュメントや依存のソースも読んでよい。ローカルの HEAD が head と違えば、`git fetch origin pull/<number>/head` の後に `git show FETCH_HEAD:<path>` と `git grep <pattern> FETCH_HEAD` で読む。`scope: PR` の指摘では、本文に書かれた事実 (ファイル、件数、コードの状態) が head で成り立つかだけを判定し、問いや提案の当否は判定しない。
+4. **独立検証**: 統合した指摘 1 件ごとに、読み取り専用の新しいサブエージェントを並列で起動する。渡すのは PR タイトル・本文、base/head SHA、diff、その指摘 1 件だけにし、ほかの指摘と出典の reviewer は渡さない。検証役は head のコードと呼び出し元を読み、指摘の主張が成り立つかを `確認` / `否定` / `判定不能` で判定し、根拠の `file:line` を添えて返す。読むだけで決まらなければ、ファイルを変えず外部に送らない範囲でコマンドを実行してよく (`node -e`、テストなど)、公式ドキュメントや依存のソースも読んでよい。ローカルの HEAD が対象の head と違えば、対象コミットを取得し、`git show <head SHA>:<path>` と `git grep <pattern> <head SHA>` で読む。`scope: PR` の指摘では、本文に書かれた事実 (ファイル、件数、コードの状態) が head で成り立つかだけを判定し、問いや提案の当否は判定しない。
 5. **最終フィルタ4テスト**を親が適用する:
    - 実害: 放置時の現実的な影響を1文で説明できるか。条件付きなら前提を示す。
    - 対応価値: 作者が直せる問題か。好みだけの指摘は除く。
