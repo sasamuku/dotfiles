@@ -15,7 +15,7 @@ disable-model-invocation: false
 | エージェント名        | 依頼する場面                                   | 一次責任                                                                     |
 | --------------------- | ---------------------------------------------- | ---------------------------------------------------------------------------- |
 | `security-reviewer`   | 外部からの入力、認証・認可、秘密情報、外部との通信、依存の追加・更新、権限の設定に触れる | セキュリティ脆弱性 (OWASP Top 10 等。XSS / SQL injection 等の一次責任はここ) |
-| `typescript-reviewer` | `.ts` `.tsx` `.js` `.jsx` `.mjs` `.cjs` のロジックの変更 | 型安全性・非同期・JS/TS イディオム (`any` の濫用等の一次責任はここ)          |
+| `typescript-reviewer` | `.ts` `.tsx` `.mts` `.cts` `.js` `.jsx` `.mjs` `.cjs` のロジックの変更 | 型安全性・非同期・JS/TS イディオム (`any` の濫用等の一次責任はここ)          |
 | `postgres-reviewer`   | SQL、マイグレーション、ORM のクエリやスキーマ、DB 設計の文書の変更 | Postgres 設計・クエリ・インデックス・RLS・接続管理 (生 SQL / ORM DML / Markdown DB 仕様) |
 | `terraform-reviewer`  | Terraform に関わる変更。`.tf` `.tfvars` `.hcl` に限らず、Terraform に渡す値を作るスクリプトや設定の変更も含む | Terraform: module と state の境界・backend・環境の取り違え・保護の喪失、AWS の構成 (principle-terraform / principle-aws-architecture に準拠) |
 | `ponytail-reviewer`   | 関数・抽象・依存の追加など、コードが増える変更 | 過剰設計: 不要な依存・推測的抽象・stdlib/ネイティブ機能の再実装・短縮可能なロジック (「削れるか」のみ。正しさ・セキュリティ・性能は扱わない) |
