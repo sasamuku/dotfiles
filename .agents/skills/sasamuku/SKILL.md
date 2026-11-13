@@ -36,6 +36,7 @@ disable-model-invocation: true
 
 - **principle-two-way-door**: 常に読む。決定が、元に戻せる Two-way door か、戻せない One-way door かを見分ける。
 - **principle-documentation**: ドキュメント、指示ファイル、コードコメントを書くときと、見直すときに読む。
+- **principle-product-docs**: Product Brief、PRD、Design Doc を書くときと、見直すときに読む。
 - **principle-aws-architecture**: AWS の構成を設計、レビューするときに読む。
 - **principle-terraform**: Terraform の構成を設計、レビュー、変更するときに読む。
 - **principle-coding**: コードやテストを書くとき、レビューするときに読む。
@@ -48,6 +49,7 @@ disable-model-invocation: true
 - **autonomous-run**: 長いタスクを、終了条件を満たすまで止まらずに進める依頼に使う。対象は、席を外す間に任せる作業や、確かめられる完了条件まで繰り返す作業。依頼の例は「終わるまで回して」「テストが通るまで続けて」「もう寝るので進めておいて」。
 - **orchestrate**: Epic や目的を渡されて、配下の Issue を PR にし、merge まで運ぶ依頼に使う。対象は、日をまたぐ作業や、担当を複数並べる作業で、自分はコードを書かずに指揮に回る。依頼の例は「この Epic を最後までやって」「Sub Issue を全部 merge まで持っていって」「この移行を任せる」。
 - **session-pickup**: 前のセッションや別のエージェントの作業を引き継ぐ依頼に使う。対象は、途中で止まった作業記録、push 済みのブランチや PR、会話の記録からの再開。依頼の例は「続きをやって」「前回の続きから」「この PR を引き継いで」「どこまで進んだか見て続けて」。
+- **product-docs**: Product Brief (なぜ作るか) と PRD (何を求めるか) を書く依頼に使う。対象は、製品の方向をまとめる文書と、開発段階の要求をまとめる文書の新規作成と書き直し。依頼の例は「PRD を作って」「Product Brief を書いて」「要求をまとめて」「製品の方向を文書にまとめて」。要件と設計を書く設計書は architecture。
 - **issue-planning**: 目的を、着手できる Issue に落とす依頼に使う。対象は、1 つの Issue で済む作業から、Epic と Sub Issue に分ける大きな目標まで。依頼の例は「Issue にして」「Issue に分けて」「これを Epic にして」。システムの構成や移行方針を決める計画は architecture。
 - **issue-maintenance**: 既存 Issue 群を実態に合わせて更新・再編する依頼に使う（「Issue を整理して」「構造を見直して」「引き継げる状態にして」）。新たな目的の計画は issue-planning。
 - **feature**: 新しい機能や振る舞いを足す依頼に使う。対象は、仕様の決まった機能の追加から、設計を決めるところから始める変更まで。依頼の例は「〜を実装して」「〜できるようにして」「この Issue をやって」「機能を足して」。
