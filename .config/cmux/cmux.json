@@ -186,7 +186,7 @@
   //     }
   //   },
   "computerUse": {
-    "enabled": false,
+    "enabled": true,
     "showInMenuBar": false
   },
 }
