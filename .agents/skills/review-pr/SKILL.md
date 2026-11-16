@@ -17,7 +17,7 @@ disable-model-invocation: false
 | `security-reviewer`   | 外部からの入力、認証・認可、秘密情報、外部との通信、依存の追加・更新、権限の設定に触れる | セキュリティ脆弱性 (OWASP Top 10 等。XSS / SQL injection 等の一次責任はここ) |
 | `typescript-reviewer` | `.ts` `.tsx` `.mts` `.cts` `.js` `.jsx` `.mjs` `.cjs` のロジックの変更 | 型安全性・非同期・JS/TS イディオム (`any` の濫用等の一次責任はここ)          |
 | `postgres-reviewer`   | SQL、マイグレーション、ORM のクエリやスキーマ、DB 設計の文書の変更 | Postgres 設計・クエリ・インデックス・RLS・接続管理 (生 SQL / ORM DML / Markdown DB 仕様) |
-| `terraform-reviewer`  | Terraform に関わる変更。`.tf` `.tfvars` `.hcl` に限らず、Terraform に渡す値を作るスクリプトや設定の変更も含む | Terraform: module と state の境界・backend・環境の取り違え・保護の喪失、AWS の構成 (principle-terraform / principle-aws-architecture に準拠) |
+| `terraform-reviewer`  | Terraform に関わる変更。`.tf` `.tfvars` `.hcl` に限らず、Terraform に渡す値を作るスクリプトや設定、Terraform の出力を実行時に使うworkflow・CLIも含む | Terraform: module と state の境界・backend・環境の取り違え・保護の喪失、可変の中継入力から最終AWS API引数までの環境境界、AWS の構成 (principle-terraform / principle-aws-architecture に準拠) |
 | `ponytail-reviewer`   | 関数・抽象・依存の追加など、コードが増える変更 | 過剰設計: 不要な依存・推測的抽象・stdlib/ネイティブ機能の再実装・短縮可能なロジック (「削れるか」のみ。正しさ・セキュリティ・性能は扱わない) |
 | `standard-reviewer`   | コードの変更を含む。Markdown だけの PR など、ほかのどの reviewer にも当たらない変更も、ここに 1 体回す | 役割・観点を与えない素のレビュー (他の reviewer と範囲が重なってよい) |
 | `meta-reviewer`       | 新しい機能、仕組みの変更、回避策など、何を解くかの判断を含む | メタ認知: 問題設定・前提・構造 (症状対処になっていないか / 上流に軽い解はないか / そもそもやるべきか)。指摘は `scope: PR` の PR-level ブロックのみで、行単位指摘はしない |
@@ -36,6 +36,7 @@ gh api repos/{owner}/{repo}/pulls/{number}/reviews --paginate \
 PR本文を意図・範囲の判断に使い、既存指摘との重複を避ける。空差分なら終了する。コメントの不要な JSON フィールドは渡さない。
 
 差分・参照コード・検証結果は対象の base/head SHA に揃える。差分は merge-base → head、検証結果は head と merge 結果を区別し、対応不明なら未確認とする。既存環境で対象版を検証できない場合だけ作業場所を隔離する。
+統合コミットを含む積み上げPRでは、全差分を把握したうえで履歴とtreeを照合し、既存ブランチ由来の変更とPR固有の変更を切り分ける。競合解消で生じた差分はレビュー対象に残す。
 
 ## Phase 2: reviewer の選定と並列実行
 
