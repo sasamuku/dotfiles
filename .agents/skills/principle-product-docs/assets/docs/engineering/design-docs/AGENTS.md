@@ -1,10 +1,11 @@
 # Design Doc ディレクトリ作業ルール
 
-このディレクトリ（`docs/design-docs/`）で Design Doc を作成・編集する際のガイド。Design Doc の目的・テンプレート構成は [README.md](./README.md) を参照。
+このディレクトリ（`docs/engineering/design-docs/`）で Design Doc を作成・編集する際のガイド。
 
 ## 基本原則
 
-- **配置場所 / 1 機能 1 Design Doc**: [README.md](./README.md) の「配置場所と番号付け」を参照。新規作成は `TEMPLATE/` を丸ごとコピーする。
+- **1 機能 1 Design Doc**: Design Doc 1 つにつき `NNNN-短いタイトル/` を作る（番号は既存の最大 + 1、4 桁ゼロ埋め。再利用せず、欠番になっても詰めない）。新規作成は `TEMPLATE/` を丸ごとコピーする。
+- **ステータス**: `Draft` → `Accepted` → `Implemented` の流れで進める。別の Design Doc に置き換えたら `Superseded` にし、置き換え先を示す。
 - **省略可ファイル**: 補助資料が不要な場合、`database.md` / `api.md` / `screens.md` は削除してよい。
 
 ## 書く内容・書かない内容
@@ -20,11 +21,9 @@
 
 ## 関連ドキュメント
 
-- [README.md](./README.md): Design Doc の目的、ADR との使い分け、運用ルール。
-- [ADR](../adr/README.md): 横断的なアーキテクチャ判断の記録先。Design Doc 内で生まれた横断的な決定は ADR に切り出してリンクする。
+- [ADR](../adr/): 横断的なアーキテクチャ判断の記録先。Design Doc 内で生まれた横断的な決定は ADR に切り出してリンクする。
 
 ## 編集時のチェック
 
 - テンプレート冒頭・各節の `<!-- ... -->` コメントは、最終成果物では削除すること（記法ガイドのため）。
 - 既存 Design Doc を更新する際は、意思決定の経緯が追えるよう、書き換えではなく追記・補足を優先する。実装後に内容を最新化する必要はない（実装後はコード・スキーマ・API 仕様が正）。
-- 新規追加・ステータス変更をしたら、README.md の「一覧」テーブルも更新する。
