@@ -74,7 +74,7 @@ docs/
 
 セクションの並びと、各セクションに書くことは、[雛形](assets/docs/product/product-requirements-document.md) に従う。
 
-セクションは [productboard の PRD の項目](https://www.productboard.com/glossary/product-requirements-document/) に沿っている。同じ資料にある関係者、リリース計画、リスク、制約は載せない。要求は同じ資料に無いセクションで、スコープの項目ごとに求めることを書くために足している。
+セクションは [productboard の PRD の項目](https://www.productboard.com/glossary/product-requirements-document/) に沿っている。同じ資料にある関係者、リリース計画、リスク、制約は載せない。同じ資料に無いセクションを 2 つ足している。要求は、スコープの項目ごとに求めることを書くためである。まだ決まっていないことは、未決の判断を本文と分けて挙げるためである。
 
 ## Design Doc
 
