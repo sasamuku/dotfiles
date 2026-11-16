@@ -1,6 +1,6 @@
 ---
 name: setup-repository
-description: リポジトリの初期セットアップや開発基盤の追加に使う。GitHub テンプレート・ラベル、TypeScript の品質チェック・テスト、CI、依存更新、ローカル開発ツールを選択して導入する。
+description: リポジトリの初期セットアップや開発基盤の追加に使う。GitHub テンプレート・ラベル、TypeScript の品質チェック・テスト、CI、依存更新・脆弱性検査、ローカル開発ツールを選択して導入する。
 disable-model-invocation: true
 ---
 
@@ -13,7 +13,7 @@ disable-model-invocation: true
 | Issue・PR テンプレート、実ラベル | [GitHub テンプレート](references/github-templates.md) |
 | 依存管理、型検査、Biome、Knip、Vitest | [TypeScript](references/typescript.md) |
 | GitHub Actions、Workflow 検査、SHA 固定、PR 自動ラベル、CodeQL | [CI](references/ci.md) |
-| Renovate・Dependabot | [依存更新](references/dependencies.md) |
+| Renovate・Dependabot、OSV-Scanner | [依存更新・脆弱性検査](references/dependencies.md) |
 | Git hook、commitlint、シークレット検査、リンク検査、CLI の版管理 | [ローカル開発ツール](references/local-tooling.md) |
 
 ## 選択
