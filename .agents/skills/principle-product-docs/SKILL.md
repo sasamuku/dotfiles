@@ -49,7 +49,7 @@ docs/
 - **記録とリファレンスを分ける**: Design Doc と ADR は書いた時点の判断の記録で、実装後は直さない。いまの構成を説明する文書が必要になったら、`engineering/architecture/` に主題ごとに置き、書き換えて使う。
 - **Product Brief は 1 つだけ置く**: 版にせず、書き換えて使う。
 - **PRD は版ごとに 1 ファイルにする**: 版が 1 つのあいだは `product-requirements-document.md` を置き、書き換えて使う。版が分かれたら `product-requirements-document/` の下に `v1.md`、`v2.md` と並べる。版を切る基準は依頼者が決める。開発段階ごとでも、製品の大きな更新ごとでもよい。前の版は記録として残す。Design Doc から PRD を参照するときは、対応する版を指す。
-- **Design Doc と ADR は雛形から作る**: 雛形は [assets/docs/engineering](assets/docs/engineering) にある。採番とステータスは、雛形の `AGENTS.md` に従う。
+- **Design Doc と ADR は雛形から作る**: 雛形は [assets/docs/engineering](assets/docs/engineering) にある。採番とステータスは、雛形の README に従う。
 
 ## 適用範囲
 
