@@ -42,6 +42,7 @@ disable-model-invocation: true
 - **principle-aws-architecture**: AWS の構成を設計、レビューするときに読む。
 - **principle-terraform**: Terraform の構成を設計、レビュー、変更するときに読む。
 - **principle-monitoring**: 監視とアラートを設計、レビューするときに読む。
+- **[principle-auth-design](../principle-auth-design/SKILL.md)**: 認証・認可・セッションを設計、実装、レビューするときに読む。設計や実装が OWASP の推奨に沿っているかを確認する。
 - **principle-coding**: コードやテストを書くとき、レビューするときに読む。
 - **principle-design-system**: デザインシステム、トークン、`DESIGN.md` を作るとき、直すとき、UI をレビューするときに読む。
 - **principle-design-harness**: エージェントに UI を作らせるとき、その足場を整えるときに読む。
