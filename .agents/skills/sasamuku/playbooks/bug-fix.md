@@ -8,5 +8,3 @@
 6. 依頼にコミットや PR 作成が含まれる場合は、それぞれ **commit** と **create-pr** を使う。回帰テストを追加し、運用が許せば、修正前に失敗するテストと修正をこの順で別々にコミットする。
 
 **返信:** 症状、原因と根拠、修正内容、同じ操作での修正前後の結果、未確認事項。PR を作った場合はリンクを添える。
-
-参考 [P-Stack の Bug fix プレイブック](https://github.com/cursor/plugins/blob/main/pstack/skills/poteto-mode/playbooks/bug-fix.md)
