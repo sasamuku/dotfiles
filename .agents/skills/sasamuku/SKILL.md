@@ -19,6 +19,7 @@ disable-model-invocation: true
 
 - **分からないことがある**: どのプレイブックの途中でも、コードや履歴を読めば分かることは、ユーザーに聞く前に **investigation** プレイブックの手順で調べる。調べ終えたら、元のプレイブックの手順に戻る。ユーザーに聞くのは、調べても決まらない判断だけにする。
 - **確認を取るか迷う**: **principle-two-way-door** スキルで、その決定が Two-way door か One-way door かを見分ける。Two-way door なら聞かずに進め、結果を報告する。One-way door なら止まり、確認を取る。
+- **Issue を閉じる**: 閉じる前に **close-issue** スキルを開き、その手順で Issue と Epic の本文を整えてから閉じる。コメントと `gh issue close` だけで済ませない。
 
 ## 任せると言われたとき
 
