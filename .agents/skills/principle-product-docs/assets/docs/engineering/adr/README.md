@@ -19,7 +19,7 @@ PR コメントで完結する粒度や、影響範囲が自分 1 人に閉じ�
    ```sh
    cp docs/engineering/adr/TEMPLATE.md docs/engineering/adr/0001-linter-formatter.md
    ```
-3. 中身を書き、`ステータス` を `Proposed` にしてレビューに回す（PR の要否はプロジェクトの運用に従う）。
+3. 選定を任された場合は、推奨する一案とその理由を「決定」に書く。`ステータス` を `Proposed` にしてレビューに回す（PR の要否はプロジェクトの運用に従う）。
 4. レビューで合意できたら `Accepted` に更新する。
 
 ## ステータス
